@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
-import "../InfoProfile/Info.css"
+import "./MedInfo.css"
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import WorkOutlineRoundedIcon from '@mui/icons-material/WorkOutlineRounded';
-import Info3 from "../../../../assets/Info-Dp/img-3.jpg"
+import Info3 from "../../../assets/Info-Dp/img-3.jpg"
 
 import {LiaEdit} from "react-icons/lia"
 
 import {IoCameraOutline} from "react-icons/io5"
 import {BiLogOut} from "react-icons/bi"
 import { useRef } from 'react';
-import ModelProfile from '../ModelProfile/ModelProfile';
+import MediInput from '../MediInput/MediInput';
 import { Link } from 'react-router-dom';
 
-const Info = ({userPostData,
+const MedInfo = ({userPostData,
               following,
               modelDetails,
               setModelDetails,
@@ -110,13 +110,13 @@ const Info = ({userPostData,
               <BiLogOut />Logout
             </Link>
 
-            <button onClick={()=>setOpenEdit(true)}><LiaEdit />Edit Profile</button>
-            <ModelProfile 
-            // name={name}
-            // setName={setName}
-            // userName={userName}
-            // setUserName={setUserName}
-            // countryName={countryName}
+            <button onClick={()=>setOpenEdit(true)}><LiaEdit />Edit MedInfo</button>
+            <MediInput 
+            name={name}
+            setName={setName}
+            userName={userName}
+            setUserName={setUserName}
+            countryName={countryName}
             setCountryName={setCountryName}
             jobName={jobName}
             setJobName={setJobName}
@@ -167,4 +167,4 @@ const Info = ({userPostData,
   )
 }
 
-export default Info
+export default MedInfo

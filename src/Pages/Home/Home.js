@@ -37,8 +37,12 @@ import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
+import { useLocation } from 'react-router-dom';
 
 const Home = ({setFriendsProfile}) => {
+  const location = useLocation();
+  const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
+  //console.log(userData);
   
     const [posts,setPosts] = useState(
         [

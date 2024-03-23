@@ -3,15 +3,18 @@ import {FiMail} from "react-icons/fi"
 import {RiLockPasswordLine} from "react-icons/ri"
 import "../RegisterPage/RegisterPage.css"
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { useUser } from '../../context/UserContext';
 
 
 const Login = () => {
     const navigate =useNavigate()
     const [error,setError] =useState({})
     const [submit,setSubmit] =useState(false)
-  
+    const { setUserData } = useUser();
+
     const [data,setData] =useState({
-        email:"",
+        username:"",
         password:"",
     })
 
@@ -21,32 +24,42 @@ const Login = () => {
     }
  
 
-    const handleSignUp=(e)=>{
-        e.preventDefault()
-       setError(validationLogin(data))
-       setSubmit(true)
-    }
+    const handleSignUp = async (e) => {
+        e.preventDefault();
+        setError(validationLogin(data));
+        setSubmit(true);
 
-    useEffect(()=>{
-        if(Object.keys(error).length === 0 && submit){
-            navigate("/home")
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', data);
+            if (response.status === 200 && response.data.auth) {
+                console.log('login successful!');
+               // console.log(response.data.user);      
+                setUserData(response.data.user);
+                localStorage.setItem('userData', JSON.stringify(response.data.user));
+                //const userData = JSON.stringify(response.data.user);
+                //navigate(`/home?userData=${userData}`);
+                navigate(`/home`);
+
+
+            }
+        } catch (error) {
+            console.error('Failed to login:', error.message);
         }
-    },[error])
-
+    };
 
 
    function validationLogin(data){
         const error ={}
 
-        const emailPattern= /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-        const passwordPattern= /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g;
+        // const emailPattern= /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+        const passwordPattern= /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{1,12}$/g;
 
-        if(data.email === ""){
-            error.email ="* Email is Required"
-        }
-        else if(!emailPattern.test(data.email)){
-            error.email="* Email did not match"
-        }
+        // if(data.email === ""){
+        //     error.email ="* Email is Required"
+        // }
+        // else if(!emailPattern.test(data.email)){
+        //     error.email="* Email did not match"
+        // }
 
         
         if(data.password === ""){
@@ -62,20 +75,20 @@ const Login = () => {
 
 
   return (
-    <div className="container">
+    <div className="container_log">
         <div className="container-form">
             <form onSubmit={handleSignUp}>
                 <h1>Login</h1>
                 <p>Please sign in to continue.</p>
                 <div className="inputBox">
                     <FiMail className='mail'/>
-                    <input type="email" 
-                            name="email" 
-                            id="email" 
+                    <input type="text" 
+                            name="username" 
+                            id="username" 
                             onChange={handleChange}
-                            placeholder='Email'/> 
+                            placeholder='Username'/> 
                 </div>
-                {error.email && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.email}</span>}
+                {error.username && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.username}</span>}
 
                 <div className="inputBox">
                     <RiLockPasswordLine className='password'/>

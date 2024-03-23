@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import Left from '../../Components/LeftSide/Left'
-import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
+import ProfileMiddle from '../../Components/MediCation/MedicationBox'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
 import ProfileImg from "../../assets/profile.jpg"
-import { useUser } from '../../context/UserContext';
 
 const Profile = () => {
-  
-  //const { userData } = useUser();
-  const userData = JSON.parse(localStorage.getItem('userData'));
 
   const [following,setFollowing] =useState(3)
   const [search,setSearch] =useState("")
@@ -25,9 +21,9 @@ const Profile = () => {
 
   const [modelDetails,setModelDetails] = useState(
     {
-      ModelName:userData.first_name,
-      ModelUserName:userData.username,
-      ModelCountryName:userData.thana,
+      ModelName:"Nuha",
+      ModelUserName:"@Nuha",
+      ModelCountryName:"Bangladesh",
       ModelJobName:"Web Developer in Google"
     }
   )

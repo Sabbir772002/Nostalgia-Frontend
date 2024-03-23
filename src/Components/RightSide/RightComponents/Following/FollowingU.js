@@ -9,7 +9,7 @@ import FollowingMore from './FollowingMore'
 const FollowingU = ({following,setFollowing}) => {
 
   const [showMore,setShowMore] =useState(false)
-  
+
 
   return (
     <div className="following-comp">

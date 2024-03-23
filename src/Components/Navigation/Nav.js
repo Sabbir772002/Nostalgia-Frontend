@@ -10,7 +10,7 @@ import {TbMessage} from "react-icons/tb"
 
 import Profile from "../../assets/profile.jpg"
 
-const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
+const Nav = ({search,setSearch,showmenu,setShowMenu,profileImg}) => {
 
 
   
