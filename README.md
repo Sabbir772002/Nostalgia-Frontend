@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # About
 
  "FACE GRAM" is a Social media application which has all Basic features of Facebook, Twitter. "FACE GRAM" app is a dynamic web application that leverages the popular JavaScript library, React, to create an engaging and interactive user interface for social networking. Here's a detailed description of the front-end aspects of such an app.In this Application People can create a Post, Like, Share and Comment get a Social Media Kind-of Environment.
@@ -86,3 +87,6 @@
 
 
 
+=======
+# Nostalgia-Frontend
+>>>>>>> 894bc5b14c6dff39179bcebc98cbc84167d4e94c
