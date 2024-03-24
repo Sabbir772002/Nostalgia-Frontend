@@ -1,13 +1,2 @@
 # Nostalgia FrontEnd
 
-
-
-
-
-
-
-
-
-
-
-
