@@ -41,14 +41,16 @@ import { useLocation } from 'react-router-dom';
 
 const Home = ({setFriendsProfile}) => {
   const location = useLocation();
-  const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  //console.log(userData);
+  //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
+  const userData= JSON.parse(localStorage.getItem('userData'));
+
+  console.log(userData);
   
     const [posts,setPosts] = useState(
         [
           {
             id:1,
-            username:"Harry",
+            username:"Nuha",
             profilepicture:DPimg1,
             img:img1,
             datetime:moment("20230131", "YYYYMMDD").fromNow(),
@@ -65,7 +67,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:2,
-            username:"chris dhaniel",
+            username:"Sabbir11",
             profilepicture:DPimg2,
             img:img2,
             datetime:moment("20230605", "YYYYMMDD").fromNow(),
@@ -81,7 +83,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:3,
-            username:"April",
+            username:"Amran",
             profilepicture:DPimg3,
             img:img3,
             datetime:moment("20230813", "YYYYMMDD").fromNow(),
@@ -97,7 +99,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:4,
-            username:"Vijay",
+            username:"opy",
             profilepicture:Profile,
             img:Uimg1,
             datetime:moment("20230310", "YYYYMMDD").fromNow(),
@@ -113,7 +115,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:5,
-            username:"Lara",
+            username:"rifat",
             profilepicture:DPimg4,
             img:img4,
             datetime:moment("20200101", "YYYYMMDD").fromNow(),
@@ -129,7 +131,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:6,
-            username:"Vijay",
+            username:"momo",
             profilepicture:Profile,
             img:Uimg2,
             datetime:moment("20230618", "YYYYMMDD").fromNow(),
@@ -145,7 +147,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:7,
-            username:"Kenny",
+            username:"shahin",
             profilepicture:DPimg5,
             img:img5,
             datetime:moment("20230505", "YYYYMMDD").fromNow(),
@@ -161,7 +163,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:8,
-            username:"Vijay",
+            username:"arjun",
             profilepicture:Profile,
             img:Uimg3,
             datetime:moment("20230219", "YYYYMMDD").fromNow(),
@@ -178,7 +180,7 @@ const Home = ({setFriendsProfile}) => {
           },
           {
             id:9,
-            username:"Reyana",
+            username:"sabbir",
             profilepicture:DPimg6,
             img:img6,
             datetime:moment("20230404", "YYYYMMDD").fromNow(),
@@ -204,7 +206,7 @@ const Home = ({setFriendsProfile}) => {
         
         
         const id =posts.length ? posts[posts.length -1].id +1 :1
-        const username="Vijay"
+        const username=userData.username
         const profilepicture=Profile
         const datetime=moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
         const img =images ? {img:URL.createObjectURL(images)} : null
