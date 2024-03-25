@@ -4,6 +4,7 @@ import Fimg3 from "../assets/Following/img-3.jpg"
 import Fimg4 from "../assets/Following/img-4.jpg"
 import Fimg5 from "../assets/Following/img-5.jpg"
 
+
 export const FollowimgData =[
     {   
         name:"Mike Tyson",
@@ -16,7 +17,7 @@ export const FollowimgData =[
         img:Fimg2
     },
     { 
-        name:"Brandon",
+        name:"Brandonn",
         username:"@Brandon",
         img:Fimg3
     },
