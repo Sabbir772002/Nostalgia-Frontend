@@ -46,9 +46,16 @@ const Left = ({profileImg,
 
           
       <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
-        <BsPerson className='margin'/>
+        <BsPeople className='margin'/>
         <span>Friends</span>
       </div>
+      
+      <Link to="/findfrined" style={{textDecoration:"none",color:"black"}}>
+      <div id='L-box' onClick={() => setBtnActive("#FFriends")} className={btnActive === "#FFriends" ? "active" : ""}>
+        <BsPerson className='margin'/>
+        <span>Find Friend</span>
+      </div>
+      </Link>
 
       <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
         <BsPeople className='margin'/>

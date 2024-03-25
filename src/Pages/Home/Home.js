@@ -44,7 +44,7 @@ const Home = ({setFriendsProfile}) => {
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
 
-  console.log(userData);
+ // console.log(userData);
   
     const [posts,setPosts] = useState(
         [
