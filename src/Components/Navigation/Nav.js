@@ -10,8 +10,8 @@ import {TbMessage} from "react-icons/tb"
 
 import Profile from "../../assets/profile.jpg"
 
-const Nav = ({search,setSearch,showmenu,setShowMenu,profileImg}) => {
-
+const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
+const userData = JSON.parse(localStorage.getItem('userData'));
 
   
   return (
@@ -50,7 +50,9 @@ const Nav = ({search,setSearch,showmenu,setShowMenu,profileImg}) => {
 
 
        <div className="n-profile" >
-          <Link to="/profile"> 
+          {/* <Link to="/profile">  */}
+           <Link to={`/profile/${userData.username}`}>
+          
             <img src={profileImg ? (profileImg) : Profile} className='n-img' style={{marginBottom:"-7px"}}/>
           </Link>
       </div>
