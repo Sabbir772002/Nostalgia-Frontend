@@ -48,7 +48,28 @@ const SignUp = () => {
             console.error('Failed to register:', error.message);
         }
     };
+    const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
+  const handleEmailVerification = async () => {
+    try {
+      const response = await axios.post('http://your-backend-api-url/send-verification-email', {
+        email: email,
+      });
+      setMessage(response.data.message);
+    } catch (error) {
+      setMessage('Error sending verification email');
+      console.error(error);
+    }
+  };
+
+   
+    // <div>
+    //    <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} /> */}
+    //   <button onClick={handleEmailVerification}>Send Verification Email</button>
+    //   <p>{message}</p>
+    // </div>
+  
     return (
         <div className="container">
             <div className="container-form">
