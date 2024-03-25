@@ -1,158 +1,77 @@
 import React from 'react';
-import {
-  MDBCard,
-  MDBCardBody,
-  MDBCardFooter,
-  MDBCol,
-  MDBIcon,
-  MDBListGroup,
-  MDBListGroupItem, 
-  MDBBadge, 
-  MDBBtn,
-  MDBRow
-} from 'mdb-react-ui-kit';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
-import WorkOutlineRoundedIcon from '@mui/icons-material/WorkOutlineRounded';
-import "./FindF.css"
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Import the image
+import img3 from "../../assets/User-post/img3.jpg";
 
-const FindF = (val) => {
+const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly access userData
+    const userData= JSON.parse(localStorage.getItem('userData'));
 
-
-
-  return (
-    <div className='Find'>
-       <MDBRow>
-      <MDBCol xl={6} className='mb-4'>
-        <MDBCard>
-          <MDBCardBody>
-            <div className='d-flex justify-content-between align-items-center'>
-              <div className='d-flex align-items-center'>
-                <img
-                  src='https://mdbootstrap.com/img/new/avatars/8.jpg'
-                  alt=''
-                  style={{ width: '45px', height: '45px' }}
-                  className='rounded-circle'
-                />
-                <div className='ms-3'>
-                  <p className='fw-bold mb-1'>John Doe</p>
-                  <p className='text-muted mb-0'>john.doe@gmail.com</p>
-                </div>
-              </div>
-              <MDBBadge pill color='success' light>
-                Active
-              </MDBBadge>
+    return (
+        <Card className="text-center card-box" style={{ width: '300px',height: '460px' }}> 
+        <Card.Body className="member-card pt-2 pb-2">
+            <div className="thumb-lg member-thumb mx-auto">
+              <img
+                src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                className="rounded-circle img-thumbnail"
+                alt="profile-image"
+              />
             </div>
-          </MDBCardBody>
-          <MDBCardFooter background='light' border='0' className='p-2 d-flex justify-content-around'>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Message <MDBIcon fas icon='envelope' />
-            </MDBBtn>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Call <MDBIcon fas icon='phone' />
-            </MDBBtn>
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-      <MDBCol xl={6} className='mb-4'>
-        <MDBCard>
-          <MDBCardBody>
-            <div className='d-flex justify-content-between align-items-center'>
-              <div className='d-flex align-items-center'>
-                <img
-                  src='https://mdbootstrap.com/img/new/avatars/6.jpg'
-                  alt=''
-                  style={{ width: '45px', height: '45px' }}
-                  className='rounded-circle'
-                />
-                <div className='ms-3'>
-                  <p className='fw-bold mb-1'>Alex Ray</p>
-                  <p className='text-muted mb-0'>alex.ray@gmail.com</p>
-                </div>
-              </div>
-              <MDBBadge pill color='primary' light>
-                Onboarding
-              </MDBBadge>
+            <div>
+              <h4>{fnd.first_name} {fnd.last_name}</h4>
+              <p className="text-muted">
+                @{fnd.username} <span> </span
+                ><span><a href="#" className="text-pink"></a></span>
+              </p>
             </div>
-          </MDBCardBody>
-          <MDBCardFooter background='light' border='0' className='p-2 d-flex justify-content-around'>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Message <MDBIcon fas icon='envelope' />
-            </MDBBtn>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Call <MDBIcon fas icon='phone' />
-            </MDBBtn>
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-      <MDBCol xl={6} className='mb-4'>
-        <MDBCard>
-          <MDBCardBody>
-            <div className='d-flex justify-content-between align-items-center'>
-              <div className='d-flex align-items-center'>
-                <img
-                  src='https://mdbootstrap.com/img/new/avatars/7.jpg'
-                  alt=''
-                  style={{ width: '45px', height: '45px' }}
-                  className='rounded-circle'
-                />
-                <div className='ms-3'>
-                  <p className='fw-bold mb-1'>Kate Hunington</p>
-                  <p className='text-muted mb-0'>kate.hunington@gmail.com</p>
-                </div>
-              </div>
-              <MDBBadge pill color='warning' light>
-                Awaiting
-              </MDBBadge>
+            <ul className="social-links list-inline">
+              <li className="list-inline-item">
+                <a
+                  title=""
+                  data-placement="top"
+                  data-toggle="tooltip"
+                  className="tooltips"
+                  href=""
+                  data-original-title="Facebook"
+                  ><i className="fa fa-facebook"></i
+                ></a>
+              </li>
+              <li className="list-inline-item">
+                <a
+                  title=""
+                  data-placement="top"
+                  data-toggle="tooltip"
+                  className="tooltips"
+                  href=""
+                  data-original-title="Twitter"
+                  ><i className="fa fa-twitter"></i
+                ></a>
+              </li>
+              <li className="list-inline-item">
+                <a
+                  title=""
+                  data-placement="top"
+                  data-toggle="tooltip"
+                  className="tooltips"
+                  href=""
+                  data-original-title="Skype"
+                  ><i className="fa fa-skype"></i
+                ></a>
+              </li>
+            </ul>
+            <div>
+              <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
+                Request Now
+              </Button>
+              <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
+                View Profile
+              </Button>
             </div>
-          </MDBCardBody>
-          <MDBCardFooter background='light' border='0' className='p-2 d-flex justify-content-around'>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Message <MDBIcon fas icon='envelope' />
-            </MDBBtn>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Call <MDBIcon fas icon='phone' />
-            </MDBBtn>
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-      <MDBCol xl={6} className='mb-4'>
-        <MDBCard>
-          <MDBCardBody>
-            <div className='d-flex justify-content-between align-items-center'>
-              <div className='d-flex align-items-center'>
-                <img
-                  src='https://mdbootstrap.com/img/new/avatars/3.jpg'
-                  alt=''
-                  style={{ width: '45px', height: '45px' }}
-                  className='rounded-circle'
-                />
-                <div className='ms-3'>
-                  <p className='fw-bold mb-1'>Michael Bale</p>
-                  <p className='text-muted mb-0'>michael.bale@gmail.com</p>
-                </div>
-              </div>
-              <MDBBadge pill color='danger' light>
-                Removed
-              </MDBBadge>
-            </div>
-          </MDBCardBody>
-          <MDBCardFooter background='light' border='0' className='p-2 d-flex justify-content-around'>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Message <MDBIcon fas icon='envelope' />
-            </MDBBtn>
-            <MDBBtn color='link' rippleColor='primary' className='text-reset m-0'>
-              Call <MDBIcon fas icon='phone' />
-            </MDBBtn>
-          </MDBCardFooter>
-        </MDBCard>
-      </MDBCol>
-    </MDBRow>
-  
-    </div>
-    
-  )
-}
+          </Card.Body>
+        </Card>
+      );
+};
 
-export default FindF
+export default FindF;

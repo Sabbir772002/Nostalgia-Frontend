@@ -31,9 +31,8 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
 import "../FindFriend/FindFriend.css"
-
+import Fndbox from "./Fndlist"
 import Left from "../../Components/LeftSide/Left"
-import FindF from "../../Components/FindF/FindF"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
@@ -53,6 +52,44 @@ const FindFriend = ({setFriendsProfile}) => {
 
    
    
+
+  const [fndlist,setfndlist] =useState([
+    {
+        id:1,
+        profilePic:img1,
+        first_name:"Nusrat",
+        username:"Nusrat",
+        last_name:"Jahan",
+    },
+    {
+        id:2,
+        profilePic:img2,
+        first_name:"Sabbir",
+        username:"Sabbir",
+        last_name:"Khan",
+    },
+    {
+      id:3,
+      profilePic:img3,
+      first_name:"Irin",
+      username:"iopy",
+      last_name:"Opy",
+  }, {
+    id:4,
+    profilePic:img1,
+    first_name:"Amran",
+    username:"Amran",
+    last_name:"Hossain",
+}, {
+  id:5,
+  profilePic:img2,
+  first_name:"Sworna",
+  username:"Sworna",
+  last_name:"Apu",
+}
+])
+
+
    const [search,setSearch] =useState("")
 
     
@@ -73,8 +110,10 @@ const FindFriend = ({setFriendsProfile}) => {
     <div className="home">
    
         <Left />
-        <FindF/>
-        
+        <Fndbox
+        fndlist={fndlist}
+        setfndlist={setfndlist}
+        />   
         <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
