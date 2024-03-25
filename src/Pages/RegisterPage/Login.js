@@ -31,7 +31,7 @@ const Login = () => {
 
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/login', data);
-            if (response.status === 200 && response.data.auth) {
+            if (response.status === 200) {
                 console.log('login successful!');
                // console.log(response.data.user);      
                 setUserData(response.data.user);
@@ -41,6 +41,8 @@ const Login = () => {
                 navigate(`/home`);
 
 
+            }else{
+                console.log("guru");
             }
         } catch (error) {
             console.error('Failed to login:', error.message);
