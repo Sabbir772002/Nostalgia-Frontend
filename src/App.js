@@ -7,6 +7,7 @@ import Notification from './Pages/Notification/Notification';
 import Login from './Pages/RegisterPage/Login';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
+import FindFriend from './Pages/FindFriend/FindFriend';
 import { UserProvider } from './context/UserContext';
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/medication' element={<Medi />} />
+            <Route path='/findfrined' element={<FindFriend />} />
           </Routes>
         </div>
       </UserProvider>
