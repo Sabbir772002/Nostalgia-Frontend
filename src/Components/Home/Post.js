@@ -126,7 +126,7 @@ const handleDelete=(id)=>{
   return (
     <div className='post'>
       <div className='post-header'>
-        <Link to="/FriendsId" style={{textDecoration:"none"}}>
+        <Link to={`/profile/${post.username}`} style={{textDecoration:"none"}}>
         <div className='post-user' onClick={()=>handleFriendsId(post.id)} style={{cursor:"pointer"}}>
             <img src={post.profilepicture} className='p-img' alt="" />
             <h2>{post.username}</h2>

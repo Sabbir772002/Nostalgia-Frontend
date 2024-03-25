@@ -19,6 +19,8 @@ const App = () => {
           <Routes>
             <Route path='/home' element={<Home setFriendsProfile={setFriendsProfile} />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/profile/:username' element={<Profile />} />
+            {/* <Route path='/friendsId/:id' element={<FriendsId friendProfile={friendProfile} />} /> */}
             <Route path='/friendsId' element={<FriendsId friendProfile={friendProfile} />} />
             <Route path='/notification' element={<Notification />} />
             <Route path='/' element={<Login />} />

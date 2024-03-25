@@ -2,9 +2,6 @@ import Info from './ProfileComponents/InfoProfile/Info'
 import UserHome from '../UserHome/UserHome'
 
 import Profile from "../../assets/profile.jpg"
-import img1 from "../../assets/User-post/img1.jpg"
-import img2 from "../../assets/User-post/img2.jpg"
-import img3 from "../../assets/User-post/img3.jpg"
 import { useEffect, useState } from 'react'
 import "../Profile/ProfileMiddle.css"
 
@@ -22,42 +19,10 @@ const ProfileMiddle = ({following,
                         userName,
                         setUserName,
                         modelDetails,
-                        setModelDetails}) => {
+                        setModelDetails,
+                        userPostData,
+                        setUserPostData}) => {
 
-  const [userPostData ,setUserPostData] =useState(
-    [
-      {
-        id:1,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img1,
-        datetime:moment("20230401", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 22,
-        comment:12
-    },
-    {
-        id:2,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img2,
-        datetime:moment("20230525", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 84,
-        comment:30
-    },
-    {
-        id:3,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img3,
-        datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 340,
-        comment:76
-    }
-    ]
-  )
   const [body,setBody] =useState("")
   const [importFile,setImportFile] =useState("")
   
