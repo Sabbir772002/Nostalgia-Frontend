@@ -44,11 +44,12 @@ const Left = ({profileImg,
         <span>Trending</span>
       </div>
 
-          
+         
       <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Friends</span>
       </div>
+      
       
       <Link to="/findfrined" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#FFriends")} className={btnActive === "#FFriends" ? "active" : ""}>
