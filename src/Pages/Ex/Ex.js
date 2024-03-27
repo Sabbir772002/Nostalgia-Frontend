@@ -45,6 +45,14 @@ const ComparePage = () => {
       </div>
     </div>
   );
+
+
+
+
+
+
+
+
 };
 
 export default ComparePage;

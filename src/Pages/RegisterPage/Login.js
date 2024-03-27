@@ -28,9 +28,10 @@ const Login = () => {
         e.preventDefault();
         setError(validationLogin(data));
         setSubmit(true);
+        //why u dindt work
 
         try {
-            const response = await axios.post('p', data);
+            const response = await axios.post('http://localhost:8000/login', data);
             if (response.status === 200) {
                 console.log('login successful!');
                // console.log(response.data.user);      
