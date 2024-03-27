@@ -31,7 +31,7 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
 import "../Friend/Friend.css"
-import Fndbox from "./Fndlist"
+import Fndbox from "./BuddyList"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
