@@ -3,6 +3,7 @@ import Left from '../../Components/LeftSide/Left'
 import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
+import EditPro from '../../Components/EditPro/EditPro'
 import "../Profile/Profile.css"
 import ProfileImg from "../../assets/profile.jpg"
 import { useUser } from '../../context/UserContext';
@@ -12,8 +13,9 @@ import img3 from "../../assets/User-post/img3.jpg"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import SearchIcon from '@mui/icons-material/Search';
 
-const Profile = () => {
+const EditProfile = () => {
   const { username } = useParams();
   console.log(username);
   const [userData, setUserData] = useState([]);
@@ -96,7 +98,7 @@ const Profile = () => {
 
     fetchUserData();
   }, [username]);
-
+   console.log(userData);
   // const [modelDetails,setModelDetails] = useState(
   //   {
   //     ModelName:user.first_name,
@@ -105,6 +107,9 @@ const Profile = () => {
   //     ModelJobName:"Web Developer in Google"
   //   }
   // )
+  
+  console.log("bro");
+  console.log(userPostData);
 
   return (
     <div className='interface'>
@@ -124,22 +129,7 @@ const Profile = () => {
         
         />
 
-        <ProfileMiddle 
-        following={following}
-        search={search}
-        images={images}
-        setImages={setImages}
-        name={name}
-        setName={setName}
-        userName={userName}
-        setUserName={setUserName}
-        profileImg={profileImg}
-        setProfileImg={setProfileImg}
-        modelDetails={modelDetails}
-        setModelDetails={setModelDetails}
-        userPostData={userPostData}
-        setUserPostData={setUserPostData}
-        />
+        <EditPro/>
         
         <Right 
         showMenu={showMenu}
@@ -152,4 +142,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default EditProfile

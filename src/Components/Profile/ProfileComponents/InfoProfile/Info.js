@@ -80,7 +80,7 @@ const Info = ({userPostData,
     <div className='info'>
         <div className="info-cover">
             <img src={coverImg} alt="" />
-            <img src={profileImg} alt="" />
+            <img src={modelDetails.image} alt="profile" />
             <div className='coverDiv'><IoCameraOutline className='coverSvg' onClick={()=>importCover.current.click()}/></div>
             <div className='profileDiv'><IoCameraOutline className='profileSvg' onClick={()=>importProfile.current.click()}/></div>
         </div>
