@@ -42,6 +42,7 @@ const EditProfile = () => {
       console.error('Error fetching user data:', error);
     }
   };
+  
 
   const handleimg = (e) => {
     setimg(URL.createObjectURL(e.target.files[0]));
@@ -108,26 +109,26 @@ const EditProfile = () => {
                                     </div>
                                     <div className="row gx-3 mb-3">
                                         <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="inputOrgName">Organization name</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="inputOrgName" type="text" placeholder="Enter your organization name" value="Start Bootstrap" />
+                                            <label className="small mb-1" htmlFor="gender">Gender</label>
+                                            <input className="form-control" onChange={handleInputChange}  id="gender" type="text" name="gender" placeholder="Enter your organization name" value={user.gender} />
                                         </div>
                                         <div className="col-md-6">
                                             <label className="small mb-1" htmlFor="address">Address</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="address" type="text" placeholder="Enter your location" value="San Francisco, CA" />
+                                            <input className="form-control" onChange={handleInputChange}  id="address" name="address" type="text" placeholder="Enter your location" value={user.address} />
                                         </div>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="small mb-1" htmlFor="inputEmailAddress">Email address</label>
-                                        <input className="form-control" onChange={handleInputChange}  id="inputEmailAddress" type="email" placeholder="Enter your email address" value="name@example.com" />
+                                        <label className="small mb-1" htmlFor="inputEmailAddress">Email</label>
+                                        <input className="form-control" onChange={handleInputChange}  id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value={user.email} />
                                     </div>
                                     <div className="row gx-3 mb-3">
                                         <div className="col-md-6">
                                             <label className="small mb-1" htmlFor="inputPhone">Phone number</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="inputPhone" type="tel" placeholder="Enter your phone number" value="555-123-4567" />
+                                            <input className="form-control" onChange={handleInputChange}  id="inputPhone" type="tel" name="phone" placeholder="Enter your phone number" value={user.phone} />
                                         </div>
                                         <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="inputBirthday">Birthday</label>
-                                            <input className="form-control" onChange={handleInputChange}   id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988" />
+                                            <label className="small mb-1" htmlFor="dob">DOB</label>
+                                            <input className="form-control" onChange={handleInputChange}   id="inputDOB" type="text" name="dob" placeholder="Enter your birthday" value={user.dob} />
                                         </div>
                                     </div>
                                     <button className="btn btn-primary" type="button" onClick={() => handleSubmit('Save changes')}>Save changes</button>
