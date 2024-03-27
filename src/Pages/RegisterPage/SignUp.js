@@ -39,7 +39,7 @@ const SignUp = () => {
         setSubmit(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/sign', data);
+            const response = await axios.post('http://127.0.0.1:8000/sign', data);
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/home");

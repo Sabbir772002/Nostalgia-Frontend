@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
+import EditProfile from './Pages/Profile/EditProfile';
 import FriendsId from './Pages/FriendsId/FriendsId';
 import Notification from './Pages/Notification/Notification';
 import Login from './Pages/RegisterPage/Login';
+import ImgBox from './Pages/Ex/Ex';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
 import FindFriend from './Pages/FindFriend/FindFriend';
+import Ex from './Pages/Ex/Ex';
 import { UserProvider } from './context/UserContext';
 
 const App = () => {
@@ -20,6 +23,7 @@ const App = () => {
           <Routes>
             <Route path='/home' element={<Home setFriendsProfile={setFriendsProfile} />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/profile/edit/:username' element={<EditProfile />} />
             <Route path='/profile/:username' element={<Profile />} />
             {/* <Route path='/friendsId/:id' element={<FriendsId friendProfile={friendProfile} />} /> */}
             <Route path='/friendsId' element={<FriendsId friendProfile={friendProfile} />} />
@@ -28,6 +32,8 @@ const App = () => {
             <Route path='/signup' element={<SignUp />} />
             <Route path='/medication' element={<Medi />} />
             <Route path='/findfrined' element={<FindFriend />} />
+            <Route path='/image' element={<ImgBox />} />
+            <Route path='/ex' element={<Ex />} />
           </Routes>
         </div>
       </UserProvider>

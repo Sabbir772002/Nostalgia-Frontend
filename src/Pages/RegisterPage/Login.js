@@ -30,7 +30,7 @@ const Login = () => {
         setSubmit(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/login', data);
+            const response = await axios.post('p', data);
             if (response.status === 200) {
                 console.log('login successful!');
                // console.log(response.data.user);      
