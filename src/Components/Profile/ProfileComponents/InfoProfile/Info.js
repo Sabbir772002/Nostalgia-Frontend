@@ -29,7 +29,12 @@ const Info = ({userPostData,
 
   const importProfile=useRef()
   const importCover =useRef()
-
+  const logoutUser = () => {
+    // Remove 'userData' from localStorage or perform logout actions
+    localStorage.removeItem('userData');
+    // Add other logout logic here
+  };
+  
   
   const handleFile1=(e)=>{
     if(e.target.files && e.target.files[0]){
@@ -106,7 +111,8 @@ const Info = ({userPostData,
             <h1>{modelDetails.ModelName}</h1>
             <p>{modelDetails.ModelUserName}</p>
 
-            <Link to="/" className='logout'>
+            <Link to="/" className='logout'onClick={logoutUser}>
+
               <BiLogOut />Logout
             </Link>
 

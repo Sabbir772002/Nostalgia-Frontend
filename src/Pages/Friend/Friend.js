@@ -30,7 +30,7 @@ import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
-import "../FindFriend/FindFriend.css"
+import "../Friend/Friend.css"
 import Fndbox from "./Fndlist"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
@@ -39,7 +39,7 @@ import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const FindFriend = ({setFriendsProfile}) => {
+const Friend = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
@@ -126,4 +126,4 @@ const FindFriend = ({setFriendsProfile}) => {
   )
 }
 
-export default  FindFriend 
+export default  Friend 
