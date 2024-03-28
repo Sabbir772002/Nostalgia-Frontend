@@ -1,11 +1,13 @@
 {
-  "homepage": "https://iamvijay98.github.io/Social-Media-App-Frontend",
-  "name": "social-media-new",
+  "homepage": "http://127.0.0.1:3000/",
+  "name": "Nostalgia",
   "version": "0.1.0",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mantine/core": "^6.0.19",
     "@mantine/hooks": "^6.0.19",
     "@mui/icons-material": "^5.14.1",

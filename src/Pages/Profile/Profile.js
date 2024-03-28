@@ -27,12 +27,12 @@ const Profile = () => {
   const [profileImg, setProfileImg] = useState(ProfileImg);
   const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
-  const [modelDetails, setModelDetails] = useState(
+  const [userD, setUserD] = useState(
     {
-      ModelName: "",
-      ModelUserName: "",
-      ModelCountryName: "",
-      ModelJobName: ""
+      name: "",
+      username: "",
+      email: "",
+      image:""
     }
   );
 
@@ -45,11 +45,10 @@ const Profile = () => {
           console.log(response.data.p_image);
           //setUserData(data);
           //console.log(userData.p_image);
-          setModelDetails({
-            ModelName: response.data.first_name,
-            ModelUserName: response.data.username,
-            ModelCountryName: response.data.thana,
-            ModelJobName: "Web Developer in Google",
+          setUserD({
+            name: response.data.first_name,
+            username: response.data.username,
+            email: response.data.thana,
             image: `http://localhost:8000/${response.data.p_image}`
           });
           const initialUserPostData = [
@@ -120,7 +119,7 @@ const Profile = () => {
         following={following}
         setFollowing={setFollowing}
         profileImg={profileImg}
-        modelDetails={modelDetails}
+        userD={userD}
         
         />
 
@@ -135,8 +134,8 @@ const Profile = () => {
         setUserName={setUserName}
         profileImg={profileImg}
         setProfileImg={setProfileImg}
-        modelDetails={modelDetails}
-        setModelDetails={setModelDetails}
+        userD={userD}
+        setUserD={setUserD}
         userPostData={userPostData}
         setUserPostData={setUserPostData}
         />

@@ -37,7 +37,6 @@ const EditProfile = () => {
       ModelJobName: ""
     }
   );
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {

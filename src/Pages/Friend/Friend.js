@@ -1,4 +1,5 @@
-import {  useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
 import Profile from "../../assets/profile.jpg"
 import img1 from "../../assets/Post Images/img1.jpg"
 import img2 from "../../assets/Post Images/img2.jpg"
@@ -46,49 +47,29 @@ const Friend = () => {
 
  // console.log(userData);
   
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
+      const [body,setBody] =useState("");
+      const [importFile,setImportFile] =useState("");
       
 
-   
-   
+     const [fndlist, setfndlist] = useState([]);
 
-  const [fndlist,setfndlist] =useState([
-    {
-        id:1,
-        profilePic:img1,
-        first_name:"Nusrat",
-        username:"Nusrat",
-        last_name:"Jahan",
-    },
-    {
-        id:2,
-        profilePic:img2,
-        first_name:"Sabbir",
-        username:"Sabbir",
-        last_name:"Khan",
-    },
-    {
-      id:3,
-      profilePic:img3,
-      first_name:"Irin",
-      username:"iopy",
-      last_name:"Opy",
-  }, {
-    id:4,
-    profilePic:img1,
-    first_name:"Amran",
-    username:"Amran",
-    last_name:"Hossain",
-}, {
-  id:5,
-  profilePic:img2,
-  first_name:"Sworna",
-  username:"Sworna",
-  last_name:"Apu",
-}
-])
+      useEffect(() => {
+          // Fetch data from Django backend
+          axios.get('http://localhost:8000/friends')
+              .then(response => {
+                 // console.log("mere fnd");
+                 // console.log(response.data.users);
+                  setfndlist(response.data.users);
+                 // console.log(fndlist);
+              })
+              .catch(error => {
+                  console.error('Error fetching data:', error);
+              });
+      }, [fndlist]);
 
+  
+
+      
 
    const [search,setSearch] =useState("")
 

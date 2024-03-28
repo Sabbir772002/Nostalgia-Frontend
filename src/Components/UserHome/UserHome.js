@@ -2,11 +2,11 @@ import React from 'react'
 import FeedUser from './FeedUser'
 
 
-const UserHome = ({setUserPostData,userPostData,profileImg,modelDetails,images}) => {
+const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
   return (
     <div>
         {userPostData.length ? <FeedUser 
-                               modelDetails ={modelDetails}
+                               userD ={userD}
                                profileImg={profileImg}
                                posts={userPostData}
                                setPosts={setUserPostData}

@@ -13,7 +13,7 @@ const ProfileInputPost = ({handleSubmit,
                             images,
                             setImages,
                             profileImg,
-                            modelDetails
+                            userD
                         }) => {
   return (
     <div className="i-form">
@@ -24,7 +24,7 @@ const ProfileInputPost = ({handleSubmit,
                 <input 
                 type="text" 
                 id="i-input" 
-                placeholder={`What's in your mind ${modelDetails.ModelName}?`}
+                placeholder={`What's in your mind ${userD.name}?`}
                 required
                 value={body}
                 onChange={(e)=>setBody(e.target.value)}
