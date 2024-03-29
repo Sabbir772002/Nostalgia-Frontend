@@ -1,259 +1,115 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './MedicationPage.css'; // Custom CSS for styling
-import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
+import './Ex.css';
 
-const MedicationPage = () => {
-  // State variables for medication schedule, notes, and new medication
-  const [medicationSchedule, setMedicationSchedule] = useState([
-    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication E', dosage: '25mg', times: ['Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
+const Messenger = () => {
+  const [messages, setMessages] = useState([
+    { id: 1, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:00 AM' },
+    { id: 2, sender: 'Nusrat', type:"text", text: 'Hi there!', timestamp: '10:05 AM' },
+    { id: 3, sender: 'Opy',  type:"text", text: 'How are you?', timestamp: '10:10 AM' },
+    { id: 4, sender: 'Amran',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:15 AM' },
+    { id: 5, sender: 'Arjun',  type:"text", text: 'What are you up to?', timestamp: '10:20 AM' },
+    { id: 6, sender: 'Arjun',  type:"text", text: 'Just saying hi.', timestamp: '10:25 AM' },
+    { id: 7, sender: 'Amran',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:30 AM' },
+    { id: 8, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:35 AM' },
+    { id: 9, sender: 'Nusrat', type:"text", text: 'How have you been?', timestamp: '10:40 AM' },
+    { id: 10, sender: 'Nusrat', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:45 AM' },
+    { id: 11, sender: 'Sabbir', type:"text", text: 'Not much, just relaxing.', timestamp: '10:50 AM' },
+    { id: 12, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:55 AM' },
+    { id: 13, sender: 'Sabbir',  type:"text", text: 'I need a vacation!', timestamp: '11:00 AM' },
+    { id: 14, sender: 'Opy',  type:"text", text: 'Me too, let\'s plan something.', timestamp: '11:05 AM' },
+    { id: 15, sender: 'Opy',  type:"text", text: 'Count me in!', timestamp: '11:10 AM' },
+    { id: 16, sender: 'Arjun',  type:"text", text: 'Sounds like a plan.', timestamp: '11:15 AM' },
+    { id: 17, sender: 'Arjun',  type:"text", text: 'Great, let\'s discuss more later.', timestamp: '11:20 AM' },
+    { id: 18, sender: 'Nusrat',  type:"text", text: 'Absolutely!', timestamp: '11:25 AM' },
+    { id: 19, sender: 'Nusrat', type:"text", text: 'Looking forward to it.', timestamp: '11:30 AM' },
+    { id: 20, sender: 'Opy',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '11:35 AM' },
   ]);
-  const [notes, setNotes] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [alertTime, setAlertTime] = useState('');
 
-  // State variable for new medication input
-  const [newMedication, setNewMedication] = useState
-  ({
-    name: '',
-    dosage: '',
-    times: [],
-    note: ''
-  });
+  const [newMessage, setNewMessage] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const messageBoxRef = useRef(null);
 
-  // Function to handle adding medication
-  const handleAddMedication = () => {
-    // Update medication schedule with new medication
-    setMedicationSchedule([...medicationSchedule, newMedication]);
-    // Add new medication to notes
-    setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
-    // Clear the new medication form fields
-    setNewMedication({
-      name: '',
-      dosage: '',
-      times: [],
-      note: ''
-    });
-  };
+  useEffect(() => {
+    scrollToTop();
+  }, [messages]);
 
-  // Function to display system notification
-  const showNotification = (message) => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(message);
-        }
-      });
+  const scrollToTop = () => {
+    if (messageBoxRef.current) {
+      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
     }
   };
 
-  // Function to display alert at specific time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = new Date().getHours();
-      if (currentTime === parseInt(alertTime)) {
-        showNotification('Time to take medication!');
-      }
-    }, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, [alertTime]);
-
-  // Function to sort medication by current time frame (Morning, Noon, Night)
-  const sortMedicationByTime = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return 'Morning';
-    if (currentTime >= 12 && currentTime < 18) return 'Noon';
-    return 'Night';
+  const handleSendMessage = () => {
+    if (!selectedUser || newMessage.trim() === '') return;
+    const timestampOptions = { hour: 'numeric', minute: 'numeric' };
+    const timestamp = new Date().toLocaleTimeString([], timestampOptions);
+  
+    const newMsg = {
+      id: messages.length + 1,
+      sender: 'Sabbir', // Assuming user1 is the current user
+      text: newMessage.trim(),
+      type: "text",
+      timestamp: timestamp // Add timestamp
+    };
+    setMessages([...messages, newMsg]);
+    setNewMessage('');
   };
 
-  // Function to sort medication by next time frame
-  const sortMedicationByNextTimeFrame = () => {
-    const currentTimeFrame = sortMedicationByTime();
-    const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
-    const nextMedications = medicationSchedule.filter(med => !med.times.includes(currentTimeFrame));
-    return [...currentMedications, ...nextMedications];
-  };
-
-  // Function to handle setting alert time
-  const handleSetAlertTime = () => {
-    setShowModal(false);
-    const [hours, minutes] = alertTime.split(':').map(time => parseInt(time));
-    const targetTime = new Date();
-    targetTime.setHours(targetTime.getHours() + hours);
-    targetTime.setMinutes(targetTime.getMinutes() + minutes);
-
-    // Show notification after 1 minute
-    setTimeout(() => {
-      showNotification('Time to take medication!');
-      // Play notification sound
-      const notificationSound = new Audio(notificationSoundFile);
-      notificationSound.play();
-      const interval = setInterval(() => {
-        notificationSound.play();
-      }, 1000); // Play every second
-    
-      // Stop playing sound after 1 minute
-      setTimeout(() => {
-        clearInterval(interval);
-        notificationSound.pause(); // Pause the sound
-      }, 60000); // Stop after 1 minute // Check every minute
-    }, 60000);
-
-    // Set up intervals for each hour/minute combination
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      if (currentTime.getHours() === targetTime.getHours() && currentTime.getMinutes() === targetTime.getMinutes()) {
-        showNotification('Time to take medication!');
-        // Play notification sound
-        const notificationSound = new Audio(notificationSoundFile);
-        notificationSound.play();
-        const interval = setInterval(() => {
-          notificationSound.play();
-        }, 1000); // Play every second
-      
-        // Stop playing sound after 1 minute
-        setTimeout(() => {
-          clearInterval(interval);
-          notificationSound.pause(); // Pause the sound
-        }, 60000); // Stop after 1 minute
-      }
-    }, 60000); // Check every minute
-
-    // Clear the interval after the specified time
-    setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
-  };
+  const filteredMessages = selectedUser ? messages.filter(msg => msg.sender === selectedUser || msg.sender === 'Sabbir') : messages;
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        {/* Set Alert Time Modal */}
-        <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Set Alert Time</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Select Time (24-hour format)</label>
-                  <input
-                    type="time"
-                    className="form-control"
-                    value={alertTime}
-                    onChange={(e) => setAlertTime(e.target.value)}
-                  />
+    <div className="container-fluid">
+      <div className="row" style={{ height: '100vh' }}>
+        <div className="col-3 border-right">
+          <h2>User List</h2>
+          <ul className="list-group">
+            <li className="list-group-item" onClick={() => setSelectedUser('Nusrat')}>Nusrat</li>
+            <li className="list-group-item" onClick={() => setSelectedUser('Arjun')}>Arjun</li>
+            <li className="list-group-item" onClick={() => setSelectedUser('Amran')}>Amran</li>
+            <li className="list-group-item" onClick={() => setSelectedUser('Opy')}>Opy</li>
+            {/* Add more user list items here */}
+          </ul>
+        </div>
+        <div className="col-9">
+        <h2> <img className="rounded" src={`http://localhost:8000/media/d.png`} alt="img" style={{ width: '40px', height: '40px' }}/> {selectedUser}</h2>
+          <hr className="mb-4"/>
+          <div ref={messageBoxRef} className="overflow-auto" style={{ height: '70vh' }}>
+            {filteredMessages.map(msg => (
+              <div key={msg.id} className={`mb-2 ${msg.sender === 'Sabbir' ? 'items-align-right' : 'items-align-left'}`}>
+                <div className={`d-inline-block p-2 rounded ${msg.sender === 'Sabbir' ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>
+                {msg.type === "text" ? (
+      <>
+        <p>{msg.text}</p>
+      </>
+    ) : (
+      <>
+        <img src={msg.text} alt="img" style={{ width: '100px', height: '100px' }} />
+      </>
+    )}
+            <p className="text-muted text-small"><span>{msg.timestamp}</span></p> {/* Display timestamp */}
+
+
                 </div>
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
-
-        {/* Medication Schedule */}
-        <div className="col-md-4">
-          <h4>Medication Schedule</h4>
-          {['Morning', 'Noon', 'Night'].map((timeFrame, index) => (
-            <div key={index}>
-              <h5>{timeFrame}</h5>
-              {sortMedicationByNextTimeFrame().map((med, medIndex) => (
-                med.times.includes(timeFrame) && (
-                  <div className="card mb-3" key={medIndex}>
-                    <img src={med.image} className="card-img-top" alt="Medication" style={{ width: '180px', height: '100px' }} />
-                    <div className="card-body">
-                      <h6 className="card-title">{med.name}</h6>
-                      <p className="card-text">Dosage: {med.dosage}</p>
-                    </div>
-                  </div>
-                )
-              ))}
-            </div>
-          ))}
-        </div>
-
-        {/* Notes */}
-        <div className="col-md-4">
-          <h4>Notes</h4>
-          {notes.map((note, index) => (
-            <div key={index}>
-              <h5>{note.name}</h5>
-              <p>{note.note}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Add Medication */}
-        <div className="col-md-4">
-          <h4>Add Medication</h4>
-          <div className="form-group">
-            <label>Medication Name</label>
+          <div className="input-group">
             <input
               type="text"
               className="form-control"
-              value={newMedication.name}
-              onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+              value={newMessage}
+              onChange={e => setNewMessage(e.target.value)}
+              placeholder="Type your message..."
             />
-          </div>
-          <div className="form-group">
-            <label>Dosage</label>
-            <input
-              type="text"
-              className="form-control"
-              value={newMedication.dosage}
-              onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Times per Day</label>
-            <div>
-              {['Morning', 'Noon', 'Night'].map(time => (
-                <div key={time} className="form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id={time}
-                    value={time}
-                    checked={newMedication.times.includes(time)}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setNewMedication(prevState => {
-                        if (isChecked) {
-                          return { ...prevState, times: [...prevState.times, time] };
-                        } else {
-                          return { ...prevState, times: prevState.times.filter(t => t !== time) };
-                        }
-                      });
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={time}>{time}</label>
-                </div>
-              ))}
+            <div className="input-group-append">
+              <button className="btn btn-primary" onClick={handleSendMessage}>Send</button>
             </div>
           </div>
-          <div className="form-group">
-            <label>Note</label>
-            <input
-              type="text"
-              className="form-control"
-              value={newMedication.note}
-              onChange={(e) => setNewMedication({ ...newMedication, note: e.target.value })}
-            />
-          </div>
-          <button className="btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
         </div>
-      </div>
-      <div className="fixed-bottom m-3">
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
       </div>
     </div>
   );
 };
 
-export default MedicationPage;
+export default Messenger;
