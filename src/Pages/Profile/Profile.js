@@ -1,6 +1,7 @@
 import { useState,useEffect } from 'react'
 import Left from '../../Components/LeftSide/Left'
 import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
+import Overseer from '../../Components/EditPro/Overseer/Overseer'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import "../Profile/Profile.css"

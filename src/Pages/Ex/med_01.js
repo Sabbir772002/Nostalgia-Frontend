@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MedicationPage.css'; // Custom CSS for styling
-import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
 
 const MedicationPage = () => {
   // State variables for medication schedule, notes, and new medication
@@ -14,12 +13,11 @@ const MedicationPage = () => {
     { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
   ]);
   const [notes, setNotes] = useState([]);
-  const [showModal, setShowModal] = useState(false);
   const [alertTime, setAlertTime] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   // State variable for new medication input
-  const [newMedication, setNewMedication] = useState
-  ({
+  const [newMedication, setNewMedication] = useState({
     name: '',
     dosage: '',
     times: [],
@@ -83,47 +81,17 @@ const MedicationPage = () => {
   const handleSetAlertTime = () => {
     setShowModal(false);
     const [hours, minutes] = alertTime.split(':').map(time => parseInt(time));
-    const targetTime = new Date();
-    targetTime.setHours(targetTime.getHours() + hours);
-    targetTime.setMinutes(targetTime.getMinutes() + minutes);
-
-    // Show notification after 1 minute
-    setTimeout(() => {
-      showNotification('Time to take medication!');
-      // Play notification sound
-      const notificationSound = new Audio(notificationSoundFile);
-      notificationSound.play();
-      const interval = setInterval(() => {
-        notificationSound.play();
-      }, 1000); // Play every second
-    
-      // Stop playing sound after 1 minute
-      setTimeout(() => {
-        clearInterval(interval);
-        notificationSound.pause(); // Pause the sound
-      }, 60000); // Stop after 1 minute // Check every minute
-    }, 60000);
-
+    showNotification(`Alert set for ${hours} hours and ${minutes} minutes from now`);
     // Set up intervals for each hour/minute combination
     const interval = setInterval(() => {
       const currentTime = new Date();
-      if (currentTime.getHours() === targetTime.getHours() && currentTime.getMinutes() === targetTime.getMinutes()) {
+      const targetTime = new Date(currentTime);
+      targetTime.setHours(currentTime.getHours() + hours);
+      targetTime.setMinutes(currentTime.getMinutes() + minutes);
+      if (targetTime.getHours() === currentTime.getHours() && targetTime.getMinutes() === currentTime.getMinutes()) {
         showNotification('Time to take medication!');
-        // Play notification sound
-        const notificationSound = new Audio(notificationSoundFile);
-        notificationSound.play();
-        const interval = setInterval(() => {
-          notificationSound.play();
-        }, 1000); // Play every second
-      
-        // Stop playing sound after 1 minute
-        setTimeout(() => {
-          clearInterval(interval);
-          notificationSound.pause(); // Pause the sound
-        }, 60000); // Stop after 1 minute
       }
     }, 60000); // Check every minute
-
     // Clear the interval after the specified time
     setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
   };
@@ -212,30 +180,16 @@ const MedicationPage = () => {
           </div>
           <div className="form-group">
             <label>Times per Day</label>
-            <div>
-              {['Morning', 'Noon', 'Night'].map(time => (
-                <div key={time} className="form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id={time}
-                    value={time}
-                    checked={newMedication.times.includes(time)}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setNewMedication(prevState => {
-                        if (isChecked) {
-                          return { ...prevState, times: [...prevState.times, time] };
-                        } else {
-                          return { ...prevState, times: prevState.times.filter(t => t !== time) };
-                        }
-                      });
-                    }}
-                  />
-                  <label className="form-check-label" htmlFor={time}>{time}</label>
-                </div>
-              ))}
-            </div>
+            <select
+              className="form-control"
+              value={newMedication.times}
+              onChange={(e) => setNewMedication({ ...newMedication, times: Array.from(e.target.selectedOptions, option => option.value) })}
+              multiple
+            >
+              <option value="Morning">Morning</option>
+              <option value="Noon">Noon</option>
+              <option value="Night">Night</option>
+            </select>
           </div>
           <div className="form-group">
             <label>Note</label>
