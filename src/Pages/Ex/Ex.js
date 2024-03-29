@@ -21,15 +21,15 @@ const ComparePage = () => {
         <div className='info'>
         <h1 className="text-center mt-5 mb-4" style={{ height: '100%', width: '100%' }}>Compare Page</h1>
       <div className="row mb-4 m-4">
-        <div className="col-md-6 text-center " style={{ borderRight: '1px solid black'}}>
+        <div className="col-md-6 text-center " style={{ borderRight: '1px solid black', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)'}}>
           <input type="file" accept="image/*" onChange={handleLeftImageUpload} />
-          {leftImage && <img src={leftImage} alt="Left Image" className="img-fluid mt-3" style={{ maxWidth: '100%', height: 'auto' }} />}
+          {leftImage && <img src={leftImage} alt="Left Image" className="img-fluid mt-3" style={{ maxWidth: '70%', height: 'auto', borderRadius: '8px' }} />}
       </div>
       {/* <h1 className="col-md-2 text-center" style={{ borderRight: '1px solid black', borderLeft: '1px solid black' }}/> */}
 
-        <div className="col-md-6  text-center " style={{ borderLeft: '1px solid black' }}>
+        <div className="col-md-6  text-center " style={{ borderLeft: '1px solid black', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
           <input type="file" accept="image/*" onChange={handleRightImageUpload} />
-          {rightImage && <img src={rightImage} alt="Right Image" className="img-fluid mt-3" style={{ maxWidth: '100%', height: 'auto' }} />}
+          {rightImage && <img src={rightImage} alt="Right Image" className="img-fluid mt-3" style={{ maxWidth: '70%', height: 'auto', borderRadius: '8px'}} />}
         </div>
       </div>
       <div className="row justify-content-center mb-4">
@@ -45,13 +45,6 @@ const ComparePage = () => {
       </div>
     </div>
   );
-
-
-
-
-
-
-
 
 };
 
