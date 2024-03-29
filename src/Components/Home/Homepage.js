@@ -3,15 +3,12 @@ import Feedposts from './Feedposts'
 import "../Home/Homepage.css"
 
 
-const Homepage = ({posts,setPosts,setFriendsProfile,images}) => {
+const Homepage = ({posts}) => {
   return (
     <main className='homepage'>
         
         {posts.length ? <Feedposts 
-                        images={images}
                         posts={posts}
-                        setPosts={setPosts}
-                        setFriendsProfile={setFriendsProfile}
                         /> 
         :
         (<p style={{textAlign:"center",marginTop:"40px"}}>

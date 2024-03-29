@@ -64,7 +64,10 @@ const EditProfile = () => {
 
   const handleImageChange = (e) => {
     setimg(URL.createObjectURL(e.target.files[0]));
+    //console.log(e.target.files[0]);
     setUser({ ...user, p_image: e.target.files[0] });
+    console.log(user.p_image);
+   // console.log(user.p_image);
   };
 
    const handleSubmit = async (e) => {
