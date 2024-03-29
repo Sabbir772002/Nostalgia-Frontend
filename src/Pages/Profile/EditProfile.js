@@ -4,6 +4,7 @@ import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import EditPro from '../../Components/EditPro/EditPro'
+import Overseer from '../../Components/EditPro/Overseer/Overseer'
 import "../Profile/Profile.css"
 import ProfileImg from "../../assets/profile.jpg"
 import { useUser } from '../../context/UserContext';
@@ -37,7 +38,6 @@ const EditProfile = () => {
       ModelJobName: ""
     }
   );
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -131,12 +131,7 @@ const EditProfile = () => {
 
         <EditPro/>
         
-        <Right 
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        following={following}
-        setFollowing={setFollowing}
-        />
+       <Overseer/>
       </div>
     </div>
   )

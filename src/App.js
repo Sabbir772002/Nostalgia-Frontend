@@ -9,8 +9,12 @@ import Login from './Pages/RegisterPage/Login';
 import ImgBox from './Pages/Ex/Ex';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
-import FindFriend from './Pages/FindFriend/FindFriend';
+import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
+import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
+import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
+import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
+import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 
 const App = () => {
@@ -31,9 +35,12 @@ const App = () => {
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/medication' element={<Medi />} />
-            <Route path='/findfrined' element={<FindFriend />} />
+            <Route path='/friend' element={<Friend />} />
             <Route path='/image' element={<ImgBox />} />
             <Route path='/ex' element={<Ex />} />
+            <Route path='/forget' element={<Recovered />} />
+            <Route path='/Reset' element={<Reset />} />
+            <Route path='/OTP' element={<OTPInput />} />
           </Routes>
         </div>
       </UserProvider>

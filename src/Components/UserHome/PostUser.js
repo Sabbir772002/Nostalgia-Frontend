@@ -33,12 +33,12 @@ import moment from 'moment';
 
 
 
-const PostUser = ({posts,post,setPosts,profileImg,modelDetails,images}) => {
+const PostUser = ({posts,post,setPosts,profileImg,userD,images}) => {
 
   const [comments,setComments] =useState([
     {
         id:1,
-        profilePic:img1,
+        profilePic:userD.image,
         likes:23,
         username:"Violet",
         time:"3 Hours Ago",
@@ -46,7 +46,7 @@ const PostUser = ({posts,post,setPosts,profileImg,modelDetails,images}) => {
     },
     {
         id:2,
-        profilePic:img2,
+        profilePic:userD.image,
         likes:5,
         username:"Brandon",
         time:"1 Hour Ago",
@@ -54,7 +54,7 @@ const PostUser = ({posts,post,setPosts,profileImg,modelDetails,images}) => {
     },
     {
         id:3,
-        profilePic:img3,
+        profilePic:userD.image,
         likes:50,
         username:"Lilly",
         time:"30 Mins Ago",
@@ -95,8 +95,8 @@ const handleDelete=(id)=>{
      e.preventDefault()
 
     const id=comments.length ? comments[comments.length -1].id +1 : 1
-    const profilePic =profileImg
-    const username=modelDetails.ModelName
+    const profilePic =userD.image
+    const username=userD.name
     const comment =commentInput
     const time= moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
 
@@ -122,7 +122,7 @@ const handleDelete=(id)=>{
       <div className='post-header'>
         <div className='post-user' style={{cursor:"pointer"}}>
             <img src={profileImg} className='p-img' alt="" />
-            <h2>{modelDetails.ModelName}</h2>
+            <h2>{userD.name}</h2>
             <p className='datePara'>{post.datetime}</p>
         </div>
          
@@ -241,7 +241,7 @@ const handleDelete=(id)=>{
         <div className="sticky">
           {comments.map((cmt)=>(
             <Comments 
-            modelDetails={modelDetails}
+            userD={userD}
             className="classComment"
             cmt={cmt}
             key={cmt.id}

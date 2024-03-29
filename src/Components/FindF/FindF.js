@@ -2,8 +2,7 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// Import the image
+import { Link } from 'react-router-dom';
 import img3 from "../../assets/User-post/img3.jpg";
 
 const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly access userData
@@ -14,7 +13,8 @@ const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly a
         <Card.Body className="member-card pt-2 pb-2">
             <div className="thumb-lg member-thumb mx-auto">
               <img
-                src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                src= {`http://localhost:8000/${fnd.pp}`}
+
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
               />
@@ -65,9 +65,12 @@ const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly a
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 Request Now
               </Button>
+              <Link to={`/profile/${fnd.username}`}>
+             
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 View Profile
               </Button>
+              </Link>
             </div>
           </Card.Body>
         </Card>

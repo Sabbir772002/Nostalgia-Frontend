@@ -105,7 +105,9 @@ const Login = () => {
                
 
                 <div className='divBtn'>
+                <Link to="/forget" className="btn">
                     <small className='FG'>Forgot Password?</small>
+                    </Link>
                     <button type='submit' className='loginBtn'>LOGIN</button>
                 </div>
                 

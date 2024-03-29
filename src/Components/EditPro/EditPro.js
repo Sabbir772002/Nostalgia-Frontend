@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams,Link,useNavigate } from 'react-router-dom';
 import "../EditPro/EditPro.css"
 
+const Notification = ({ message }) => {
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  );
+};
+
 const EditProfile = () => {
+  const navigate = useNavigate();
+  const [notification, setNotification] = useState(null);
   const { username } = useParams();
   const [user, setUser] = useState({
     email: '',
@@ -57,16 +67,24 @@ const EditProfile = () => {
     setUser({ ...user, p_image: e.target.files[0] });
   };
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     //e.preventDefault();
     try {
-      console.log(user);
+      //console.log(user);
       const formData = new FormData();
       Object.entries(user).forEach(([key, value]) => {
+        if (key === 'p_image' && !(value instanceof File)) {
+          console.log("No image provided.");
+          return;
+        }
         formData.append(key, value);
       });
+     //setimg(`http://localhost:8000/${user.p_image}`);
       const response = await axios.put(`http://127.0.0.1:8000/owner/${username}`, formData);
-      console.log('User data updated:', response.data);
+      //console.log('User data updated:', response.data);
+      setNotification('Profile updated');
+      navigate(`/profile/${user.username}`);
+
     } catch (error) {
       console.error('Error updating user data:', error);
     }

@@ -1,13 +1,13 @@
 import React from 'react'
 import PostUser from './PostUser'
 
-const FeedUser = ({posts,setPosts,profileImg,modelDetails,images}) => {
+const FeedUser = ({posts,setPosts,profileImg,userD,images}) => {
   return (
     <div className='feedposts'>
         {posts.map((post)=>(
             <PostUser 
             images={images}
-            modelDetails={modelDetails}
+            userD={userD}
             profileImg={profileImg}
             posts={posts}
             post ={post}
