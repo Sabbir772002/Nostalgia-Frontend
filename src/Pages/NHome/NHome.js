@@ -1,5 +1,4 @@
 import {  useState } from 'react'
-import Profile from "../../assets/profile.jpg"
 import img1 from "../../assets/Post Images/img1.jpg"
 import img2 from "../../assets/Post Images/img2.jpg"
 import img3 from "../../assets/Post Images/img3.jpg"
@@ -7,13 +6,6 @@ import img4 from "../../assets/Post Images/img4.jpg"
 import img5 from "../../assets/Post Images/img5.jpg"
 import img6 from "../../assets/Post Images/img6.jpg"
 
-
-import DPimg1 from "../../assets/DP/img1.jpg"
-import DPimg2 from "../../assets/DP/img2.jpg"
-import DPimg3 from "../../assets/DP/img3.jpg"
-import DPimg4 from "../../assets/DP/img4.jpg"
-import DPimg5 from "../../assets/DP/img5.jpg"
-import DPimg6 from "../../assets/DP/img6.jpg"
 
 import cover from "../../assets/Info-Dp/img-3.jpg"
 
@@ -35,16 +27,14 @@ import "../NHome/NHome.css"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
-import Nav from '../../Components/Navigation/Nav'
+import Nav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
 const NHome = ({setFriendsProfile}) => {
-  const location = useLocation();
+  //const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const userData= JSON.parse(localStorage.getItem('userData'));
-
- // console.log(userData);
+ // const userData= JSON.parse(localStorage.getItem('userData'))
   
     const [posts,setPosts] = useState(
         [
@@ -196,44 +186,8 @@ const NHome = ({setFriendsProfile}) => {
            }
         ]
       )
-
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-      
-
-      const handleSubmit =(e)=>{
-        e.preventDefault()
-        
-        
-        const id =posts.length ? posts[posts.length -1].id +1 :1
-        const username=userData.username
-        const profilepicture=Profile
-        const datetime=moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
-        const img =images ? {img:URL.createObjectURL(images)} : null
-        
-        const obj ={id:id,
-                   profilepicture:profilepicture,
-                   username:username,
-                   datetime:datetime,
-                   img:img && (img.img),
-                   body:body,
-                   like:0,
-                   comment:0
-                  }
-
-        
-
-        const insert =[...posts,obj]
-        setPosts(insert)
-        setBody("")
-        setImages(null)
-
-      }
    
-   const [search,setSearch] =useState("")
-
-    
-  const [following,setFollowing] =useState("")
+  const [search,setSearch] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null)
@@ -260,17 +214,13 @@ const NHome = ({setFriendsProfile}) => {
         posts={posts}
         setPosts={setPosts}
         search={search}
-        setFriendsProfile={setFriendsProfile}
         images={images}
-        setImages={setImages}
 
         />
 
         <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        following={following}
-        setFollowing={setFollowing}
         />
     </div>
 
