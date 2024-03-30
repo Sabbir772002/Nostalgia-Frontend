@@ -16,6 +16,7 @@ import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
+import Buddy from './Pages/WalkingBuddy/Buddy';
 
 const App = () => {
   // Define state for friendProfile
@@ -41,6 +42,8 @@ const App = () => {
             <Route path='/forget' element={<Recovered />} />
             <Route path='/Reset' element={<Reset />} />
             <Route path='/OTP' element={<OTPInput />} />
+            <Route path='/OTPP' element={<OTPInput />} />
+            <Route path='/buddy' element={<Buddy />} />
           </Routes>
         </div>
       </UserProvider>

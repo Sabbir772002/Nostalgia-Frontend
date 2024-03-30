@@ -4,7 +4,7 @@ import Homepage from "../Home/Homepage"
 import "../MiddleSide/Middle.css"
 
 
-const Middle = ({posts}) => {
+const Middle = ({posts,fetchPosts}) => {
     
   
     const [searchResults,setSearchResults] =useState("")
@@ -23,10 +23,11 @@ const Middle = ({posts}) => {
     <div className='M-features'>
         <InputPost
         // useEffect={useEffect}
+        fetchPosts={fetchPosts}
         />
-
         <Homepage 
           posts={posts}
+          fetchPosts={fetchPosts}
         />
     </div>
   )

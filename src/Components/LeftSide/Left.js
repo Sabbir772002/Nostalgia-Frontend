@@ -72,20 +72,28 @@ const Left = ({profileImg,
       </div> 
       </Link>
 
+      <Link to="/buddy" style={{textDecoration:"none",color:"black"}}>
+
       <div id='L-box' onClick={() => setBtnActive("#walk")} className={btnActive === "#walk" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Walking Buddy</span>
       </div> 
+      </Link>
+      <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
 
       <div id='L-box' onClick={() => setBtnActive("#Trip")} className={btnActive === "#Trip" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Trip</span>
       </div>
+      </Link>
+      <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
+
       <div id='L-box' onClick={()=>setBtnActive("#settings")} className={btnActive === "#settings" ? "active" : ""}>
         <FiSettings 
         className='margin'/>
         <span>Settings</span>
       </div>
+      </Link>
 
 
     </div>
