@@ -20,22 +20,19 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
     fetchPosts();
   }, []);
 
-  React.useEffect(() => {
-    if (userData && username !== userData.username) {
-      setShowModal(true);
-    }
-  }, [username, userData]);
+  // React.useEffect(() => {
+  //   if (userData && username !== userData.username) {
+  //     setShowModal(true);
+  //   }
+  // }, [username, userData]);
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  // Render the profile edit page if authorized
-
- 
-   if (userData && username !== userData.username) {
-    navigate(userData?`/profile/${userData.username}`:'/login');
-   }
+  //  if (userData && username !== userData.username) {
+  //   navigate(userData?`/profile/edit/${userData.username}`:'/login');
+  //  }
 
   const fetchPosts = () => {
     axios.get(`http://localhost:8000/singleblog`,
@@ -56,19 +53,7 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
    
 
     <div>
-           <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Unauthorized Access</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          You are not authorized to edit this profile.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
         {posts && posts.length ?<FeedUser 
                                userD ={userD}
                                profileImg={profileImg}
