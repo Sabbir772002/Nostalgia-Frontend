@@ -30,12 +30,12 @@ import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
-import "../NHome/NHome.css"
+import "../Home/Home.css"
 
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
-import Nav from '../../Components/Navigation/Nav'
+import NNav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
@@ -44,8 +44,7 @@ const NHome = ({setFriendsProfile}) => {
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
 
- // console.log(userData);
-  
+
     const [posts,setPosts] = useState(
         [
           {
@@ -199,36 +198,6 @@ const NHome = ({setFriendsProfile}) => {
 
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
-      
-
-      const handleSubmit =(e)=>{
-        e.preventDefault()
-        
-        
-        const id =posts.length ? posts[posts.length -1].id +1 :1
-        const username=userData.username
-        const profilepicture=Profile
-        const datetime=moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
-        const img =images ? {img:URL.createObjectURL(images)} : null
-        
-        const obj ={id:id,
-                   profilepicture:profilepicture,
-                   username:username,
-                   datetime:datetime,
-                   img:img && (img.img),
-                   body:body,
-                   like:0,
-                   comment:0
-                  }
-
-        
-
-        const insert =[...posts,obj]
-        setPosts(insert)
-        setBody("")
-        setImages(null)
-
-      }
    
    const [search,setSearch] =useState("")
 
@@ -240,7 +209,7 @@ const NHome = ({setFriendsProfile}) => {
 
   return (
     <div className='interface'>
-        <Nav 
+        <NNav 
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
@@ -251,18 +220,7 @@ const NHome = ({setFriendsProfile}) => {
    
         <Left />
 
-        <Middle 
-        handleSubmit={handleSubmit}
-        body ={body}
-        setBody ={setBody}
-        importFile ={importFile}
-        setImportFile ={setImportFile}
-        posts={posts}
-        setPosts={setPosts}
-        search={search}
-        setFriendsProfile={setFriendsProfile}
-        images={images}
-        setImages={setImages}
+        <Middle posts={posts}
 
         />
 

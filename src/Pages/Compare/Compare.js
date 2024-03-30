@@ -1,54 +1,93 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState,useEffect } from 'react'
+import Left from '../../Components/LeftSide/Left'
+import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
+import Right from '../../Components/RightSide/Right'
+import Nav from '../../Components/Navigation/Nav'
+import EditPro from '../../Components/EditPro/EditPro'
+import Overseer from '../../Components/EditPro/Overseer/Overseer'
+import "./Compare.css"
+import CompareBox from "./CompareBox"
+import { useUser } from '../../context/UserContext';
+import moment from 'moment'
+import { useParams } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
+import SearchIcon from '@mui/icons-material/Search';
 
-const FaceCompareForm = () => {
-  const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
-  const [result, setResult] = useState('');
-
-  const handleImage1Change = (event) => {
-    setImage1(event.target.files[0]);
-  };
-
-  const handleImage2Change = (event) => {
-    setImage2(event.target.files[0]);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append('image', image1);
-    formData.append('image2', image2);
-
-    try {
-      const response = await axios.post('http://your-api-endpoint/compare_images', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setResult(response.data);
-    } catch (error) {
-      console.error('Error:', error);
+const Compare = () => {
+  const { username } = useParams();
+  console.log(username);
+  const [userData, setUserData] = useState([]);
+  const user= JSON.parse(localStorage.getItem('userData'));
+  const [following, setFollowing] = useState(3);
+  const [search, setSearch] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const [images, setImages] = useState(null);
+  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [profileImg, setProfileImg] = useState("");
+  const [data,setData] = useState("");
+  const [userPostData, setUserPostData] = useState([]);
+  const [modelDetails, setModelDetails] = useState(
+    {
+      ModelName: "",
+      ModelUserName: "",
+      ModelCountryName: "",
+      ModelJobName: ""
     }
-  };
+  );
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
+        if (response.status === 200) {
+          setUserData(response.data);
+          console.log(response.data.p_image);
+          //setUserData(data);
+          //console.log(userData.p_image);
+          setModelDetails({
+            ModelName: response.data.first_name,
+            ModelUserName: response.data.username,
+            ModelCountryName: response.data.thana,
+            ModelJobName: "Web Developer in Google",
+            image: `http://localhost:8000/${response.data.p_image}`
+          });
+          
+              // Additional setup based on fetched userData
+            } else {
+              console.error('Failed to fetch user data');
+            }
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+          }
+    };
+
+    fetchUserData();
+  }, [username]);
+   console.log(userData);
+  
+//   console.log("bro");
+//   console.log(userPostData);
 
   return (
-    <div>
-      <h1>Face Comparison</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="image1">Image 1:</label>
-          <input type="file" id="image1" accept="image/*" onChange={handleImage1Change} />
-        </div>
-        <div>
-          <label htmlFor="image2">Image 2:</label>
-          <input type="file" id="image2" accept="image/*" onChange={handleImage2Change} />
-        </div>
-        <button type="submit">Compare Images</button>
-      </form>
-      {result && <p>{result}</p>}
+    <div className='interface'>
+        <Nav
+        search={search}
+        setSearch={setSearch}
+        showMenu={showMenu}
+        setShowMenu={setShowMenu}
+        profileImg={profileImg}
+        />
+      <div className="home">
+      <Left 
+        following={following}
+        setFollowing={setFollowing}
+        profileImg={profileImg}
+        modelDetails={modelDetails}
+        />
+        <CompareBox/>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default FaceCompareForm;
-
+export default Compare;
