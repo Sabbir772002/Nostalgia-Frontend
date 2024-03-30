@@ -15,6 +15,7 @@ import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
 import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import Compare from './Pages/Compare/Compare';
+import Caregiver from './Pages/Caregiver/Caregiver';
 
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
@@ -37,6 +38,7 @@ const App = () => {
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/medication' element={<Medi />} />
+            <Route path='/caregiver' element={<Caregiver />} />
             <Route path='/friend' element={<Friend />} />
             <Route path='/image' element={<ImgBox />} />
             <Route path='/ex' element={<Ex />} />
@@ -49,5 +51,4 @@ const App = () => {
       </UserProvider>
   );
 };
-//sabbir
 export default App;
