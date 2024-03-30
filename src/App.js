@@ -14,6 +14,8 @@ import Ex from './Pages/Ex/Ex';
 import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
 import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
+import Compare from './Pages/Compare/Compare';
+
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 
@@ -41,6 +43,7 @@ const App = () => {
             <Route path='/forget' element={<Recovered />} />
             <Route path='/Reset' element={<Reset />} />
             <Route path='/OTP' element={<OTPInput />} />
+            <Route path='/compare' element={<Compare />} />
           </Routes>
         </div>
       </UserProvider>

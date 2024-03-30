@@ -56,3 +56,73 @@ const ComparePage = () => {
 };
 
 export default ComparePage;
+
+// import React, { useState } from 'react';
+// import axios from 'axios';
+
+// const ComparePage = () => {
+//   const [leftImage, setLeftImage] = useState(null);
+//   const [rightImage, setRightImage] = useState(null);
+//   const [compareResult, setCompareResult] = useState('');
+
+//   const handleLeftImageUpload = (e) => {
+//     setLeftImage(e.target.files[0]);
+//   };
+
+//   const handleRightImageUpload = (e) => {
+//     setRightImage(e.target.files[0]);
+//   };
+
+//   const handleCompare = async () => {
+//     if (!leftImage || !rightImage) {
+//       console.error('Please upload both images');
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append('leftImage', leftImage);
+//     formData.append('rightImage', rightImage);
+
+//     try {
+//       const response = await axios.post('http://127.0.0.1:8000/compare', formData, {
+//         headers: { 'Content-Type': 'multipart/form-data' },
+//       });
+//       setCompareResult(response.data.result);
+//     } catch (error) {
+//       console.error('Error:', error);
+//     }
+//   };
+
+//   return (
+//     <div className='info'>
+//       <h1 className="text-center mt-5 mb-4">Compare Page</h1>
+//       <div className="row mb-4 m-4">
+//         <div className="col-md-6 text-center" style={{ borderRight: '1px solid black' }}>
+//           <input type="file" accept="image/*" onChange={handleLeftImageUpload} />
+//         </div>
+//         <div className="col-md-6 text-center" style={{ borderLeft: '1px solid black' }}>
+//           <input type="file" accept="image/*" onChange={handleRightImageUpload} />
+//         </div>
+//       </div>
+//       <div className="row justify-content-center mb-4">
+//         <div className="col-md-7 text-center">
+//           <button className="btn btn-primary" onClick={handleCompare}>
+//             Compare
+//           </button>
+//         </div>
+//       </div>
+//       {compareResult && (
+//         <div className="row justify-content-center">
+//           <div className="col-md-8">
+//             <div className="result-box">
+//               <h3>Comparison Result</h3>
+//               <p>{compareResult}</p>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default ComparePage;
