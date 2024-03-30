@@ -44,8 +44,7 @@ const Home = ({setFriendsProfile}) => {
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
 
-  console.log(userData);
-  
+
     const [posts,setPosts] = useState(
         [
           {
@@ -199,36 +198,6 @@ const Home = ({setFriendsProfile}) => {
 
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
-      
-
-      const handleSubmit =(e)=>{
-        e.preventDefault()
-        
-        
-        const id =posts.length ? posts[posts.length -1].id +1 :1
-        const username=userData.username
-        const profilepicture=Profile
-        const datetime=moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
-        const img =images ? {img:URL.createObjectURL(images)} : null
-        
-        const obj ={id:id,
-                   profilepicture:profilepicture,
-                   username:username,
-                   datetime:datetime,
-                   img:img && (img.img),
-                   body:body,
-                   like:0,
-                   comment:0
-                  }
-
-        
-
-        const insert =[...posts,obj]
-        setPosts(insert)
-        setBody("")
-        setImages(null)
-
-      }
    
    const [search,setSearch] =useState("")
 
@@ -251,18 +220,7 @@ const Home = ({setFriendsProfile}) => {
    
         <Left />
 
-        <Middle 
-        handleSubmit={handleSubmit}
-        body ={body}
-        setBody ={setBody}
-        importFile ={importFile}
-        setImportFile ={setImportFile}
-        posts={posts}
-        setPosts={setPosts}
-        search={search}
-        setFriendsProfile={setFriendsProfile}
-        images={images}
-        setImages={setImages}
+        <Middle posts={posts}
 
         />
 

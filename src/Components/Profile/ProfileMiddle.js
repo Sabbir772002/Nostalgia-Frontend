@@ -18,8 +18,8 @@ const ProfileMiddle = ({following,
                         setName,
                         userName,
                         setUserName,
-                        modelDetails,
-                        setModelDetails,
+                        userD,
+                        setUserD,
                         userPostData,
                         setUserPostData}) => {
 
@@ -77,8 +77,8 @@ const ProfileMiddle = ({following,
   return (
     <div className='profileMiddle'>
         <Info 
-        modelDetails ={modelDetails}
-        setModelDetails={setModelDetails}
+        userD ={userD}
+        setUserD={setUserD}
         profileImg={profileImg}
         setProfileImg={setProfileImg}
         userPostData={userPostData}
@@ -90,7 +90,7 @@ const ProfileMiddle = ({following,
         />
         
         <ProfileInputPost
-        modelDetails={modelDetails}
+        userD={userD}
         profileImg={profileImg}
         handleSubmit={handleSubmit}
         body ={body}
@@ -102,7 +102,7 @@ const ProfileMiddle = ({following,
         />
         
         <UserHome 
-        modelDetails={modelDetails}
+        userD={userD}
         profileImg={profileImg}
         setUserPostData={setUserPostData}
         userPostData={searchResults}

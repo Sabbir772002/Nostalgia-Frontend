@@ -29,31 +29,41 @@ const Left = ({profileImg,
           <span>Home</span>
         </div>
       </Link>
-    
+
+      <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={()=>setBtnActive("#explore")} className={btnActive === "#explore" ? "active" : ""}>
-        <AiOutlineSearch
-          className='margin'/>
+        <AiOutlineSearch className='margin'/>
          <span>Explore</span>
       </div>
-          
+      </Link>
+
+      <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box'  onClick={()=>setBtnActive("#trending")} className={btnActive === "#trending" ? "active" : ""}>
-       <h1 className='notifi'>
-          <FiTrendingUp 
-           className='margin'/>
-        </h1> 
+          <FiTrendingUp className='margin'/>
         <span>Trending</span>
       </div>
-
-          
+      </Link>
+      <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
-        <BsPerson className='margin'/>
+        <BsPeople className='margin'/>
         <span>Friends</span>
       </div>
+      </Link>
 
+      
+      <Link to="/findfrined" style={{textDecoration:"none",color:"black"}}>
+      <div id='L-box' onClick={() => setBtnActive("#FFriends")} className={btnActive === "#FFriends" ? "active" : ""}>
+        <BsPerson className='margin'/>
+        <span>Find Friend</span>
+      </div>
+     </Link>
+
+     <Link to="/forget" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Groups</span>
       </div>
+      </Link>
 
       <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Medication")} className={btnActive === "#Medication" ? "active" : ""}>

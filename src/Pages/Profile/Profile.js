@@ -1,6 +1,7 @@
 import { useState,useEffect } from 'react'
 import Left from '../../Components/LeftSide/Left'
 import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
+import Overseer from '../../Components/EditPro/Overseer/Overseer'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
@@ -16,7 +17,7 @@ import axios from 'axios'; // Import Axios
 const Profile = () => {
   const { username } = useParams();
   console.log(username);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState([]);
   const user= JSON.parse(localStorage.getItem('userData'));
   const [following, setFollowing] = useState(3);
   const [search, setSearch] = useState("");
@@ -25,37 +26,72 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
   const [profileImg, setProfileImg] = useState(ProfileImg);
-  //const [userPostData, setUserPostData] = useState([]);
-  const [modelDetails, setModelDetails] = useState(
+  const [data,setData] = useState("");
+  const [userPostData, setUserPostData] = useState([]);
+  const [userD, setUserD] = useState(
     {
-      ModelName: "",
-      ModelUserName: "",
-      ModelCountryName: "",
-      ModelJobName: ""
+      name: "",
+      username: "",
+      email: "",
+      image:""
     }
   );
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/profile/${username}`);
+        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
         if (response.status === 200) {
-          const data = response.data;
-          //console.log(data);
-          setUserData(data);
-          setModelDetails({
-            ModelName: data.first_name,
-            ModelUserName: data.username,
-            ModelCountryName: data.thana,
-            ModelJobName: "Web Developer in Google"
+          setUserData(response.data);
+          console.log(response.data.p_image);
+          //setUserData(data);
+          //console.log(userData.p_image);
+          setUserD({
+            name: response.data.first_name,
+            username: response.data.username,
+            email: response.data.thana,
+            image: `http://localhost:8000/${response.data.p_image}`
           });
-          // Additional setup based on fetched userData
-        } else {
-          console.error('Failed to fetch user data');
+          const initialUserPostData = [
+            {
+              id: 1,
+              username: "Vijay",
+              profilepicture: ProfileImg,
+              img: `http://localhost:8000/${response.data.p_image}`,
+              datetime: moment("20230401", "YYYYMMDD").fromNow(),
+              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
+              like: 22,
+              comment: 12
+            },
+         {
+        id:2,
+        username:"Vijay",
+        profilepicture:ProfileImg,
+        img:`http://localhost:8000/${response.data.p_image}`,
+        datetime:moment("20230525", "YYYYMMDD").fromNow(),
+        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
+        like: 84,
+        comment:30
+        },
+        {
+            id:3,
+            username:"Vijay",
+            profilepicture:ProfileImg,
+            img:`http://localhost:8000/${response.data.p_image}`,
+            datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
+            body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
+            like: 340,
+            comment:76
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+      ];
+              setUserPostData(initialUserPostData);
+              // Additional setup based on fetched userData
+            } else {
+              console.error('Failed to fetch user data');
+            }
+          } catch (error) {
+            console.error('Error fetching user data:', error);
+          }
     };
 
     fetchUserData();
@@ -69,40 +105,6 @@ const Profile = () => {
   //     ModelJobName:"Web Developer in Google"
   //   }
   // )
-  const [userPostData ,setUserPostData] =useState(
-    [
-      {
-        id:1,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img1,
-        datetime:moment("20230401", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 22,
-        comment:12
-    },
-    {
-        id:2,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img2,
-        datetime:moment("20230525", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 84,
-        comment:30
-    },
-    {
-        id:3,
-        username:"Vijay",
-        profilepicture:Profile,
-        img:img3,
-        datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 340,
-        comment:76
-    }
-    ]
-  )
 
   return (
     <div className='interface'>
@@ -118,7 +120,7 @@ const Profile = () => {
         following={following}
         setFollowing={setFollowing}
         profileImg={profileImg}
-        modelDetails={modelDetails}
+        userD={userD}
         
         />
 
@@ -133,8 +135,8 @@ const Profile = () => {
         setUserName={setUserName}
         profileImg={profileImg}
         setProfileImg={setProfileImg}
-        modelDetails={modelDetails}
-        setModelDetails={setModelDetails}
+        userD={userD}
+        setUserD={setUserD}
         userPostData={userPostData}
         setUserPostData={setUserPostData}
         />

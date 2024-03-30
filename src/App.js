@@ -2,11 +2,21 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
+import EditProfile from './Pages/Profile/EditProfile';
 import FriendsId from './Pages/FriendsId/FriendsId';
 import Notification from './Pages/Notification/Notification';
 import Login from './Pages/RegisterPage/Login';
+import ImgBox from './Pages/Ex/Ex';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
+import Friend from './Pages/Friend/Friend';
+import Ex from './Pages/Ex/Ex';
+import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
+import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
+import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
+import Compare from './Pages/Compare/Compare';
+
+import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 
 const App = () => {
@@ -19,6 +29,7 @@ const App = () => {
           <Routes>
             <Route path='/home' element={<Home setFriendsProfile={setFriendsProfile} />} />
             <Route path='/profile' element={<Profile />} />
+            <Route path='/profile/edit/:username' element={<EditProfile />} />
             <Route path='/profile/:username' element={<Profile />} />
             {/* <Route path='/friendsId/:id' element={<FriendsId friendProfile={friendProfile} />} /> */}
             <Route path='/friendsId' element={<FriendsId friendProfile={friendProfile} />} />
@@ -26,6 +37,13 @@ const App = () => {
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/medication' element={<Medi />} />
+            <Route path='/friend' element={<Friend />} />
+            <Route path='/image' element={<ImgBox />} />
+            <Route path='/ex' element={<Ex />} />
+            <Route path='/forget' element={<Recovered />} />
+            <Route path='/Reset' element={<Reset />} />
+            <Route path='/OTP' element={<OTPInput />} />
+            <Route path='/compare' element={<Compare />} />
           </Routes>
         </div>
       </UserProvider>

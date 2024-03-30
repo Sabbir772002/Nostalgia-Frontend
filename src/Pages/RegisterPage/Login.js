@@ -28,10 +28,11 @@ const Login = () => {
         e.preventDefault();
         setError(validationLogin(data));
         setSubmit(true);
+        //why u dindt work
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/login', data);
-            if (response.status === 200 && response.data.auth) {
+            const response = await axios.post('http://localhost:8000/login', data);
+            if (response.status === 200) {
                 console.log('login successful!');
                // console.log(response.data.user);      
                 setUserData(response.data.user);
@@ -41,6 +42,8 @@ const Login = () => {
                 navigate(`/home`);
 
 
+            }else{
+                console.log("guru");
             }
         } catch (error) {
             console.error('Failed to login:', error.message);
@@ -102,7 +105,9 @@ const Login = () => {
                
 
                 <div className='divBtn'>
+                <Link to="/forget" className="btn">
                     <small className='FG'>Forgot Password?</small>
+                    </Link>
                     <button type='submit' className='loginBtn'>LOGIN</button>
                 </div>
                 
