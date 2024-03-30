@@ -34,7 +34,7 @@ import { Link } from 'react-router-dom';
 
 
 
-const Post = ({post,posts,setPosts,setFriendsProfile,images}) => {
+const Post = ({post,posts,key}) => {
 
   const [comments,setComments] =useState([
     {
@@ -85,7 +85,6 @@ const Post = ({post,posts,setPosts,setFriendsProfile,images}) => {
 
 const handleDelete=(id)=>{
   const deleteFilter =posts.filter(val=> val.id !== id)
-    setPosts(deleteFilter)
     setShowDelete(false)
   }
  
@@ -115,7 +114,6 @@ const handleDelete=(id)=>{
 
    const handleFriendsId=(id)=>{
       const friendsIdFilter = posts.filter(val => val.id === id)
-      setFriendsProfile(friendsIdFilter)
    }
 
    const [socialIcons,setSocialIcons] = useState(false)

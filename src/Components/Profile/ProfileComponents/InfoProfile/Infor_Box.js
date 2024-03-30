@@ -12,7 +12,7 @@ import {BiMessage, BiLogOut} from "react-icons/bi"
 import { useRef } from 'react';
 import ModelProfile from '../ModelProfile/ModelProfile';
 import { Link } from 'react-router-dom';
-const Info = ({userPostData,
+const Info_Box = ({userPostData,
               following,
               userD,
               setUserD,
@@ -22,8 +22,6 @@ const Info = ({userPostData,
               setName,
               userName,
               setUserName}) => {
-
-
   const [coverImg,setCoverImg] =useState(Info3)
 
   const importProfile=useRef()
@@ -33,7 +31,6 @@ const Info = ({userPostData,
     //localStorage.removeItem('userData');
     // Add other logout logic here
   };
-  
   
   const handleFile1=(e)=>{
     if(e.target.files && e.target.files[0]){
@@ -284,4 +281,4 @@ const Info = ({userPostData,
 }
 
    }
-export default Info;
+export default Info_Box;

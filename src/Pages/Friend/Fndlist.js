@@ -1,16 +1,17 @@
 import React from 'react'
-import FindF from "../../Components/FindF/FindF"
+import FndVox from "../../Components/Fndlist/FndVox"
 
-const Fndbox = ({fndlist,setfndlist}) => {
+const Fndbox = ({fndlist,setfndlist,fetchfnd}) => {
   return (
 <div className='fndlist'>
         {fndlist.map((fnd)=>(
              <div className="d-inline-flex p-4">
 
-            <FindF 
+            <FndVox 
             fndlist={fndlist}
             setfndlist={setfndlist}
             fnd ={fnd}
+            fetchfnd={fetchfnd}
             />
             </div>
         ))}

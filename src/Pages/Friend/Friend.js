@@ -53,20 +53,23 @@ const Friend = () => {
 
      const [fndlist, setfndlist] = useState([]);
 
+     const fetchfnd = async (setfndlist) => {
+      try {
+          const response = await axios.get('http://localhost:8000/friends',
+          {
+            params: {
+              user_id: userData.id
+            }
+        });
+          setfndlist(response.data.users);
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
+  };
       useEffect(() => {
-          // Fetch data from Django backend
-          axios.get('http://localhost:8000/friends')
-              .then(response => {
-                 // console.log("mere fnd");
-                 // console.log(response.data.users);
-                  setfndlist(response.data.users);
-                 // console.log(fndlist);
-              })
-              .catch(error => {
-                  console.error('Error fetching data:', error);
-              });
+        fetchfnd(setfndlist);
       }, []);
-
+  
   
 
       
@@ -94,6 +97,7 @@ const Friend = () => {
         <Fndbox
         fndlist={fndlist}
         setfndlist={setfndlist}
+        fetchfnd={fetchfnd}
         />   
         <Right
         showMenu={showMenu}
