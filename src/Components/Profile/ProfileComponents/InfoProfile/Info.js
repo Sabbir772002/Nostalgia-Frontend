@@ -8,7 +8,8 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { BiMessage, BiLogOut } from 'react-icons/bi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
-import './Info.css';
+import "./Info.css"
+
 const Info = ({
   userPostData,
   following,

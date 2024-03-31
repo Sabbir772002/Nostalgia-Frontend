@@ -33,13 +33,13 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 import "../Home/Home.css"
 
 import Left from "../../Components/LeftSide/Left"
-import Middle from "../../Components/MiddleSide/Middle"
+import NMiddle from "../NMiddle/NMiddle"
 import Right from '../../Components/RightSide/Right'
 import NNav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const NHome = ({setFriendsProfile}) => {
+const NHome = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   // const userData= JSON.parse(localStorage.getItem('userData'));
@@ -227,18 +227,18 @@ const NHome = ({setFriendsProfile}) => {
 
   return (
     <div className='interface'>
-        {/* <NNav 
+        <NNav 
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        /> */}
+        />
 
     <div className="home">
    
         <Left />
 
-        <Middle posts={posts} />
+        <NMiddle posts={posts} />
 
         <Right
         showMenu={showMenu}
