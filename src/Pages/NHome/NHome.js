@@ -232,7 +232,7 @@ const NHome = () => {
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        /> 
+        />
 
     <div className="home">
    
