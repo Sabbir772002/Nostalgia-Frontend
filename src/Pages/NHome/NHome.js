@@ -227,20 +227,12 @@ const NHome = () => {
 
   return (
     <div className='interface'>
-<<<<<<< HEAD
-        { <NNav 
-=======
         <NNav 
->>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-<<<<<<< HEAD
-        /> }
-=======
         /> 
->>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
 
     <div className="home">
    
