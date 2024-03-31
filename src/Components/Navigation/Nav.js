@@ -23,7 +23,6 @@ const userData = JSON.parse(localStorage.getItem('userData'));
   </div>
 
       <div className="n-form-button" >
-
         <form className='n-form' onSubmit={(e)=>e.preventDefault()} >
           <SearchIcon className='search-icon'/>
           <input type="text" 

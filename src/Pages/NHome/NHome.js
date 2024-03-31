@@ -227,12 +227,12 @@ const NHome = ({setFriendsProfile}) => {
 
   return (
     <div className='interface'>
-        {/* <NNav 
+        { <NNav 
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        /> */}
+        /> }
 
     <div className="home">
    
