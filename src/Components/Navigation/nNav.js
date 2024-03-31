@@ -6,14 +6,22 @@ import {AiOutlineHome} from "react-icons/ai"
 import { RiProfileLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 
-const NNav = ({search,setSearch}) => {
+const NNav = ({search,setSearch,setShowMenu}) => {
+const userData = JSON.parse(localStorage.getItem('userData'));
 
   return (
     <nav>
         <div className="n-logo">
-            <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
-              <h1>Nostalgia</h1>
-            </Link>
+            {userData ? (
+      <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
+        <h1>Nostalgia</h1>
+      </Link>
+    ) : (
+      <Link to="/nhome" className='logo' style={{color:"black",textDecoration:"none"}}>
+        <h1>Nostalgia</h1>
+      </Link>
+    )}
+
         </div>
 
       <div className="n-form-button" >

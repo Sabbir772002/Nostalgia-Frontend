@@ -29,18 +29,14 @@ import Uimg1 from "../../assets/User-post/img1.jpg"
 import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
-
-import "../Home/Home.css"
-
+import "./NHome.css"
 import Left from "../../Components/LeftSide/Left"
 import NMiddle from "../NMiddle/NMiddle"
 import Right from '../../Components/RightSide/Right'
 import NNav from '../../Components/Navigation/nNav'
-import moment from 'moment/moment'
-import { useLocation } from 'react-router-dom';
+import moment from 'moment/moment';
 
 const NHome = () => {
-  const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   // const userData= JSON.parse(localStorage.getItem('userData'));
 
@@ -201,6 +197,7 @@ const NHome = () => {
         axios.get('http://localhost:8000/blog')
           .then(response => {
             setPosts(response.data);
+            //console.log(response.data[0].content);
           })
           .catch(error => {
             console.error('Error fetching posts:', error);
@@ -232,7 +229,7 @@ const NHome = () => {
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        />
+        /> 
 
     <div className="home">
    
