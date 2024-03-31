@@ -29,22 +29,14 @@ import Uimg1 from "../../assets/User-post/img1.jpg"
 import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
-
-import "../NHomepage/Home/Home.css"
-
+import "./NHome.css"
 import Left from "../../Components/LeftSide/Left"
-<<<<<<< HEAD
-import NMiddle from "../NHomepage/NMiddle/NMiddle"
-=======
 import NMiddle from "../NMiddle/NMiddle"
->>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
 import Right from '../../Components/RightSide/Right'
 import NNav from '../../Components/Navigation/nNav'
-import moment from 'moment/moment'
-import { useLocation } from 'react-router-dom';
+import moment from 'moment/moment';
 
 const NHome = () => {
-  const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   // const userData= JSON.parse(localStorage.getItem('userData'));
 
@@ -205,6 +197,7 @@ const NHome = () => {
         axios.get('http://localhost:8000/blog')
           .then(response => {
             setPosts(response.data);
+            //console.log(response.data[0].content);
           })
           .catch(error => {
             console.error('Error fetching posts:', error);
@@ -236,11 +229,7 @@ const NHome = () => {
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-<<<<<<< HEAD
-        />
-=======
         /> 
->>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
 
     <div className="home">
    
