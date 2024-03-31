@@ -6,8 +6,6 @@ import img3 from "../../assets/Post Images/img3.jpg"
 import img4 from "../../assets/Post Images/img4.jpg"
 import img5 from "../../assets/Post Images/img5.jpg"
 import img6 from "../../assets/Post Images/img6.jpg"
-
-
 import DPimg1 from "../../assets/DP/img1.jpg"
 import DPimg2 from "../../assets/DP/img2.jpg"
 import DPimg3 from "../../assets/DP/img3.jpg"

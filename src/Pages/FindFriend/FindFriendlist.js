@@ -32,7 +32,7 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
 import "../Friend/Friend.css"
-import Fndbox from "./Fndlist"
+import FindFlist from "./FindFlist"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
@@ -40,7 +40,7 @@ import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const Friend = () => {
+const FindFriendlist = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
@@ -55,8 +55,11 @@ const Friend = () => {
 
       useEffect(() => {
           // Fetch data from Django backend
-          axios.get('http://localhost:8000/friends')
-              .then(response => {
+          axios.get('http://localhost:8000/findfriend',  {
+            params: {
+              user_id: userData.id
+            }
+        }) .then(response => {
                  // console.log("mere fnd");
                  // console.log(response.data.users);
                   setfndlist(response.data.users);
@@ -91,7 +94,7 @@ const Friend = () => {
     <div className="home">
    
         <Left />
-        <Fndbox
+        <FindFlist
         fndlist={fndlist}
         setfndlist={setfndlist}
         />   
@@ -107,4 +110,4 @@ const Friend = () => {
   )
 }
 
-export default  Friend 
+export default  FindFriendlist;

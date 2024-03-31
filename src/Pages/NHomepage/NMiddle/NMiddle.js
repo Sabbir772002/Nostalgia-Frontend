@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
+<<<<<<<< HEAD:src/Pages/NHomepage/NMiddle/NMiddle.js
+import Homepage from "./NHomepage/NHome"
+========
 import Homepage from "../../Components/NHome/Homepage"
+>>>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c:src/Pages/NMiddle/NMiddle.js
 import "./NMiddle.css"
 
 
@@ -20,7 +24,12 @@ const NMiddle = ({posts,fetchPosts}) => {
   
   return (
     <div className='M-features'>
-              <Homepage 
+<<<<<<<< HEAD:src/Pages/NHomepage/NMiddle/NMiddle.js
+        
+========
+
+>>>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c:src/Pages/NMiddle/NMiddle.js
+        <Homepage 
           posts={posts}
           fetchPosts={fetchPosts}
         />
