@@ -15,6 +15,11 @@ import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
 import SearchIcon from '@mui/icons-material/Search';
+import React from 'react'
+import { useLocation,useNavigate } from 'react-router-dom';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
 
 const EditProfile = () => {
   const { username } = useParams();
@@ -38,66 +43,27 @@ const EditProfile = () => {
       ModelJobName: ""
     }
   );
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
-        if (response.status === 200) {
-          setUserData(response.data);
-          console.log(response.data.p_image);
-          //setUserData(data);
-          //console.log(userData.p_image);
-          setModelDetails({
-            ModelName: response.data.first_name,
-            ModelUserName: response.data.username,
-            ModelCountryName: response.data.thana,
-            ModelJobName: "Web Developer in Google",
-            image: `http://localhost:8000/${response.data.p_image}`
-          });
-          const initialUserPostData = [
-            {
-              id: 1,
-              username: "Vijay",
-              profilepicture: ProfileImg,
-              img: `http://localhost:8000/${response.data.p_image}`,
-              datetime: moment("20230401", "YYYYMMDD").fromNow(),
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-              like: 22,
-              comment: 12
-            },
-         {
-        id:2,
-        username:"Vijay",
-        profilepicture:ProfileImg,
-        img:`http://localhost:8000/${response.data.p_image}`,
-        datetime:moment("20230525", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 84,
-        comment:30
-        },
-        {
-            id:3,
-            username:"Vijay",
-            profilepicture:ProfileImg,
-            img:`http://localhost:8000/${response.data.p_image}`,
-            datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
-            body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-            like: 340,
-            comment:76
-        }
-      ];
-              setUserPostData(initialUserPostData);
-              // Additional setup based on fetched userData
-            } else {
-              console.error('Failed to fetch user data');
-            }
-          } catch (error) {
-            console.error('Error fetching user data:', error);
-          }
-    };
+  const userd= JSON.parse(localStorage.getItem('userData'));
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [showModal, setShowModal] = React.useState(false);
 
-    fetchUserData();
-  }, [username]);
+
+  React.useEffect(() => {
+    if (userd && username !== userd.username) {
+      setShowModal(true);
+    }
+  }, [username, userd]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+   if (userd && username !== userd.username) {
+    navigate(userd?`/profile/edit/${userd.username}`:'/login');
+    return;
+
+   }
    console.log(userData);
   // const [modelDetails,setModelDetails] = useState(
   //   {
@@ -113,6 +79,19 @@ const EditProfile = () => {
 
   return (
     <div className='interface'>
+                 <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Unauthorized Access</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          You are not authorized to edit this profile.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
         <Nav
         search={search}
         setSearch={setSearch}

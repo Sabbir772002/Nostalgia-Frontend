@@ -34,7 +34,7 @@ import { Link } from 'react-router-dom';
 
 
 
-const Post = ({post,posts,setPosts,setFriendsProfile,images}) => {
+const Post = ({post,posts,key}) => {
 
   const [comments,setComments] =useState([
     {
@@ -85,7 +85,6 @@ const Post = ({post,posts,setPosts,setFriendsProfile,images}) => {
 
 const handleDelete=(id)=>{
   const deleteFilter =posts.filter(val=> val.id !== id)
-    setPosts(deleteFilter)
     setShowDelete(false)
   }
  
@@ -115,7 +114,6 @@ const handleDelete=(id)=>{
 
    const handleFriendsId=(id)=>{
       const friendsIdFilter = posts.filter(val => val.id === id)
-      setFriendsProfile(friendsIdFilter)
    }
 
    const [socialIcons,setSocialIcons] = useState(false)
@@ -126,13 +124,16 @@ const handleDelete=(id)=>{
   return (
     <div className='post'>
       <div className='post-header'>
-        <Link to={`/profile/${post.username}`} style={{textDecoration:"none"}}>
+        <Link to={`/profile/${post.author}`} style={{textDecoration:"none"}}>
         <div className='post-user' onClick={()=>handleFriendsId(post.id)} style={{cursor:"pointer"}}>
-            <img src={post.profilepicture} className='p-img' alt="" />
-            <h2>{post.username}</h2>
-            <p className='datePara'>{post.datetime}</p>
+            <img src={`http://localhost:8000/${post.author_img}`} className='p-img' alt="" />
+            <div className='post-user-info'>
+            <h2>{post.author}</h2>
+            <p className='datePara'>{post.post_date}</p>
+            </div>
         </div>
         </Link>
+
          
          <div className='delete'>
          {showDelete && (<div className="options">
@@ -149,11 +150,11 @@ const handleDelete=(id)=>{
        </div>
 
         <p className='body'>{
-        (post.body).length <=300 ?
-        post.body : `${(post.body).slice(0,300)}...`
+        (post.content).length <=300 ?
+        post.content : `${(post.content).slice(0,300)}...`
         }</p>
 
-       {post.img && (<img src={post.img} alt="" className="post-img" />)}
+       {post.blog_img && (<img src={`http://localhost:8000/${post.blog_img}`} alt="" className="post-img" />)}
   
 
 

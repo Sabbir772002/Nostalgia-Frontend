@@ -39,7 +39,7 @@ import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const Friend = () => {
+const Buddy = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
@@ -126,4 +126,4 @@ const Friend = () => {
   )
 }
 
-export default  Friend 
+export default  Buddy;
