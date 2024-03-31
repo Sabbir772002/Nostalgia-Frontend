@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import InputPost from '../Post/InputPost'
-import Homepage from "../Home/Homepage"
-import "./Middle.css"
+import Homepage from "../../Components/NHome/Homepage"
+import "./NMiddle.css"
 
 
-const Middle = ({posts,fetchPosts}) => {
+const NMiddle = ({posts,fetchPosts}) => {
     
   
     const [searchResults,setSearchResults] =useState("")
@@ -21,10 +20,7 @@ const Middle = ({posts,fetchPosts}) => {
   
   return (
     <div className='M-features'>
-        <InputPost
-        // useEffect={useEffect}
-        fetchPosts={fetchPosts}
-        />
+
         <Homepage 
           posts={posts}
           fetchPosts={fetchPosts}
@@ -33,4 +29,4 @@ const Middle = ({posts,fetchPosts}) => {
   )
 }
 
-export default Middle
+export default NMiddle
