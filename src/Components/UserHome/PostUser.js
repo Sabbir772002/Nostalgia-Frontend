@@ -33,7 +33,7 @@ import moment from 'moment';
 
 
 
-const PostUser = ({posts,post,setPosts,profileImg,userD,images}) => {
+const PostUser = ({posts,post,setPosts,userD}) => {
 
   const [comments,setComments] =useState([
     {
@@ -94,7 +94,7 @@ const handleDelete=(id)=>{
   const handleCommentInput=(e)=>{
      e.preventDefault()
 
-    const id=comments.length ? comments[comments.length -1].id +1 : 1
+    const id= comments && comments.length ? comments[comments.length -1].id +1 : 1
     const profilePic =userD.image
     const username=userD.name
     const comment =commentInput
@@ -121,7 +121,7 @@ const handleDelete=(id)=>{
     <div className='post'>
       <div className='post-header'>
         <div className='post-user' style={{cursor:"pointer"}}>
-            <img src={profileImg} className='p-img' alt="" />
+            <img src={userD.image} className='p-img' alt="" />
             <h2>{userD.name}</h2>
             <p className='datePara'>{post.datetime}</p>
         </div>
@@ -143,8 +143,8 @@ const handleDelete=(id)=>{
     
     }
         <p className='body'>{
-        (post.body).length <=300 ?
-        post.body : `${(post.body).slice(0,300)}...`
+        (post.content).length <=300 ?
+        post.content : `${(post.content).slice(0,300)}...`
         }</p>
 
         {post.img && (<img src={post.img} alt="" className="post-img" />)}

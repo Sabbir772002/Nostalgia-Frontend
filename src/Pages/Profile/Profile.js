@@ -13,7 +13,6 @@ import img3 from "../../assets/User-post/img3.jpg"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
-
 const Profile = () => {
   const { username } = useParams();
   console.log(username);
