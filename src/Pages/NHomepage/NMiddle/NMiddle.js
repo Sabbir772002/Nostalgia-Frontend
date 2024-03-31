@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Homepage from "../../Components/Home/Homepage"
+import Homepage from "./NHomepage/NHome"
 import "./NMiddle.css"
 
 

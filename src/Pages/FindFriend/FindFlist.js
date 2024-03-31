@@ -1,7 +1,7 @@
 import React from 'react'
 import FindF from "../../Components/FindF/FindF"
 
-const Fndbox = ({fndlist,setfndlist}) => {
+const FindFlist = ({fndlist,setfndlist}) => {
   return (
 <div className='fndlist'>
         {fndlist.map((fnd)=>(
@@ -18,4 +18,4 @@ const Fndbox = ({fndlist,setfndlist}) => {
   )
 }
 
-export default Fndbox;
+export default FindFlist;

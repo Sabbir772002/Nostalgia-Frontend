@@ -20,6 +20,8 @@ import NHome from './Pages/NHome/NHome';
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
+import FindFriendlist from './Pages/FindFriend/FindFriendlist';
+
 
 const App = () => {
   // Define state for friendProfile
@@ -49,6 +51,7 @@ const App = () => {
             <Route path='/buddy' element={<Buddy />} />
             <Route path='/compare' element={<Compare />} />
             <Route path='/nhome' element={<NHome />} />
+            <Route path='/findfrined' element={<FindFriendlist />} />
           </Routes>
         </div>
       </UserProvider>

@@ -1,4 +1,4 @@
-import {  useState,useEffect } from 'react'
+import {  useState } from 'react'
 import Profile from "../../assets/profile.jpg"
 import img1 from "../../assets/Post Images/img1.jpg"
 import img2 from "../../assets/Post Images/img2.jpg"
@@ -6,7 +6,7 @@ import img3 from "../../assets/Post Images/img3.jpg"
 import img4 from "../../assets/Post Images/img4.jpg"
 import img5 from "../../assets/Post Images/img5.jpg"
 import img6 from "../../assets/Post Images/img6.jpg"
-import axios from 'axios'
+
 
 import DPimg1 from "../../assets/DP/img1.jpg"
 import DPimg2 from "../../assets/DP/img2.jpg"
@@ -30,19 +30,19 @@ import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
-import "../NHomepage/Home/Home.css"
+import "./Home/Home.css"
 
 import Left from "../../Components/LeftSide/Left"
-import NMiddle from "../NHomepage/NMiddle/NMiddle"
+import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import NNav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const NHome = () => {
+const NHome = ({setFriendsProfile}) => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  // const userData= JSON.parse(localStorage.getItem('userData'));
+  const userData= JSON.parse(localStorage.getItem('userData'));
 
 
     const [posts,setPosts] = useState(
@@ -194,25 +194,7 @@ const NHome = () => {
             followers:3599
            }
         ]
-      ) 
-      
-    //const [posts, setPosts] = useState([]);
-      const fetchPosts = () => {
-        axios.get('http://localhost:8000/blog')
-          .then(response => {
-            setPosts(response.data);
-          })
-          .catch(error => {
-            console.error('Error fetching posts:', error);
-          });
-      };
-      useEffect(() => {
-        // Fetch posts when component mounts
-        fetchPosts();
-      }, []);
-    
-    
-    
+      )
 
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
@@ -238,7 +220,9 @@ const NHome = () => {
    
         <Left />
 
-        <NMiddle posts={posts} />
+        {/* <Middle posts={posts}
+
+        /> */}
 
         <Right
         showMenu={showMenu}
