@@ -30,7 +30,7 @@ import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
-import "../Friend/Friend.css"
+import "./Buddy.css"
 import Fndbox from "./BuddyList"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
@@ -38,7 +38,7 @@ import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
-
+import BuddyList from './BuddyList'
 const Buddy = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -107,19 +107,11 @@ const Buddy = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="home">
+    <div className="bot">
    
         <Left />
-        <Fndbox
-        fndlist={fndlist}
-        setfndlist={setfndlist}
-        />   
-        <Right
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        following={following}
-        setFollowing={setFollowing}
-        />
+        <BuddyList/>
+        
     </div>
 
     </div>

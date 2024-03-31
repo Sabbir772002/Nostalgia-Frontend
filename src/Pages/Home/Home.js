@@ -44,13 +44,18 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/blog')
-      .then(response => {
-        setPosts(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-      });
+    axios.get('http://localhost:8000/blog', {
+    params: {
+        username: userData.username
+    }
+})
+.then(response => {
+    setPosts(response.data);
+})
+.catch(error => {
+    console.error('Error fetching posts:', error);
+});
+
   };
   useEffect(() => {
     // Fetch posts when component mounts

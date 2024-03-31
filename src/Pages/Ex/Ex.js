@@ -1,115 +1,132 @@
-import React, { useState, useRef, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './Ex.css';
+import React, { useState } from 'react';
+import { Button, Modal, Form } from 'react-bootstrap';
 
-const Messenger = () => {
-  const [messages, setMessages] = useState([
-    { id: 1, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:00 AM' },
-    { id: 2, sender: 'Nusrat', type:"text", text: 'Hi there!', timestamp: '10:05 AM' },
-    { id: 3, sender: 'Opy',  type:"text", text: 'How are you?', timestamp: '10:10 AM' },
-    { id: 4, sender: 'Amran',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:15 AM' },
-    { id: 5, sender: 'Arjun',  type:"text", text: 'What are you up to?', timestamp: '10:20 AM' },
-    { id: 6, sender: 'Arjun',  type:"text", text: 'Just saying hi.', timestamp: '10:25 AM' },
-    { id: 7, sender: 'Amran',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:30 AM' },
-    { id: 8, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:35 AM' },
-    { id: 9, sender: 'Nusrat', type:"text", text: 'How have you been?', timestamp: '10:40 AM' },
-    { id: 10, sender: 'Nusrat', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:45 AM' },
-    { id: 11, sender: 'Sabbir', type:"text", text: 'Not much, just relaxing.', timestamp: '10:50 AM' },
-    { id: 12, sender: 'Sabbir', type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '10:55 AM' },
-    { id: 13, sender: 'Sabbir',  type:"text", text: 'I need a vacation!', timestamp: '11:00 AM' },
-    { id: 14, sender: 'Opy',  type:"text", text: 'Me too, let\'s plan something.', timestamp: '11:05 AM' },
-    { id: 15, sender: 'Opy',  type:"text", text: 'Count me in!', timestamp: '11:10 AM' },
-    { id: 16, sender: 'Arjun',  type:"text", text: 'Sounds like a plan.', timestamp: '11:15 AM' },
-    { id: 17, sender: 'Arjun',  type:"text", text: 'Great, let\'s discuss more later.', timestamp: '11:20 AM' },
-    { id: 18, sender: 'Nusrat',  type:"text", text: 'Absolutely!', timestamp: '11:25 AM' },
-    { id: 19, sender: 'Nusrat', type:"text", text: 'Looking forward to it.', timestamp: '11:30 AM' },
-    { id: 20, sender: 'Opy',  type:"img", text: `http://localhost:8000/media/d.png`, timestamp: '11:35 AM' },
-  ]);
-
-  const [newMessage, setNewMessage] = useState('');
+const ExamplePage = () => {
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
+  const [showInputBoxModal, setShowInputBoxModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const messageBoxRef = useRef(null);
 
-  useEffect(() => {
-    scrollToTop();
-  }, [messages]);
+  // Dummy data for the list
+  const userList = [
+    { id: 1, name: 'John Doe', location: 'New York', date: 'April 1, 2024', time: '10:00 AM' },
+    { id: 2, name: 'Jane Smith', location: 'Los Angeles', date: 'April 2, 2024', time: '11:00 AM' },
+    // Add more users as needed
+  ];
 
-  const scrollToTop = () => {
-    if (messageBoxRef.current) {
-      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
-    }
+  const handleUserInfoClick = (user) => {
+    setSelectedUser(user);
+    setShowUserInfoModal(true);
   };
 
-  const handleSendMessage = () => {
-    if (!selectedUser || newMessage.trim() === '') return;
-    const timestampOptions = { hour: 'numeric', minute: 'numeric' };
-    const timestamp = new Date().toLocaleTimeString([], timestampOptions);
-  
-    const newMsg = {
-      id: messages.length + 1,
-      sender: 'Sabbir', // Assuming user1 is the current user
-      text: newMessage.trim(),
-      type: "text",
-      timestamp: timestamp // Add timestamp
-    };
-    setMessages([...messages, newMsg]);
-    setNewMessage('');
+  const handleInputBoxButtonClick = () => {
+    setShowInputBoxModal(true);
   };
-
-  const filteredMessages = selectedUser ? messages.filter(msg => msg.sender === selectedUser || msg.sender === 'Sabbir') : messages;
 
   return (
-    <div className="container-fluid">
-      <div className="row" style={{ height: '100vh' }}>
-        <div className="col-3 border-right">
-          <h2>User List</h2>
-          <ul className="list-group">
-            <li className="list-group-item" onClick={() => setSelectedUser('Nusrat')}>Nusrat</li>
-            <li className="list-group-item" onClick={() => setSelectedUser('Arjun')}>Arjun</li>
-            <li className="list-group-item" onClick={() => setSelectedUser('Amran')}>Amran</li>
-            <li className="list-group-item" onClick={() => setSelectedUser('Opy')}>Opy</li>
-            {/* Add more user list items here */}
-          </ul>
-        </div>
-        <div className="col-9">
-        <h2> <img className="rounded" src={`http://localhost:8000/media/d.png`} alt="img" style={{ width: '40px', height: '40px' }}/> {selectedUser}</h2>
-          <hr className="mb-4"/>
-          <div ref={messageBoxRef} className="overflow-auto" style={{ height: '70vh' }}>
-            {filteredMessages.map(msg => (
-              <div key={msg.id} className={`mb-2 ${msg.sender === 'Sabbir' ? 'items-align-right' : 'items-align-left'}`}>
-                <div className={`d-inline-block p-2 rounded ${msg.sender === 'Sabbir' ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>
-                {msg.type === "text" ? (
-      <>
-        <p>{msg.text}</p>
-      </>
-    ) : (
-      <>
-        <img src={msg.text} alt="img" style={{ width: '100px', height: '100px' }} />
-      </>
-    )}
-            <p className="text-muted text-small"><span>{msg.timestamp}</span></p> {/* Display timestamp */}
+    <div className="container">
+      <div className="box">
+      <div className="mt-3 row">
+        <div className="col-6">
+          <h1>User List</h1>
+      </div>
+    <div className="col-6">
+    <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Walking List</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="startDate">
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control type="date" />
+            </Form.Group>
+            <Form.Group controlId="endDate">
+              <Form.Label>End Date</Form.Label>
+              <Form.Control type="date" />
+            </Form.Group>
+            <Form.Group controlId="time">
+              <Form.Label>Time</Form.Label>
+              <Form.Control type="time" />
+            </Form.Group>
+            <Form.Group controlId="location">
+              <Form.Label>Location</Form.Label>
+              <Form.Control type="text" />
+            </Form.Group>
+            <Form.Group controlId="walkName">
+              <Form.Label>Walk Name</Form.Label>
+              <Form.Control type="text" />
+            </Form.Group>
+            <Form.Group controlId="privacy">
+              <Form.Label>Privacy</Form.Label>
+              <Form.Control as="select">
+                <option>Friends</option>
+                <option>Known</option>
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowInputBoxModal(false)}>Close</Button>
+          <Button variant="primary" onClick={() => setShowInputBoxModal(false)}>Save</Button>
+        </Modal.Footer>
+      </Modal>
 
-
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
-              placeholder="Type your message..."
-            />
-            <div className="input-group-append">
-              <button className="btn btn-primary" onClick={handleSendMessage}>Send</button>
-            </div>
-          </div>
-        </div>
+      {/* Button to open Input Box Modal */}
+      <div style={{ textAlign: 'right' }}>
+        <Button variant="primary" onClick={handleInputBoxButtonClick}>Walking List</Button>
       </div>
     </div>
+</div>   
+     
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Request</th>
+            <th>View Info</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userList.map(user => (
+            <tr key={user.id}>
+              <td>Image</td>
+              <td>{user.name}</td>
+              <td>{user.location}</td>
+              <td>{user.date}</td>
+              <td>{user.time}</td>
+              <td><Button variant="primary">Request</Button></td>
+              <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* User Info Modal */}
+      <Modal show={showUserInfoModal} onHide={() => setShowUserInfoModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>User Info</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedUser && (
+            <div>
+              <p><strong>Name:</strong> {selectedUser.name}</p>
+              <p><strong>Location:</strong> {selectedUser.location}</p>
+              <p><strong>Date:</strong> {selectedUser.date}</p>
+              <p><strong>Time:</strong> {selectedUser.time}</p>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowUserInfoModal(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  </div>
   );
 };
 
-export default Messenger;
+export default ExamplePage;
