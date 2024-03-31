@@ -18,7 +18,7 @@ const userData = JSON.parse(localStorage.getItem('userData'));
     <nav>
         <div className="n-logo">
             <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
-              <h1>Face <span>Gram</span></h1>
+              <h1>Nos<span>talgia</span></h1>
             </Link>
         </div>
 

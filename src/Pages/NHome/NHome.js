@@ -1,11 +1,19 @@
-import {  useState } from 'react'
+import {  useState,useEffect } from 'react'
+import Profile from "../../assets/profile.jpg"
 import img1 from "../../assets/Post Images/img1.jpg"
 import img2 from "../../assets/Post Images/img2.jpg"
 import img3 from "../../assets/Post Images/img3.jpg"
 import img4 from "../../assets/Post Images/img4.jpg"
 import img5 from "../../assets/Post Images/img5.jpg"
 import img6 from "../../assets/Post Images/img6.jpg"
+import axios from 'axios'
 
+import DPimg1 from "../../assets/DP/img1.jpg"
+import DPimg2 from "../../assets/DP/img2.jpg"
+import DPimg3 from "../../assets/DP/img3.jpg"
+import DPimg4 from "../../assets/DP/img4.jpg"
+import DPimg5 from "../../assets/DP/img5.jpg"
+import DPimg6 from "../../assets/DP/img6.jpg"
 
 import cover from "../../assets/Info-Dp/img-3.jpg"
 
@@ -22,20 +30,21 @@ import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
-import "../NHome/NHome.css"
+import "../Home/Home.css"
 
 import Left from "../../Components/LeftSide/Left"
-import Middle from "../../Components/MiddleSide/Middle"
+import NMiddle from "../NMiddle/NMiddle"
 import Right from '../../Components/RightSide/Right'
-import Nav from '../../Components/Navigation/nNav'
+import NNav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 
-const NHome = ({setFriendsProfile}) => {
-  //const location = useLocation();
+const NHome = () => {
+  const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
- // const userData= JSON.parse(localStorage.getItem('userData'))
-  
+  // const userData= JSON.parse(localStorage.getItem('userData'));
+
+
     const [posts,setPosts] = useState(
         [
           {
@@ -185,16 +194,40 @@ const NHome = ({setFriendsProfile}) => {
             followers:3599
            }
         ]
-      )
+      ) 
+      
+    //const [posts, setPosts] = useState([]);
+      const fetchPosts = () => {
+        axios.get('http://localhost:8000/blog')
+          .then(response => {
+            setPosts(response.data);
+          })
+          .catch(error => {
+            console.error('Error fetching posts:', error);
+          });
+      };
+      useEffect(() => {
+        // Fetch posts when component mounts
+        fetchPosts();
+      }, []);
+    
+    
+    
+
+      const [body,setBody] =useState("")
+      const [importFile,setImportFile] =useState("")
    
-  const [search,setSearch] =useState("")
+   const [search,setSearch] =useState("")
+
+    
+  const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null)
 
   return (
     <div className='interface'>
-        <Nav 
+        <NNav 
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
@@ -205,22 +238,13 @@ const NHome = ({setFriendsProfile}) => {
    
         <Left />
 
-        <Middle 
-        handleSubmit={handleSubmit}
-        body ={body}
-        setBody ={setBody}
-        importFile ={importFile}
-        setImportFile ={setImportFile}
-        posts={posts}
-        setPosts={setPosts}
-        search={search}
-        images={images}
-
-        />
+        <NMiddle posts={posts} />
 
         <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
+        following={following}
+        setFollowing={setFollowing}
         />
     </div>
 

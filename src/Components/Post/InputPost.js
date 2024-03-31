@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import "../Post/InputPost.css";
 import Profile from "../../assets/profile.jpg";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
@@ -8,7 +8,7 @@ import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
 
-const InputPost = () => {
+const InputPost = ({fetchPosts}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
@@ -35,6 +35,11 @@ const InputPost = () => {
     setImages(file);
     //console.log(post.file);
   };
+  useEffect(() => {
+    // Fetch posts when component mounts
+    fetchPosts();
+  }, []);
+
   
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +65,7 @@ const InputPost = () => {
         post_time: formattedTime,
         blog_img: null
       });
+      fetchPosts();
       setImages(null); // Reset images state
     } catch (error) {
       console.error('Error creating blog:', error);
