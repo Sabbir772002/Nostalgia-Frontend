@@ -17,10 +17,10 @@ const userData = JSON.parse(localStorage.getItem('userData'));
   return (
     <nav>
         <div className="n-logo">
-            <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
-              <h1>Face <span>Gram</span></h1>
-            </Link>
-        </div>
+    <Link to="/home" className='logo' style={{ color: "black", textDecoration: "none" }}>
+      <h1 style={{ fontFamily: "Arial, sans-serif", color: "white" }}>Nostalgia</h1>
+    </Link>
+  </div>
 
       <div className="n-form-button" >
 

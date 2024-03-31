@@ -2,12 +2,13 @@ import React from 'react'
 import "../Navigation/Nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-
+import { FaUserCircle } from 'react-icons/fa'; // Importing a profile icon from React Icons
 import {AiOutlineHome} from "react-icons/ai"
 import {LiaUserFriendsSolid} from "react-icons/lia"
+import { RiProfileLine } from 'react-icons/ri';
+import { BsPeople } from 'react-icons/bs';
 
-const Nav = ({search,setSearch,setShowMenu}) => {
-//const userData = JSON.parse(localStorage.getItem('userData'));
+const NNav = ({search,setSearch,setShowMenu}) => {
 
   return (
     <nav>
@@ -33,9 +34,9 @@ const Nav = ({search,setSearch,setShowMenu}) => {
       <div className="n-buttons">
         <Link to="/login" className="n-button">Login</Link>
         <Link to="/signup" className="n-button">Signup</Link>
-      </div>    
+      </div>      
     </nav>
   )
 }
 
-export default nNav
+export default NNav
