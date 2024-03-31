@@ -33,7 +33,11 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 import "../NHomepage/Home/Home.css"
 
 import Left from "../../Components/LeftSide/Left"
+<<<<<<< HEAD
 import NMiddle from "../NHomepage/NMiddle/NMiddle"
+=======
+import NMiddle from "../NMiddle/NMiddle"
+>>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
 import Right from '../../Components/RightSide/Right'
 import NNav from '../../Components/Navigation/nNav'
 import moment from 'moment/moment'
@@ -232,7 +236,11 @@ const NHome = () => {
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
+<<<<<<< HEAD
         />
+=======
+        /> 
+>>>>>>> dc7a6a607ba1bf26161e2829471b7f87d30b584c
 
     <div className="home">
    
