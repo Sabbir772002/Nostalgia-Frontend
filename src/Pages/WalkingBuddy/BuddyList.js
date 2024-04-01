@@ -132,7 +132,6 @@ const BuddyList = () => {
                 </Form>
               </Modal.Body>
             </Modal>
-
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>

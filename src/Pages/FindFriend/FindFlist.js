@@ -1,7 +1,7 @@
 import React from 'react'
 import FindF from "../../Components/FindF/FindF"
 
-const FindFlist = ({fndlist,setfndlist}) => {
+const FindFlist = ({fndlist,setfndlist,fetchData}) => {
   return (
 <div className='fndlist'>
         {fndlist.map((fnd)=>(
@@ -11,6 +11,7 @@ const FindFlist = ({fndlist,setfndlist}) => {
             fndlist={fndlist}
             setfndlist={setfndlist}
             fnd ={fnd}
+            fetchData={fetchData}
             />
             </div>
         ))}
