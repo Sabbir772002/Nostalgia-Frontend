@@ -100,7 +100,7 @@ useEffect(() => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="home">
+    <div className="btw">
    
         <Left />
         <FindFlist
@@ -108,12 +108,12 @@ useEffect(() => {
         setfndlist={setfndlist}
         fetchData={fetchData}
         />   
-        <Right
+        {/* <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         following={following}
         setFollowing={setFollowing}
-        />
+        /> */}
     </div>
 
     </div>
