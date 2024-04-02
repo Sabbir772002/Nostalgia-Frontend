@@ -1,20 +1,83 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+import {Dropdown,DropdownButton,Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import axios from 'axios';
+import './FindF.css';
 // Import the image
 import img3 from "../../assets/User-post/img3.jpg";
 
-const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly access userData
+const FindF = ({fndlist,setfndlist,fnd,fetchData}) => { // Destructure props to directly access userData
     const userData= JSON.parse(localStorage.getItem('userData'));
+    const [selectedOption, setSelectedOption] = React.useState("Accept");
+    const add_fnf = async () => {
+      try {
+          
+          const response = await axios.post('http://localhost:8000/add_fnf', {
+              user_id: userData.id,
+              friend_id: fnd.id,
+              type: "Sent"
+          });
+          alert("Friend Request Sent successfully")
+          fetchData();
+          console.log(response.data.message); // Log the response message
+          // You may update UI state or perform other actions after successful request
+      } catch (error) {
+          alert(error.response.data.message)
+          console.error('Error:', error);
+          // Handle errors if any
+      }
+  };
 
-    return (
-        <Card className="text-center card-box" style={{ width: '300px',height: '460px' }}> 
+   const delete_fnd = async () => {
+    try {
+        
+        const response = await axios.post('http://localhost:8000/delete_fnd', {
+            user_id: userData.id,
+            friend_id: fnd.id,
+            type: "Sent"
+        });
+        alert("Friend Request Delete successfully")
+        fetchData();
+        console.log(response.data.message); // Log the response message
+        // You may update UI state or perform other actions after successful request
+    } catch (error) {
+        alert(error.response.data.message)
+        console.error('Error:', error);
+        // Handle errors if any
+    }
+};
+const updatefnf = async (option) => {
+  try {
+      if( option == "" ){ 
+          return;
+      }
+      const response = await axios.post('http://localhost:8000/update_fnf', {
+          user_id: userData.id,
+          friend_id: fnd.id,
+          type: option
+      });
+      alert("Friend Update successfully")
+      fetchData(setfndlist);
+      console.log(response.data.message); // Log the response message
+      // You may update UI state or perform other actions after successful request
+  } catch (error) {
+      alert(error.response.data.message)
+      console.error('Error:', error);
+      // Handle errors if any
+  }
+};
+const handleSelect = (option) => {
+  setSelectedOption(option);
+  updatefnf(option);
+};
+
+        return (
+        <Card className="text-center card-box" style={{ width: '330px',height: '460px' }}> 
         <Card.Body className="member-card pt-2 pb-2">
             <div className="thumb-lg member-thumb mx-auto">
               <img
-                src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                src={`http://localhost:8000/${fnd.pp}`}
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
               />
@@ -61,13 +124,40 @@ const FindF = ({fndlist,setfndlist,fnd}) => { // Destructure props to directly a
                 ></a>
               </li>
             </ul>
-            <div>
-              <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
-                Request Now
-              </Button>
+            <div className="row">
+              <div className="col-6">
+            <>
+            {fnd && fnd.good === userData.username ? (
+                <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1 disabled-button" onClick={delete_fnd}>
+                    Undo
+                </Button>
+            ) : (
+              <>
+              {fnd && fnd.status == 1 ? (
+                <DropdownButton
+                title={selectedOption || "Select Option"}
+                variant="secondary"
+                className="mt-3 btn-rounded waves-effect w-md waves-light m-1"
+                onSelect={handleSelect}
+            >
+                <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
+                <Dropdown.Item eventKey="Bondhu">Bondhu</Dropdown.Item>
+            </DropdownButton>
+              ) : (
+                  <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1" onClick={add_fnf}>
+                      Request
+                  </Button>
+              )}
+          </>
+
+            )}
+        </>
+        </div>
+            <div className="col-6">
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 View Profile
               </Button>
+              </div>
             </div>
           </Card.Body>
         </Card>

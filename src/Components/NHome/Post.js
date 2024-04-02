@@ -149,10 +149,15 @@ const handleDelete=(id)=>{
          </div>
        </div>
 
-        <p className='body'>{
-        (post.content).length <=300 ?
-        post.content : `${(post.content).slice(0,300)}...`
-        }</p>
+       <p className='body'>
+  {post.content && typeof post.content === 'string' && post.content.length > 300 ? (
+    `${post.content.slice(0, 300)}...`
+  ) : (
+    post.content
+  )}
+</p>
+
+
 
        {post.blog_img && (<img src={`http://localhost:8000/${post.blog_img}`} alt="" className="post-img" />)}
   

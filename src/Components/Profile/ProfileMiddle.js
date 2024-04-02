@@ -3,6 +3,7 @@ import UserHome from '../UserHome/UserHome'
 
 import Profile from "../../assets/profile.jpg"
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import "../Profile/ProfileMiddle.css"
 
 import moment from 'moment'
@@ -72,8 +73,8 @@ const ProfileMiddle = ({following,
 
    
 
-    
-
+    const { username } = useParams();
+const userData= JSON.parse(localStorage.getItem('userData'));
   return (
     <div className='profileMiddle'>
         <Info 
@@ -88,7 +89,7 @@ const ProfileMiddle = ({following,
         userName={userName}
         setUserName={setUserName}
         />
-        
+        {userData && userD.username == userData.username &&(
         <ProfileInputPost
         userD={userD}
         profileImg={profileImg}
@@ -100,6 +101,7 @@ const ProfileMiddle = ({following,
         images={images}
         setImages={setImages}
         />
+        )}
         
         <UserHome 
         userD={userD}

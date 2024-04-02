@@ -53,22 +53,31 @@ const FindFriendlist = () => {
 
      const [fndlist, setfndlist] = useState([]);
 
-      useEffect(() => {
-          // Fetch data from Django backend
-          axios.get('http://localhost:8000/findfriend',  {
-            params: {
-              user_id: userData.id
-            }
-        }) .then(response => {
-                 // console.log("mere fnd");
-                 // console.log(response.data.users);
-                  setfndlist(response.data.users);
-                 // console.log(fndlist);
-              })
-              .catch(error => {
-                  console.error('Error fetching data:', error);
-              });
-      }, []);
+     // Define the function to fetch data
+// Define the function to fetch data
+// Define the function to fetch data
+const fetchData = () => {
+  axios.get('http://localhost:8000/findfriend', {
+      params: {
+          user_id: userData.id
+      }
+  })
+  .then(response => {
+      // console.log("mere fnd");
+      // console.log(response.data.users);
+      setfndlist(response.data.users);
+      // console.log(fndlist);
+  })
+  .catch(error => {
+      console.error('Error fetching data:', error);
+  });
+};
+
+// Call the fetchData function using useEffect
+useEffect(() => {
+  fetchData(); // Call the fetchData function
+}, []);
+
 
   
 
@@ -97,6 +106,7 @@ const FindFriendlist = () => {
         <FindFlist
         fndlist={fndlist}
         setfndlist={setfndlist}
+        fetchData={fetchData}
         />   
         <Right
         showMenu={showMenu}

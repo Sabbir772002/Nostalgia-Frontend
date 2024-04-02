@@ -1,0 +1,5 @@
+.disabled-button {
+    background-color: gray !important; /* Change the background color to gray when disabled */
+    border-color: gray !important; /* Change the border color to gray when disabled */
+    color: #fff !important; /* Change the text color to white when disabled */
+}
