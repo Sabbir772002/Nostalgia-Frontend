@@ -2,14 +2,16 @@ import React from 'react'
 import "../Navigation/Nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa'; // Importing a profile icon from React Icons
 import {AiOutlineHome} from "react-icons/ai"
-import {LiaUserFriendsSolid} from "react-icons/lia"
 import { RiProfileLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 
+<<<<<<< HEAD
 const NNav = ({search,setSearch,setShowMenu}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
+=======
+const NNav = ({search,setSearch}) => {
+>>>>>>> b94fef7b0361a759972056a534389b89bb9bd9f1
 
   return (
     <nav>
@@ -39,13 +41,10 @@ const userData = JSON.parse(localStorage.getItem('userData'));
         </form>
       </div>
 
-      <div className="n-profile" >
-          {/* <Link to="/profile">  */}
-           <Link to="/">
-         <FaUserCircle style={{ fontSize: '24px', marginBottom: '8px',color: 'black' }} />
-
-          </Link>
-      </div>   
+      <div className="n-buttons">
+        <Link to="/login" className="n-button">Login</Link>
+        <Link to="/signup" className="n-button">Signup</Link>
+      </div>      
     </nav>
   )
 }

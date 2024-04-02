@@ -9,32 +9,7 @@ import img3 from "../../assets/User-post/img3.jpg";
 import { useLocation } from 'react-router-dom';
 
 const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { // Destructure props to directly access userData
-    const location = useLocation();
-    //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-    const userData= JSON.parse(localStorage.getItem('userData'));
-  
-   // console.log(userData);
-    
-        const [body,setBody] =useState("");
-        const [importFile,setImportFile] =useState("");
-        
-  
-       const [fndlist, setfndlist] = useState([]);
-  
-        useEffect(() => {
-            // Fetch data from Django backend
-            axios.get('http://localhost:8000/friends')
-                .then(response => {
-                   // console.log("mere fnd");
-                   // console.log(response.data.users);
-                    setfndlist(response.data.users);
-                   // console.log(fndlist);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        }, []);
-  
+   
 
     return (
         <Card className="text-center card-box" style={{ width: '300px',height: '460px' }}> 

@@ -14,13 +14,6 @@ const Caregiver = () => {
   const userData= JSON.parse(localStorage.getItem('userData'));
  // console.log(userData);
  
- 
- 
- 
- 
- 
- 
- 
       
      const [caregiverlist, setCaregiverlist] = useState([]);
       useEffect(() => {
