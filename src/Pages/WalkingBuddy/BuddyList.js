@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import './Buddylist.css';
+import { Tab, Tabs, Table } from 'react-bootstrap';
 
 const BuddyList = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -28,21 +29,19 @@ const BuddyList = () => {
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value; // By default, use the selected value
-  
+
     // If the id is "privacy", you can map the value to "Bondhu" or "Known"
     if (id === 'privacy') {
       newValue = value === 'Bondhu' ? 'Bondhu' : 'Known';
       console.log("yo");
       console.log(newValue);
     }
-  
+
     setFormData(prevFormData => ({
       ...prevFormData,
       [id]: newValue
     }));
   };
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +85,8 @@ const BuddyList = () => {
   const handleInputBoxButtonClick = () => {
     setShowInputBoxModal(true);
   };
+  
+  const handleClose = () => setShowUserInfoModal(false);
 
   return (
     <div className="vox mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
@@ -169,23 +170,33 @@ const BuddyList = () => {
         </table>
 
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={() => setShowUserInfoModal(false)}>
+        <Modal show={showUserInfoModal} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {selectedUser && (
-              <div>
-                <p><strong>Name:</strong> {selectedUser.w_creator}</p>
-                <p><strong>Location:</strong> {selectedUser.location}</p>
-                <p><strong>Date:</strong> {selectedUser.date}</p>
-                <p><strong>End:</strong> {selectedUser.end}</p>
-                <p><strong>Time:</strong> {selectedUser.time}</p>
-              </div>
-            )}
-          </Modal.Body>
+  <Tabs defaultActiveKey="details">
+    <Tab eventKey="request" title="Request">
+      <RequestList/>
+    </Tab>
+    <Tab eventKey="details" title="Details">
+      {selectedUser && (
+        <div>
+          <p><strong>Name:</strong> {selectedUser.w_creator}</p>
+          <p><strong>Location:</strong> {selectedUser.location}</p>
+          <p><strong>Date:</strong> {selectedUser.date}</p>
+          <p><strong>End:</strong> {selectedUser.end}</p>
+          <p><strong>Time:</strong> {selectedUser.time}</p>
+        </div>
+      )}
+    </Tab>
+    <Tab eventKey="members" title="Members">
+      {selectedUser && <MemberList members={selectedUser.members} />}
+    </Tab>
+  </Tabs>
+</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowUserInfoModal(false)}>Close</Button>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -194,3 +205,66 @@ const BuddyList = () => {
 };
 
 export default BuddyList;
+
+const MemberList = ({ members }) => {
+  // Sample member data
+  const sampleMembers = [
+    { id: 1, name: 'John Doe', age: 30, gender: 'Male' },
+    { id: 2, name: 'Jane Smith', age: 25, gender: 'Female' },
+    // Add more sample members as needed
+  ];
+
+  return (
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sampleMembers.map(member => (
+          <tr key={member.id}>
+            <td>{member.name}</td>
+            <td>{member.age}</td>
+            <td>{member.gender}</td>
+            {/* <td><Button variant="primary" onClick={() =>}>View Profile</Button></td> */}
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+}
+
+const RequestList = (userId) => {
+// Sample member data
+const sampleMembers = [
+  { id: 1, name: 'John Doe', age: 30, gender: 'Male' },
+  { id: 2, name: 'Jane Smith', age: 25, gender: 'Female' },
+  // Add more sample members as needed
+];
+
+return (
+  <Table striped bordered hover>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {sampleMembers.map(member => (
+        <tr key={member.id}>
+          <td>{member.name}</td>
+          <td>{member.age}</td>
+          <td>{member.gender}</td>
+          {/* <td><Button variant="primary" onClick={() => viewProfile(member.id)}>View Profile</Button></td> */}
+        </tr>
+      ))}
+    </tbody>
+  </Table>
+);}
