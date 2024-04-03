@@ -3,6 +3,9 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import './Buddylist.css';
 import { Tab, Tabs, Table } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
+import RequestList from './Request';
 
 const BuddyList = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -176,9 +179,12 @@ const BuddyList = () => {
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
-    <Tab eventKey="request" title="Request">
-      <RequestList/>
-    </Tab>
+ {userData && selectedUser && userData.id == selectedUser.userid && (
+             <Tab eventKey="request" title="Request">
+                  <RequestList fmembers={fetchData} />
+                  </Tab>
+                )}
+    
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
@@ -236,35 +242,4 @@ const MemberList = ({ members }) => {
       </tbody>
     </Table>
   );
-}
-
-const RequestList = (userId) => {
-// Sample member data
-const sampleMembers = [
-  { id: 1, name: 'John Doe', age: 30, gender: 'Male' },
-  { id: 2, name: 'Jane Smith', age: 25, gender: 'Female' },
-  // Add more sample members as needed
-];
-
-return (
-  <Table striped bordered hover>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {sampleMembers.map(member => (
-        <tr key={member.id}>
-          <td>{member.name}</td>
-          <td>{member.age}</td>
-          <td>{member.gender}</td>
-          {/* <td><Button variant="primary" onClick={() => viewProfile(member.id)}>View Profile</Button></td> */}
-        </tr>
-      ))}
-    </tbody>
-  </Table>
-);}
+        };
