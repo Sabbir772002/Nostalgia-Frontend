@@ -6,12 +6,8 @@ import {AiOutlineHome} from "react-icons/ai"
 import { RiProfileLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 
-<<<<<<< HEAD
 const NNav = ({search,setSearch,setShowMenu}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
-=======
-const NNav = ({search,setSearch}) => {
->>>>>>> b94fef7b0361a759972056a534389b89bb9bd9f1
 
   return (
     <nav>

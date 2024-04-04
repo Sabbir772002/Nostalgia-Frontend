@@ -8,6 +8,7 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { BiMessage, BiLogOut } from 'react-icons/bi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import './Info.css';
 const Info = ({
   userPostData,
@@ -44,13 +45,16 @@ const Info = ({
   };
 
   const user = JSON.parse(localStorage.getItem('userData'));
-
+const navigate = useNavigate();
   const logoutUser = () => {
     // Remove 'userData' from localStorage or perform logout actions
     localStorage.removeItem('userData');
+    console.log("logout "+user.username);
+    localStorage.clear();
+    navigate('/')
     // Add other logout logic here
   };
-
+  
   return (
     <div className='info'>
       <div className='info-cover'>

@@ -28,7 +28,7 @@ const Info_Box = ({userPostData,
   const importCover =useRef()
   const logoutUser = () => {
     // Remove 'userData' from localStorage or perform logout actions
-    //localStorage.removeItem('userData');
+    localStorage.removeItem('userData');
     // Add other logout logic here
   };
   
