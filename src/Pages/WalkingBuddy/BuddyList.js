@@ -81,6 +81,8 @@ const BuddyList = () => {
   });
 
   const handleUserInfoClick = (user) => {
+    console.log('User info:', user);
+    console.log('User data:', userData);
     setSelectedUser(user);
     setShowUserInfoModal(true);
   };
@@ -179,7 +181,7 @@ const BuddyList = () => {
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.id == selectedUser.userid && (
+ {userData && selectedUser && userData.username == selectedUser.w_creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchData} />
                   </Tab>
