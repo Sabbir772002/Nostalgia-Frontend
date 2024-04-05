@@ -17,13 +17,12 @@ import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import Compare from './Pages/Compare/Compare';
 import NHome from './Pages/NHome/NHome';
 import Caregiver from './Pages/Caregiver/Caregiver';
-
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
-
+import GroupProfile from './Pages/Groups/Profile/GroupProfile';
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
@@ -54,7 +53,8 @@ const App = () => {
             <Route path='/compare' element={<Compare />} />
             <Route path='/nhome' element={<NHome />} />
             <Route path='/findfrined' element={<FindFriendlist />} />
-            <Route path='/group' element={<GroupHome />} />
+            <Route path='/groups' element={<GroupHome />} />
+            <Route path='/group' element={<GroupProfile />} />
           </Routes>
         </div>
       </UserProvider>

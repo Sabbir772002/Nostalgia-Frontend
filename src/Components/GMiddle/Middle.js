@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import InputPost from '../Post/InputPost'
 import Homepage from "../GHome/Homepage"
 import "../MiddleSide/Middle.css"
-import ShowGroup from "./RightGroup/ShowGroup.js"
 
 
 const Middle = ({posts,fetchPosts}) => {

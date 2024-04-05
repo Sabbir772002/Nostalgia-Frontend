@@ -28,22 +28,55 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const Post = ({ post, posts }) => {
-  const [comments, setComments] = useState([]);
+    const [postbox,setPostbox] = useState(post);
+
+  const [comments,setComments] =useState([]);
   const [like, setLike] = useState(post.is_upvoted);
   const [filledLike, setFilledLike] = useState(post.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
-  const [commentInput, setCommentInput] = useState("");
   const [showDelete, setShowDelete] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [socialIcons, setSocialIcons] = useState(false);
   const userdata = JSON.parse(localStorage.getItem('userData'));
-  const [postbox,setPostbox] = useState(post);
+  const [commentInput, setCommentInput] = useState({
+    author: userdata.username,
+    content: '',
+    blog: post.id,
+});
+const handleCommentSubmit = async (e) => {
+    console.log(commentInput.content);
+    e.preventDefault();
+    try {
+        const response = await axios.post('http://localhost:8000/comment', commentInput);
+        console.log(response.data);
+        alert('Comment created successfully');
+        setCommentInput(  { 
+         author: userdata.username,
+          content: '',
+          blog: post.id,
+    });
+        //Fetch comments again
+        fetchComments();
+    } catch (error) {
+        console.error('Error creating comment:', error);
+        alert('Error creating comment. Please try again.');
+    }
+};
   useEffect(() => {
     fetchComments(postbox.id);
-  }, [post.id]);
+  }, []);
   const fetchComments = async (postId) => {
     try {
-      const response = await axios.get(`API_ENDPOINT/posts/${postId}/comments`);
-      setComments(response.data.comments);
+      console.log(post.author);
+      console.log(post.id);
+      
+      const response = await axios.get(`http://localhost:8000/comments`,{
+          params: {
+          username:post.author,
+          blog: post.id
+      }
+      });
+      console.log(response.data);
+      setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
@@ -72,29 +105,17 @@ const Post = ({ post, posts }) => {
       // Handle UI update after successful deletion
     } catch (error) {
       console.error('Error deleting the post:', error);
+    
     }
   };
-
-  const handleCommentInput = async (e) => {
-    e.preventDefault();
-    const commentObj = {
-      profilePic: Profile,
-      username: "Vijay",
-      comment: commentInput,
-      time: moment().fromNow(),
-    };
-    try {
-      const response = await axios.post(`API_ENDPOINT/posts/${postbox.id}/comments`, commentObj);
-      setComments([...comments, response.data.comment]);
-      setCommentInput("");
-    } catch (error) {
-      console.error('Error adding comment:', error);
-    }
-  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCommentInput(prevState => ({ ...prevState, [name]: value }));
+};
   const handleFriendsId = (id) => {
     // Implement this function as per your requirements
   };
-
+  
   return (
     <div className='post'>
       <div className='post-header'>
@@ -153,7 +174,7 @@ const Post = ({ post, posts }) => {
 
           {showComment && (
             <div className="commentSection">
-              <form onSubmit={handleCommentInput}>
+              <form onSubmit={handleCommentSubmit}>
                 <div className="cmtGroup">
                   <SentimentSatisfiedRoundedIcon className='emoji' />
                   <input
@@ -161,8 +182,9 @@ const Post = ({ post, posts }) => {
                     id="commentInput"
                     required
                     placeholder='Add a comment...'
-                    onChange={(e) => setCommentInput(e.target.value)}
-                    value={commentInput}
+                    onChange={handleChange}
+                    value={commentInput.content}
+                    name="content"
                   />
                   <button type='submit'><SendRoundedIcon className='send' /></button>
                 </div>
@@ -174,6 +196,8 @@ const Post = ({ post, posts }) => {
                     className="classComment"
                     cmt={cmt}
                     key={cmt.id}
+                    cmnt={comments}
+                    post={post}
                   />
                 ))}
               </div>

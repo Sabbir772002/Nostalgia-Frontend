@@ -1,19 +1,13 @@
 import { useState,useEffect } from 'react'
-import Left from '../../Components/LeftSide/Left'
-import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
-import Overseer from '../../Components/EditPro/Overseer/Overseer'
-import Right from '../../Components/RightSide/Right'
-import Nav from '../../Components/Navigation/Nav'
+import Left from '../../../Components/LeftSide/Left'
+import Gprofile from '../../../Components/GroupProfile/Gprofile'
+import Right from '../../../Components/RightSide/Right'
+import Nav from '../../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
-import ProfileImg from "../../assets/profile.jpg"
-import { useUser } from '../../context/UserContext';
-import img1 from "../../assets/User-post/img1.jpg"
-import img2 from "../../assets/User-post/img2.jpg"
-import img3 from "../../assets/User-post/img3.jpg"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
-const Profile = () => {
+const GroupProfile = () => {
   const { username } = useParams();
   console.log(username);
   const [userData, setUserData] = useState([]);
@@ -24,7 +18,7 @@ const Profile = () => {
   const [images, setImages] = useState(null);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-  const [profileImg, setProfileImg] = useState(ProfileImg);
+  const [profileImg, setProfileImg] = useState("");
   const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
   const [userD, setUserD] = useState(
@@ -55,7 +49,7 @@ const Profile = () => {
             {
               id: 1,
               username: "Vijay",
-              profilepicture: ProfileImg,
+              profilepicture: `http://localhost:8000/${response.data.p_image}`,
               img: `http://localhost:8000/${response.data.p_image}`,
               datetime: moment("20230401", "YYYYMMDD").fromNow(),
               body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
@@ -65,7 +59,7 @@ const Profile = () => {
          {
         id:2,
         username:"Vijay",
-        profilepicture:ProfileImg,
+        profilepicture:`http://localhost:8000/${response.data.p_image}`,
         img:`http://localhost:8000/${response.data.p_image}`,
         datetime:moment("20230525", "YYYYMMDD").fromNow(),
         body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
@@ -75,7 +69,7 @@ const Profile = () => {
         {
             id:3,
             username:"Vijay",
-            profilepicture:ProfileImg,
+            profilepicture:`http://localhost:8000/${response.data.p_image}`,
             img:`http://localhost:8000/${response.data.p_image}`,
             datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
             body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
@@ -123,7 +117,7 @@ const Profile = () => {
         
         />
 
-        <ProfileMiddle 
+        <Gprofile 
         following={following}
         search={search}
         images={images}
@@ -150,5 +144,4 @@ const Profile = () => {
     </div>
   )
 }
-
-export default Profile
+export default GroupProfile;

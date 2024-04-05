@@ -105,7 +105,7 @@ const ShowGroup = () => {
         <Button variant="primary" onClick={handleAddOverseer}> Create Group</Button>
 
    </div>
-      <h2 className="mt-3 font-weight-bold ">Groups List</h2>
+      <h2 className="mt-3font-weight-bold ">Groups List</h2>
 
       {fndlist.map((person, index) => (
         <div className="sugg-people" key={index}>
