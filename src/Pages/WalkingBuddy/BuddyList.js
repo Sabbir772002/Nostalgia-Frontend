@@ -6,6 +6,7 @@ import { Tab, Tabs, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
+import MemberList from './Walkmembers';
 
 const BuddyList = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -79,11 +80,24 @@ const BuddyList = () => {
     time: '',
     privacy: 'Bondhu'
   });
+  const [members, setMembers] = useState([]);
+  const fetmembers = async () => {
+    try {
+    const response = await axios.get('http://localhost:8000/walkmembers', {
+    params: { id:selectedUser.walk }
+    });
+    setMembers(response.data);
+    }catch (error) {
+    console.error('Error fetching members:', error);
+    }
+    };
+    
+  
 
   const handleUserInfoClick = (user) => {
-    console.log('User info:', user);
-    console.log('User data:', userData);
+    console.log("ogo, hete chole jaite mon chaitese na...");
     setSelectedUser(user);
+    fetmembers();
     setShowUserInfoModal(true);
   };
 
@@ -199,7 +213,7 @@ const BuddyList = () => {
       )}
     </Tab>
     <Tab eventKey="members" title="Members">
-      {selectedUser && <MemberList members={selectedUser.members} />}
+      {selectedUser && <MemberList members={members} />}
     </Tab>
   </Tabs>
 </Modal.Body>
@@ -214,34 +228,3 @@ const BuddyList = () => {
 
 export default BuddyList;
 
-const MemberList = ({ members }) => {
-  // Sample member data
-  const sampleMembers = [
-    { id: 1, name: 'John Doe', age: 30, gender: 'Male' },
-    { id: 2, name: 'Jane Smith', age: 25, gender: 'Female' },
-    // Add more sample members as needed
-  ];
-
-  return (
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sampleMembers.map(member => (
-          <tr key={member.id}>
-            <td>{member.name}</td>
-            <td>{member.age}</td>
-            <td>{member.gender}</td>
-            {/* <td><Button variant="primary" onClick={() =>}>View Profile</Button></td> */}
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  );
-        };
