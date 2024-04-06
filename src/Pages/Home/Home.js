@@ -44,7 +44,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/blog', {
+    axios.get('http://localhost:8000/htimeline', {
     params: {
         username: userData.username
     }
