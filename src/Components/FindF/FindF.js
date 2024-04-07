@@ -142,6 +142,7 @@ const handleSelect = (option) => {
             >
                 <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
                 <Dropdown.Item eventKey="Bondhu">Bondhu</Dropdown.Item>
+                <Dropdown.Item eventKey="Delete">Delete</Dropdown.Item>
             </DropdownButton>
               ) : (
                   <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1" onClick={add_fnf}>

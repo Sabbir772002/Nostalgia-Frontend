@@ -102,7 +102,7 @@ const Post = ({ post, posts }) => {
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
             <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
-                <h2 className='' style={{ marginBottom: '5px' }}>FFT or Treaps</h2>
+                <h2 className='' style={{ marginBottom: '5px' }}>{post.group_name}</h2>
                 <h4 className='ml-2 item-align-center text-align-center' style={{ color: 'gray', fontSize: '14px', marginLeft: '5px', marginTop: '0' }}>{postbox.author}</h4>
                 {/* <h5 className='ml-2 datePara'>{postbox.post_date}</h5> */}
                 </div>
@@ -129,7 +129,7 @@ const Post = ({ post, posts }) => {
         postbox.content : `${(postbox.content).slice(0, 300)}...`
       }</p>
 
-      {postbox.blog_img && (<img src={`http://localhost:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
+      {postbox.post_img && (<img src={`http://localhost:8000/${postbox.post_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">

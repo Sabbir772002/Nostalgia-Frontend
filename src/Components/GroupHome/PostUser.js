@@ -25,37 +25,19 @@ import img3 from  "../../assets/Following/img-4.jpg"
 import { useState } from 'react';
 import Comments from '../Comments/Comments';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
+
 
 const PostUser = ({posts,post,setPosts,userD}) => {
+  const [postbox,setPostbox] =useState(post);
+  console.log("ye nuha kothai apni");
+  console.log(postbox);
 
-  const [comments,setComments] =useState([
-    {
-        id:1,
-        profilePic:userD.image,
-        likes:23,
-        username:"Violet",
-        time:"3 Hours Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi laboriosam vitae voluptatem animi maiores voluptatibus."
-    },
-    {
-        id:2,
-        profilePic:userD.image,
-        likes:5,
-        username:"Brandon",
-        time:"1 Hour Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    {
-        id:3,
-        profilePic:userD.image,
-        likes:50,
-        username:"Lilly",
-        time:"30 Mins Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi"
-    }
-])
+  const [comments,setComments] =useState([])
 
-
+  const handleFriendsId=(id)=>{
+    console.log(id);
+  }
 
   const [like,setLike] =useState(post.like)
   const [unlike,setUnlike] =useState(false)
@@ -63,7 +45,7 @@ const PostUser = ({posts,post,setPosts,userD}) => {
   const [filledLike,setFilledLike] =useState(<FavoriteBorderOutlinedIcon />)
   const [unFilledLike,setUnFilledLike] =useState(false)
 
-  const handlelikes=()=>{
+  const handleLike=()=>{
     setLike(unlike ? like -1 :like +1)
     setUnlike(!unlike)
 
@@ -114,141 +96,96 @@ const handleDelete=(id)=>{
   return (
     <div className='post'>
       <div className='post-header'>
-        <div className='post-user' style={{cursor:"pointer"}}>
-            <img src={ `http://localhost:8000/${userD.p_image}`} className='p-img' alt="" />
-            <h2>{userD.first_name}</h2>
-            <p className='datePara'>{post.datetime}</p>
-        </div>
-         
-         <div className='delete'>
-         {showDelete && (
-         <div className="options">
-         <button><PiSmileySad />Not Interested in this post</button>
-         <button><IoVolumeMuteOutline />Mute this user</button>
-         <button><MdBlockFlipped />Block this user</button>
-         <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
-         <button><MdReportGmailerrorred />Report post</button>
+        <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
+          <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
+            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+                <div className='post-user-info item-align-center'>
+                <h2 className='' style={{ marginBottom: '5px' }}>{postbox.group_name}</h2>
+                <h4 className='ml-2 item-align-center text-align-center' style={{ color: 'gray', fontSize: '14px', marginLeft: '5px', marginTop: '0' }}>{postbox.author}</h4>
+                {/* <h5 className='ml-2 datePara'>{postbox.post_date}</h5> */}
+                </div>
+                </div>
+
+        </Link>
+
+        <div className='delete'>
+        <h4 className='ml-2' style={{fontSize: '10px'}}>Posted on: {postbox.post_date}</h4>
+         {showDelete && (<div className="options">
+            <button><PiSmileySad />Not Interested in this post</button>
+            <button><IoVolumeMuteOutline />Mute this user</button>
+            <button><MdBlockFlipped />Block this user</button>
+            <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
+            <button><MdReportGmailerrorred />Report post</button>
          </div>
          )}
           <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
          </div>
        </div>
-       {
-    
-    }
-        <p className='body'>{
-        (post.content).length <=300 ?
-        post.content : `${(post.content).slice(0,300)}...`
-        }</p>
 
-        {post.img && (<img src={post.img} alt="" className="post-img" />)}
-      
+      <p className='body'>
+        {(postbox.content && (postbox.content).length <= 300) ? 
+    postbox.content : `${(postbox.content).slice(0, 300)}...`
+      }
+
+      </p>
+
+      {postbox.post_img && (<img src={`http://localhost:8000/${postbox.post_img}`} alt="" className="post-img" />)}
+
       <div className="post-foot">
-       <div className="post-footer">
-        <div className="like-icons">
-          <p className='heart' 
-            onClick={handlelikes}
-            style={{marginTop:"5px"}}
-          >
+        <div className="post-footer">
+          <div className="like-icons">
+            <p className='heart' onClick={handleLike}>
               {filledLike}
-          </p>
+            </p>
 
-          <MessageRoundedIcon 
-            onClick= {()=>setShowComment(!showComment)}
-            className='msg'  
-          />
+            <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
 
-          <ShareOutlinedIcon 
-            onClick={()=>setSocialIcons(!socialIcons)}
-            className='share'  
-          />
+            <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' />
 
-        {socialIcons && (
-          
-          <div className="social-buttons">        
-    
-            <a href="http://www.facebook.com" target="blank" className="social-margin"> 
-              <div className="social-icon facebook">
-                <LiaFacebookF className='social-links'/>
+            {socialIcons && (
+              <div className="social-buttons">
+                {/* Add social media icons here */}
               </div>
-            </a>
-            
-            <a href="https://pinterest.com/" target="blank"  className="social-margin">
-              <div className="social-icon instagram">
-                <FiInstagram className='social-links'/>
-              </div>
-            </a>
-            
-            <a href="http://linkedin.com/" className="social-margin" target="blank">
-              <div className="social-icon linkedin">
-                <BiLogoLinkedin className='social-links'/>
-              </div> 
-            </a>
-         
-            <a href="https://github.com/"  target="blank"  className="social-margin">
-              <div className="social-icon github">
-                <FiGithub className='social-links'/>
-              </div>
-            </a>
-            
-            <a href="http://youtube.com/" target="blank"  className="social-margin">
-              <div className="social-icon youtube">
-              <AiFillYoutube className='social-links'/>
-              </div> 
-            </a>
-      
-            <a href="http://twitter.com/" target="blank" className="social-margin">
-              <div className="social-icon twitter">
-              <RxTwitterLogo />
-              </div> 
-            </a>
-       </div>
-      )}
-    </div>
-        
-
-        <div className="like-comment-details">
-          <span className='post-like'>{like} people like it,</span>
-          <span className='post-comment'>{comments.length} comments</span>
-        </div>
-        
-       {showComment && (<div className="commentSection">
-        <form onSubmit={handleCommentInput}>
-          <div className="cmtGroup">
-              <SentimentSatisfiedRoundedIcon className='emoji'
-              />
-              
-              <input 
-              type="text" 
-              id="commentInput"
-              required
-              placeholder='Add a comment...'
-              onChange={(e)=>setCommentInput(e.target.value)}
-              value={commentInput}
-               />
-              
-              <button type='submit'><SendRoundedIcon className='send' /></button> 
-          
+            )}
           </div>
-        </form>
 
-        <div className="sticky">
-          {comments.map((cmt)=>(
-            <Comments 
-            userD={userD}
-            className="classComment"
-            cmt={cmt}
-            key={cmt.id}
-            />
-          ))}
+          <div className="like-comment-details">
+            <span className='post-like'>{postbox.upvote} people Upvoted it,</span>
+            <span className='post-comment'>{comments.length} comments</span>
           </div>
-        </div>
-        )}
 
-      </div>     
+          {showComment && (
+            <div className="commentSection">
+              <form onSubmit={handleCommentInput}>
+                <div className="cmtGroup">
+                  <SentimentSatisfiedRoundedIcon className='emoji' />
+                  <input
+                    type="text"
+                    id="commentInput"
+                    required
+                    placeholder='Add a comment...'
+                    onChange={(e) => setCommentInput(e.target.value)}
+                    value={commentInput}
+                  />
+                  <button type='submit'><SendRoundedIcon className='send' /></button>
+                </div>
+              </form>
+
+              <div className="sticky">
+                {comments.map((cmt) => (
+                  <Comments
+                    className="classComment"
+                    cmt={cmt}
+                    key={cmt.id}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-  </div>
-  )
+  );
 }
 
 export default PostUser

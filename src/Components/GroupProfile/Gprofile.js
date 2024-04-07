@@ -12,67 +12,41 @@ const GProfile = ({following,
                         images,
                         setImages,
                         profileImg,
-                        setProfileImg,
-                        name,
-                        setName,
-                        userName,
-                        setUserName,
-                        group,
-                        setgroup, 
-                        userPostData,
-                        setUserPostData}) => {
-
+                        fmembers,
+                        fetchPosts,
+                        posts,
+                        setPosts,
+                        group}) => {
   const [body,setBody] =useState("")
   const [importFile,setImportFile] =useState("")
-  
   const handleSubmit =(e)=>{
     e.preventDefault()
 
   }
-
-
-  
-
   const [searchResults,setSearchResults] =useState("")
-    
-    useEffect(()=>{
-      const searchData = userPostData.filter((val)=>(
-        (val.body.toLowerCase().includes(search.toLowerCase()))
-       ||
-       (val.username.toLowerCase().includes(search.toLowerCase()))
-       ))
-       setSearchResults(searchData)
-       
-    },[userPostData,search])
-
    const userData= JSON.parse(localStorage.getItem('userData'));
   return (
     <div className='profileMiddle'>
         <Info 
         group={group}
-        setgroup={setgroup} 
+        fmembers={fmembers}
         />
-        {/* {userData && userD.username == userData.username &&(
+        {group && group.member == 1 &&(
         <ProfileInputPost
-        userD={userD}
-        profileImg={profileImg}
         handleSubmit={handleSubmit}
-        body ={body}
-        setBody ={setBody}
-        importFile ={importFile}
-        setImportFile ={setImportFile}
-        images={images}
-        setImages={setImages}
-        />
-        )} */}
-        
-        <UserHome 
         group={group}
-        profileImg={profileImg}
-        setUserPostData={setUserPostData}
-        userPostData={searchResults}
-        images={images}
+        user={userData}
+        fmembers={fmembers}
+        fetchPosts={fetchPosts}
         />
+        )} 
+        
+        <UserHome
+        fetchPosts={fetchPosts}
+        group={group}
+        posts={posts}
+        setposts={setPosts}
+        /> 
     </div>
   )
 }

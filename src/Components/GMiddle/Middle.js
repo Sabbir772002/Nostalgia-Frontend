@@ -18,6 +18,8 @@ const Middle = ({posts,fetchPosts}) => {
     //    setSearchResults(searchData)
        
     // },[posts,search])
+    console.log("i am in middle of group timeline");
+    console.log(posts);
   
   return (
     <div className='M-features'>

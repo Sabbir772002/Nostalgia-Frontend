@@ -14,12 +14,13 @@ const GroupHome = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/blog', {
+    axios.get('http://localhost:8000/gt_post', {
     params: {
         username: userData.username
     }
 })
 .then(response => {
+  console.log('Posts:', response.data);
     setPosts(response.data);
 })
 .catch(error => {

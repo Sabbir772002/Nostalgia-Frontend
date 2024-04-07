@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react'
 import Left from '../../../Components/LeftSide/Left'
 import Gprofile from '../../../Components/GroupProfile/Gprofile'
-import Right from '../../../Components/RightSide/Right'
+import Right from '../../../Components/GroupRight/Right'
 import Nav from '../../../Components/Navigation/Nav'
 import "../Profile/Profile.css"
 import moment from 'moment'
@@ -22,12 +22,21 @@ const GroupProfile = () => {
   const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
   const [group, setgroup] = useState("");
-
-    const fetchUserData = async () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    fmembers();
+  } 
+  , [username]);
+  
+    const fmembers = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`);
+        const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`,
+        {
+          params: {
+            user_id: user.id
+          }
+        });
         if (response.status === 200) {
-          setUserData(response.data);
           console.log("i am in group profile");
           console.log(response.data);
           setgroup(response.data);
@@ -40,8 +49,24 @@ const GroupProfile = () => {
           }
     };
 
-    
-  fetchUserData();
+    const fetchPosts = () => {
+      axios.get(`http://localhost:8000/gp_post`,
+      {
+        params: {
+          username:username
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+          setPosts(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching posts:', error);
+        });
+    };
+    useEffect(() => {
+      fetchPosts();
+    }, []);
 
   return (
     <div className='interface'>
@@ -62,20 +87,12 @@ const GroupProfile = () => {
         />
 
         <Gprofile 
-        following={following}
-        search={search}
-        images={images}
-        setImages={setImages}
-        name={name}
-        setName={setName}
-        userName={userName}
-        setUserName={setUserName}
-        profileImg={profileImg}
-        setProfileImg={setProfileImg}
         group={group}
         setgroup={setgroup}
-        userPostData={userPostData}
-        setUserPostData={setUserPostData}
+        fmembers={fmembers}
+        fetchPosts={fetchPosts}
+        posts={posts}
+        setPosts={setPosts} 
         />
         
         <Right 

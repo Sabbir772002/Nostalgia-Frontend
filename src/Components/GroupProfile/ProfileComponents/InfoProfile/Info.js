@@ -10,11 +10,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
+import axios from 'axios';
 const Info = ({
-  userPostData,
-  following,
-  group,
-  setgroup
+   group,
+  setgroup,
+  fmembers
 
 }) => {
   const [coverImg, setCoverImg] = useState(Info3);
@@ -50,13 +50,40 @@ const navigate = useNavigate();
     // Add other logout logic here
   };
   console.log("in info page");
-  console.log(group); 
-  
+  console.log(group);
+  const handleJoin =async () => {
+    const response = await axios.post(`http://localhost:8000/join_group`, {
+      user_id: user.id,
+      group : group.username,
+      type: "join"
+    });
+    if(response.ok==0){
+      alert("You are already a member of this group");
+      return;
+    }
+    fmembers();
+    console.log("in join");
+    console.log(group);
+    //setgroup({...group,member:1});
+  };
+  const handleMember = async () => {
+  }
+  // const handleMember = () => {
+  //   console.log("in member");
+  //   console.log(group);
+  //   const response = axios.post(`http://localhost:8000/join_group`, {
+  //     user_id: user.id,
+  //     group : group.username,
+  //   type: "Delete"
+  //   });
+  //   fmembers();
+  //   //setgroup({...group,member:0});
+  // }
   return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src="" alt='profile' />
+        <img  src={`http://localhost:8000/${group.img}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
@@ -92,12 +119,14 @@ const navigate = useNavigate();
             </button>
           </Link>
         ) : (
-          <Link to=''>
-            <button>
-            <FontAwesomeIcon icon={faUserFriends} />
-              Friend
-            </button>
-          </Link>
+<button onClick={group.member === 1 ? handleMember : handleJoin}>
+  <FontAwesomeIcon icon={faUserFriends} />
+  {group.member === 1 ? (
+    "Member"
+  ) : (
+    "Join"
+  )}
+</button>
         )}
 
         <div className='info-details'>
@@ -126,7 +155,7 @@ const navigate = useNavigate();
             <div>
             </div>
             <div>
-              <h2>{following}</h2>
+              <h2></h2>
               <span>Following</span>
             </div>
           </div>
