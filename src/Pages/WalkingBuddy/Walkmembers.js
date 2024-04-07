@@ -17,8 +17,8 @@ const MemberList = ({ members }) => {
         <tbody>
           {members.map(member => (
             <tr key={member.id}>
-              <td>{member.name}</td>
-              <td>{member.age}</td>
+              <td>{member.first_name}</td>
+              <td>{member.dob}</td>
               <td>{member.gender}</td>
               {/* <td><Button variant="primary" onClick={() =>}>View Profile</Button></td> */}
             </tr>

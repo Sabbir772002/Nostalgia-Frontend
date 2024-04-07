@@ -55,6 +55,7 @@ const BuddyList = () => {
     try {
       await axios.post('http://localhost:8000/walk', formData);
       console.log('Walk data sent successfully:', formData);
+      fetchData();
       // Reset form data after successful submission
       setFormData({
         walk_name: '',
@@ -65,7 +66,6 @@ const BuddyList = () => {
         time: '',
         privacy: 'Bondhu'
       });
-      fetchData();
     } catch (error) {
       console.error('Error sending walk data:', error);
     }
@@ -81,23 +81,48 @@ const BuddyList = () => {
     privacy: 'Bondhu'
   });
   const [members, setMembers] = useState([]);
-  const fetmembers = async () => {
+  const fetchmembers = async (user) => {
+    console.log("kauke passi na khujte khujte...");
+    console.log(user);
     try {
     const response = await axios.get('http://localhost:8000/walkmembers', {
-    params: { id:selectedUser.walk }
+    params: { id: user.id }
     });
     setMembers(response.data);
     }catch (error) {
     console.error('Error fetching members:', error);
     }
     };
-    
+    const submitrequest = async (walk) => {
+      console.log("hatte jabo tomar sathe.... niba?");
+      if(walk.w_creator == userData.username){
+        alert("You cannot request to join your own walk.");
+        return;
+      }
+      try {
+     const response= await axios.post('http://localhost:8000/walk_request', { 
+      id: walk.id,
+      username: userData.username
+      });
+      fetchData();
+      if(response.data.user == userData.username){
+        alert("You have already requested to join this walk. Please wait for the owner to accept your request.");
+        return;
+      }
+      console.log('Request sent successfully:', walk.id); 
+      alert("Request sent successfully. Please wait for the owner to accept your request.");
+      } catch (error) {
+        alert("Some issue! Try again after some moment!.");
+        //something need to be done, as for network failure....
+      console.error('Error sending request:', error);
+      }
+    };
   
 
   const handleUserInfoClick = (user) => {
     console.log("ogo, hete chole jaite mon chaitese na...");
     setSelectedUser(user);
-    fetmembers();
+    fetchmembers(user);
     setShowUserInfoModal(true);
   };
 
@@ -181,8 +206,23 @@ const BuddyList = () => {
                 <td>{user.date}</td>
                 <td>{user.end}</td>
                 <td>{user.time}</td>
-                <td><Button variant="primary">Request</Button></td>
-                <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
+                {user.w_creator == userData.username && (
+                  <td><Button variant="primary" onClick={() => submitrequest()}>Owner</Button></td>
+              )}
+              {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
+                  <td><Button variant="success" onClick={() => submitrequest()} >Member</Button></td>
+              )}
+              {user.member == 1 && user.not_ac == 1 && (
+                <td><Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={() => submitrequest()}>Requested</Button></td>
+              )} 
+              {user.member == 1 && user.cancel == 1 && (
+                <td><Button variant="gray" onClick={() => submitrequest()}>Cancel</Button></td>
+            )}
+              {(user.w_creator != userData.username && user.member == 0 ) && (
+                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
+              )}
+
+              <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
               </tr>
             ))}
           </tbody>
@@ -197,7 +237,7 @@ const BuddyList = () => {
   <Tabs defaultActiveKey="details">
  {userData && selectedUser && userData.username == selectedUser.w_creator && (
              <Tab eventKey="request" title="Request">
-                  <RequestList fmembers={fetchData} />
+                  <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
                 )}
     

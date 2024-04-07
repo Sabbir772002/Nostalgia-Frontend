@@ -3,23 +3,31 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Overseer.css";
 import { Modal, Button, Form} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const ShowGroup = () => {
   const [formData, setFormData] = useState({
     username: '',
-    first_name: '',
-    last_name: '',
-    password: '',
+    name: '',
+    privacy: '',
+    topic: '',
     phone: '',
     email: '',
-    Location: '',
-    Relation: ''
   });
   const user= JSON.parse(localStorage.getItem('userData'));
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { id, value } = e.target;
+    let newValue = value;
+    if(id == 'privacy') {
+      console.log('Privacy:', value);
+      newValue = value;
+    }
+
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [id]: newValue
+    }));
   };
 
   const [fndlist, setfndlist] = useState([]);
@@ -35,13 +43,13 @@ const ShowGroup = () => {
 
   
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/friends`, {
+    axios.get(`http://127.0.0.1:8000/my_groups`, {
       params: {
         user_id: user.id
       }
     })
       .then(response => {
-        setfndlist(response.data.users);
+        setfndlist(response.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -71,25 +79,23 @@ const ShowGroup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('Data submitted:', formData);
-      formData.username= formData.username+"@"+user.username;
-      formData.address= formData.Location;
-      formData.dob="2021-09-01";
-      formData.thana="1";
-      formData.nid="5288";
-      formData.gender="Male";
-      const response = await axios.post('http://localhost:8000/add_overseer', formData);
+      console.log('Data submitted:', formData);   
+      formData.id=user.id;  
+      formData.username=formData.username; 
+      const response = await axios.post('http://localhost:8000/add_group', formData);
+      if(response.data.msg === "Group already exists"){
+        alert("Group With this Username already exists")
+        return;
+      }
        
       console.log('Data submitted:', response.data);
       setFormData({
         username: '',
-        first_name: '',
-        last_name: '',
-        password: '',
+        name: '',
+        privacy: '',
+        topic: '',
         phone: '',
         email: '',
-        Location: '',
-        Relation: ''
       });
       fetchOverseerList();
       setShowModal(false);
@@ -103,28 +109,28 @@ const ShowGroup = () => {
     <div className="Sugg-comp">
             <div className="text-center mt-1">
         <Button variant="primary" onClick={handleAddOverseer}> Create Group</Button>
+        <hr/>
 
    </div>
       <h2 className="mt-3font-weight-bold ">Groups List</h2>
 
-      {fndlist.map((person, index) => (
+      {fndlist.map((group, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${person.pp}`} alt="" />
-            <h3>{person.first_name}</h3>
-            <h3>{person.last_name}</h3>
+            <img  src= {`http://localhost:8000/${group.gp}`} alt="" />
+            <h3>{group.name}</h3>
           </div>
 
           <div className="s-right">
-            <button onClick={() => handleViewUser(person)}>View</button>
-            <button>Leave</button>
+            <Link to={`/group/${group.username}`}><button>View</button></Link>
+              <button>Leave</button>
           </div>
         </div>
       ))}
 
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
-          <Modal.Title>Add Overseer</Modal.Title>
+          <Modal.Title>Create Group</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
@@ -132,34 +138,34 @@ const ShowGroup = () => {
               <Form.Label>Username</Form.Label>
               <Form.Control type="text" name="username" value={formData.username} onChange={handleChange} />
             </Form.Group>
-            <Form.Group controlId="first_name">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control type="text" name="first_name" value={formData.first_name} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="last_name">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control type="text" name="last_name" value={formData.last_name} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="email">
+            <Form.Group controlId="name">
+              <Form.Label>Group Name</Form.Label>
+              <Form.Control type="text" name="name" value={formData.name} onChange={handleChange} />
+            </Form.Group>  
+            <Form.Group controlId="topic">
+              <Form.Label>Topic</Form.Label>
+              <Form.Control type="text" name="topic" value={formData.topic} onChange={handleChange} />
+            </Form.Group>  
+            {/* <Form.Group controlId="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" name="email" value={formData.email} onChange={handleChange} />
             </Form.Group>
             <Form.Group controlId="phone">
               <Form.Label>Phone</Form.Label>
               <Form.Control type="text" name="phone" value={formData.phone} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="password">
+            </Form.Group> */}
+            {/* <Form.Group controlId="password">
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="Relation">
-              <Form.Label>Relation</Form.Label>
-              <Form.Control type="text" name="Relation" value={formData.Relation} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="Location">
-              <Form.Label>Location</Form.Label>
-              <Form.Control as="textarea" name="Location" value={formData.Location} onChange={handleChange} />
-            </Form.Group>
+            </Form.Group> */}
+            <Form.Group controlId="privacy">
+                    <Form.Label>Privacy</Form.Label>
+                    <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
+                      <option value="Bondhu">Bondhu</option>
+                      <option value="Known">Known</option>
+                      <option value="Public">Public</option>
+                    </Form.Control>
+                  </Form.Group>
             {/* Add other form fields similarly */}
             <Button variant="primary" type="submit" className="mt-2">Submit</Button>
           </Form>

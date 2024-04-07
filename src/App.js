@@ -54,7 +54,7 @@ const App = () => {
             <Route path='/nhome' element={<NHome />} />
             <Route path='/findfrined' element={<FindFriendlist />} />
             <Route path='/groups' element={<GroupHome />} />
-            <Route path='/group' element={<GroupProfile />} />
+            <Route path='/group/:username' element={<GroupProfile />} />
           </Routes>
         </div>
       </UserProvider>

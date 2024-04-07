@@ -3,7 +3,7 @@ import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const RequestList = ({fmembers}) => {
+const RequestList = ({user, fmembers}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [selectedId, setSelectedId] = useState(null); // State for selected member ID
   const navigate = useNavigate();
@@ -12,11 +12,11 @@ const RequestList = ({fmembers}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/friends', {
-        params: { user_id: userData.id }
+      const response = await axios.get('http://localhost:8000/walk!members', {
+        params: { id: user.id }
       });
      // fmembers();
-      setRmembers(response.data.users);
+      setRmembers(response.data);
     } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -43,10 +43,11 @@ const RequestList = ({fmembers}) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      // Perform action (e.g., API call) based on 'action' parameter
-      // Example:
-      // const response = await axios.post('http://localhost:8000/action_url', { id, action });
-      // console.log(response.data);
+      const response = await axios.post('http://localhost:8000/handlemember', { id:id,walk_id:user.id, type: action});
+      console.log(response.data);
+      fetchData();
+      fmembers();
+      //set members from buddylist
     } catch (error) {
       console.error('Error performing action:', error);
     }

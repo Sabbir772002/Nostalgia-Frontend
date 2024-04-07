@@ -21,65 +21,18 @@ const GroupProfile = () => {
   const [profileImg, setProfileImg] = useState("");
   const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
-  const [userD, setUserD] = useState(
-    {
-      name: "",
-      username: "",
-      email: "",
-      image:""
-    }
-  );
+  const [group, setgroup] = useState("");
 
-  useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
+        const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`);
         if (response.status === 200) {
           setUserData(response.data);
-          console.log(response.data.p_image);
-          //setUserData(data);
-          //console.log(userData.p_image);
-          setUserD({
-            name: response.data.first_name,
-            username: response.data.username,
-            email: response.data.thana,
-            image: `http://localhost:8000/${response.data.p_image}`
-          });
-          const initialUserPostData = [
-            {
-              id: 1,
-              username: "Vijay",
-              profilepicture: `http://localhost:8000/${response.data.p_image}`,
-              img: `http://localhost:8000/${response.data.p_image}`,
-              datetime: moment("20230401", "YYYYMMDD").fromNow(),
-              body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-              like: 22,
-              comment: 12
-            },
-         {
-        id:2,
-        username:"Vijay",
-        profilepicture:`http://localhost:8000/${response.data.p_image}`,
-        img:`http://localhost:8000/${response.data.p_image}`,
-        datetime:moment("20230525", "YYYYMMDD").fromNow(),
-        body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-        like: 84,
-        comment:30
-        },
-        {
-            id:3,
-            username:"Vijay",
-            profilepicture:`http://localhost:8000/${response.data.p_image}`,
-            img:`http://localhost:8000/${response.data.p_image}`,
-            datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
-            body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
-            like: 340,
-            comment:76
-        }
-      ];
-              setUserPostData(initialUserPostData);
-              // Additional setup based on fetched userData
-            } else {
+          console.log("i am in group profile");
+          console.log(response.data);
+          setgroup(response.data);
+          console.log(group);
+          } else {
               console.error('Failed to fetch user data');
             }
           } catch (error) {
@@ -87,17 +40,8 @@ const GroupProfile = () => {
           }
     };
 
-    fetchUserData();
-  }, [username]);
-
-  // const [modelDetails,setModelDetails] = useState(
-  //   {
-  //     ModelName:user.first_name,
-  //     ModelUserName:user.username,
-  //     ModelCountryName:user.thana,
-  //     ModelJobName:"Web Developer in Google"
-  //   }
-  // )
+    
+  fetchUserData();
 
   return (
     <div className='interface'>
@@ -113,7 +57,7 @@ const GroupProfile = () => {
         following={following}
         setFollowing={setFollowing}
         profileImg={profileImg}
-        userD={userD}
+        group={group}
         
         />
 
@@ -128,8 +72,8 @@ const GroupProfile = () => {
         setUserName={setUserName}
         profileImg={profileImg}
         setProfileImg={setProfileImg}
-        userD={userD}
-        setUserD={setUserD}
+        group={group}
+        setgroup={setgroup}
         userPostData={userPostData}
         setUserPostData={setUserPostData}
         />

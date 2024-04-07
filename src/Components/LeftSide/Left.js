@@ -58,7 +58,7 @@ const Left = ({profileImg,
       </div>
      </Link>
 
-     <Link to="/group" style={{textDecoration:"none",color:"black"}}>
+     <Link to="/groups" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Groups</span>
@@ -79,14 +79,14 @@ const Left = ({profileImg,
         <span>Walking Buddy</span>
       </div> 
       </Link>
-      <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
+      <Link to="" style={{textDecoration:"none",color:"black"}}>
 
       <div id='L-box' onClick={() => setBtnActive("#Trip")} className={btnActive === "#Trip" ? "active" : ""}>
         <BsPeople className='margin'/>
         <span>Trip</span>
       </div>
       </Link>
-      <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
+      <Link to="" style={{textDecoration:"none",color:"black"}}>
 
       <div id='L-box' onClick={()=>setBtnActive("#settings")} className={btnActive === "#settings" ? "active" : ""}>
         <FiSettings 

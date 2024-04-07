@@ -13,29 +13,24 @@ import './Info.css';
 const Info = ({
   userPostData,
   following,
-  userD,
-  setUserD,
-  profileImg,
-  setProfileImg,
-  name,
-  setName,
-  userName,
-  setUserName
+  group,
+  setgroup
+
 }) => {
   const [coverImg, setCoverImg] = useState(Info3);
   const importProfile = useRef();
   const importCover = useRef();
 
-  const handleFile1 = (e) => {
+  const handleFile2 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
       const imgObj = { image: URL.createObjectURL(img) };
-      const profileImg = imgObj.image;
-      setProfileImg(profileImg);
+      const coverImg = imgObj.image;
+      setCoverImg(coverImg);
     }
-  };
-
-  const handleFile2 = (e) => {
+  }; 
+  
+  const handleFile1 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
       const imgObj = { image: URL.createObjectURL(img) };
@@ -54,12 +49,14 @@ const navigate = useNavigate();
     navigate('/')
     // Add other logout logic here
   };
+  console.log("in info page");
+  console.log(group); 
   
   return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src={userD.image} alt='profile' />
+        <img src="" alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
@@ -72,10 +69,10 @@ const navigate = useNavigate();
       <input type='file' ref={importCover} onChange={handleFile2} style={{ display: 'none' }} />
 
       <div className='info-follow'>
-        <h1>{userD.name}</h1>
-        <p>{userD.username}</p>
+        <h1>{group.name}</h1>
+        <p>{group.username}</p>
 
-        {userD.username === user.username ? (
+        {group.username === user.username ? (
           <Link to='/' className='logout' onClick={logoutUser}>
             <BiLogOut />
             Logout
@@ -87,8 +84,8 @@ const navigate = useNavigate();
           </Link>
         )}
 
-        {userD.username === user.username ? (
-          <Link to={`/profile/edit/${user.username}`}>
+        {group.username === user.username ? (
+          <Link to={`/profile/edit/${group.username}`}>
             <button>
               <BiLogOut />
               Edit Profile
@@ -107,12 +104,12 @@ const navigate = useNavigate();
           <div className='info-col-1'>
             <div className='info-details-list'>
               <LocationOnOutlinedIcon />
-              <span>{userD.email}</span>
+              <span>{group.Topic}</span>
             </div>
 
             <div className='info-details-list'>
               <WorkOutlineRoundedIcon />
-              <span>{userD.name}</span>
+              <span>{group.G_name}</span>
             </div>
 
             <div className='info-details-list'>
@@ -127,8 +124,6 @@ const navigate = useNavigate();
               <span>Followers</span>
             </div>
             <div>
-              <h2>{userPostData.length}</h2>
-              <span>Posts</span>
             </div>
             <div>
               <h2>{following}</h2>
