@@ -8,6 +8,45 @@ import { useUser } from '../../context/UserContext';
 
 
 const Login = () => {
+    // Set the item in localStorage
+const setLocalStorageItem = (key, value) => {
+    return new Promise((resolve, reject) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+  
+  // Get the item from localStorage
+  const getLocalStorageItem = (key) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const item = localStorage.getItem(key);
+        resolve(item ? JSON.parse(item) : null);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+  
+  async function exampleUsage(userdata) {
+    try {
+      // Set the item
+      await setLocalStorageItem('userData',userdata);
+      console.log('Item set successfully.');
+  
+      // Get the item
+      const userData = await getLocalStorageItem('userData');
+      console.log('Retrieved item:', userData);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
+  
     const navigate =useNavigate()
     const [error,setError] =useState({})
     const [submit,setSubmit] =useState(false)
@@ -36,7 +75,9 @@ const Login = () => {
                 console.log('login successful!');
                // console.log(response.data.user);      
                 setUserData(response.data.user);
-                localStorage.setItem('userData', JSON.stringify(response.data.user));
+               // localStorage.setItem('userData', JSON.stringify(response.data.user));
+               exampleUsage(response.data.user);
+
                 //const userData = JSON.stringify(response.data.user);
                 //navigate(`/home?userData=${userData}`);
                 navigate(`/home`);

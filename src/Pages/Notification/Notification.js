@@ -6,44 +6,101 @@ import img3 from "../../assets/Following/img-3.jpg"
 import img4 from "../../assets/Following/img-5.jpg"
 import {AiOutlineHome} from "react-icons/ai"
 import ProfileImg from "../../assets/profile.jpg"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useEffect,useState} from 'react'
 
 const Notification = () => {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('userData'));
+  const [notification, setNotification] = useState([]);
+  // if(user.username == ""){ 
+  //   navigate( "/");
+  //    return;
+  // }
+  
+  
+  const fetchData = () => {
+    axios.get('http://localhost:8000/notification', {
+      params: {
+        username: user.username
+      }
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   'Authorization': `Bearer ${user.token}`
+      // }
+    })
+    .then(response => {
+      console.log(response.data);
+      setNotification(response.data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+  useEffect(() => { 
+    fetchData();
+  }, []);
+  function timeAgo(timestamp) {
+    const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) {
+      return interval + " years ago";
+    }
+    
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) {
+      return interval + " months ago";
+    }
+    
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) {
+      return interval + " days ago";
+    }
+    
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) {
+      return interval + " hours ago";
+    }
+    
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) {
+      return interval + " minutes ago";
+    }
+    
+    return Math.floor(seconds) + " seconds ago";
+  }  
+
+
   
   return (
     <div className="noti-overall">
       <div className='nav-section'>
         <Link to="/home" style={{textDecoration:"none"}} className='noti-div'><AiOutlineHome className='noti-Home-Icon'/></Link>
-        <Link to="/profile" style={{textDecoration:"none"}}><img src={ProfileImg} alt="" /></Link>
+        <Link to={`/profile/${user.username}`} style={{textDecoration:"none"}}><img src={ProfileImg} alt="" /></Link>
       </div>
 
     <div className="notification-group">
-      <h1>notification</h1>
+      <h1>Notification</h1>
       <div className="notification-section">
-        <div className="notification-msg">
-            <img src={img1} alt="" />
-            <p>Mike Tysion liked <span className='noti-like'>your profile picture</span><small><br />10 mins ago</small></p>
+      {  notification.map((noti, index) => (
+        <div key={index} className="notification-msg">
+          <img src={`http://localhost:8000/${noti.img}`} alt="" /> 
+          <p>
+            {/* {noti.noti_sender} {noti.action} <span className='noti-like'>your profile picture</span> */}
+            {noti.sender} <span className='noti-like'>{noti.msg}</span>
+            <br />
+            {/* <Link to={noti.link} className='noti-link'>View</Link> */}
+            <h1>{noti.noti_time}</h1>
+            <small>{timeAgo(noti.time)}</small> {/* Assuming noti.timestamp contains the time */}
+          </p>
         </div>
+      ))}
 
-        <div className="notification-msg">
-            <img src={img2} alt="" />
-            <p>Violet liked <span className='noti-like'>your profile picture</span><br /><small>1 day ago</small></p>
-        </div>
+        
 
-        <div className="notification-msg">
-            <img src={img2} alt="" />
-            <p>violet liked <span className='noti-like'>your cover picture</span><br /><small>20s ago</small></p>
-        </div>
-
-        <div className="notification-msg">
-            <img src={img3} alt="" />
-            <p>Brandon liked <span className='noti-like'>your profile picture</span><br /><small>5h ago</small></p>
-        </div>
-
-        <div className="notification-msg">
-            <img src={img4} alt="" />
-            <p>Camille liked <span className='noti-like'>your profile picture</span><br /><small>1 min ago</small></p>
-        </div>
+      
       </div>
     </div>
     </div>
