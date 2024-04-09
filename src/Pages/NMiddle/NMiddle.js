@@ -20,12 +20,7 @@ const NMiddle = ({posts,fetchPosts}) => {
   
   return (
     <div className='M-features'>
-<<<<<<<<< Temporary merge branch 1
-        
-=========
-
->>>>>>>>> Temporary merge branch 2
-        <Homepage 
+              <Homepage 
           posts={posts}
           fetchPosts={fetchPosts}
         />
