@@ -38,7 +38,7 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
     axios.get(`http://localhost:8000/singleblog`,
     {
       params: {
-        username: userData.username
+        username: username
       }
     })
     .then(response => {

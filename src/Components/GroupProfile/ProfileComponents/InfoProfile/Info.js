@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
@@ -10,16 +10,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
+import { Modal, Tabs, Tab } from 'react-bootstrap';
 import axios from 'axios';
-const Info = ({
-   group,
-  setgroup,
-  fmembers
-
-}) => {
+import { Button } from "react-bootstrap";
+import RequestList from './Request';
+import MemberList from './Members';
+const Info = ({ group}) => {
   const [coverImg, setCoverImg] = useState(Info3);
   const importProfile = useRef();
   const importCover = useRef();
+  const [showModal, setShowModal] = useState(false);
+  const user = JSON.parse(localStorage.getItem('userData'));
+const navigate = useNavigate();
 
   const handleFile2 = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,18 +41,8 @@ const Info = ({
     }
   };
 
-  const user = JSON.parse(localStorage.getItem('userData'));
-const navigate = useNavigate();
-  const logoutUser = () => {
-    // Remove 'userData' from localStorage or perform logout actions
-    localStorage.removeItem('userData');
-    console.log("logout "+user.username);
-    localStorage.clear();
-    navigate('/')
-    // Add other logout logic here
-  };
   console.log("in info page");
-  console.log(group);
+  // console.log(group);
   const handleJoin =async () => {
     const response = await axios.post(`http://localhost:8000/join_group`, {
       user_id: user.id,
@@ -61,7 +53,6 @@ const navigate = useNavigate();
       alert("You are already a member of this group");
       return;
     }
-    fmembers();
     console.log("in join");
     console.log(group);
     //setgroup({...group,member:1});
@@ -78,7 +69,45 @@ const navigate = useNavigate();
   //   });
   //   fmembers();
   //   //setgroup({...group,member:0});
-  // }
+  // }; 
+  const handlemodal = () => { 
+    setShowModal(true);
+  }
+  const handlemodalbox = () => {
+    setShowModal(false);
+  }
+const [members, setMembers] = useState([]);
+  const fmembers= async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/groupmembers',
+        {
+          params: { username: group.username }
+        });
+        console.log(response.data);
+      setMembers(response.data);
+
+      } catch (error) {
+      console.error('Error fetching user list:', error);
+    }
+  };
+  useEffect(() => {
+    fmembers();
+    fetchData();
+  }, [group]);
+  const [Rmembers, setRmembers] = useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/requestmembers', {
+        params: { username: group.username }
+      });
+     // fmembers();
+      setRmembers(response.data);
+    } catch (error) {
+      console.error('Error fetching user list:', error);
+    }
+    
+  };
+
   return (
     <div className='info'>
       <div className='info-cover'>
@@ -100,22 +129,41 @@ const navigate = useNavigate();
         <p>{group.username}</p>
 
         {group.username === user.username ? (
-          <Link to='/' className='logout' onClick={logoutUser}>
-            <BiLogOut />
-            Logout
-          </Link>
-        ) : (
-          <Link to='' className='logout'>
-            <BiMessage />
-            Message
-          </Link>
-        )}
+        <Link to="/" className="logout" onClick="">
+          <BiLogOut />
+          Logout
+        </Link>
+      ) : (
+        <Button className="logout" onClick={handlemodal} style={{ width: "150px" }}>
+        <FontAwesomeIcon icon={faUserFriends}/>
+         Members
+          </Button>)}
+          <Modal show={showModal} onHide={handlemodalbox}>
+          <Modal.Header closeButton>
+            <Modal.Title>MemberList</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+  <Tabs defaultActiveKey="request">
+ {1 && 1 && 1 == 1 && (
+             <Tab eventKey="request" title="Request">
+                  <RequestList fmembers={fmembers} members={members} Rmembers={Rmembers} setRmembers={setMembers} guser={group.username} />
+                  </Tab>
+                )}
+    <Tab eventKey="members" title="Members">
+     <MemberList fmembers={fmembers} members={members} guser={group.username} />
+    </Tab>
+  </Tabs>
+</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handlemodalbox}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
         {group.username === user.username ? (
           <Link to={`/profile/edit/${group.username}`}>
             <button>
               <BiLogOut />
-              Edit Profile
+              Edit ProFILE
             </button>
           </Link>
         ) : (

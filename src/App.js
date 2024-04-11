@@ -9,6 +9,7 @@ import Login from './Pages/RegisterPage/Login';
 import ImgBox from './Pages/Ex/Ex';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
+import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
 import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
@@ -23,6 +24,9 @@ import Buddy from './Pages/WalkingBuddy/Buddy';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
+
+
+
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
@@ -40,7 +44,8 @@ const App = () => {
             <Route path='/notification' element={<Notification />} />
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
-            <Route path='/medication' element={<Medi />} />
+            <Route path='/med' element={<Medi />} />
+            <Route path='/medication' element={<MediHome />} />
             <Route path='/caregiver' element={<Caregiver />} />
             <Route path='/friend' element={<Friend />} />
             <Route path='/image' element={<ImgBox />} />

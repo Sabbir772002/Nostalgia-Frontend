@@ -6,13 +6,13 @@ import axios from 'axios';
 import './FindF.css';
 // Import the image
 import img3 from "../../assets/User-post/img3.jpg";
+import { Link } from 'react-router-dom';
 
 const FindF = ({fndlist,setfndlist,fnd,fetchData}) => { // Destructure props to directly access userData
     const userData= JSON.parse(localStorage.getItem('userData'));
     const [selectedOption, setSelectedOption] = React.useState("Accept");
     const add_fnf = async () => {
       try {
-          
           const response = await axios.post('http://localhost:8000/add_fnf', {
               user_id: userData.id,
               friend_id: fnd.id,
@@ -155,9 +155,11 @@ const handleSelect = (option) => {
         </>
         </div>
             <div className="col-6">
+              <Link to={`/profile/${fnd.username}`}>
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 View Profile
               </Button>
+              </Link>
               </div>
             </div>
           </Card.Body>
