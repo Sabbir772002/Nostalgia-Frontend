@@ -27,31 +27,18 @@ const Compare = () => {
   const [profileImg, setProfileImg] = useState("");
   const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
-  const [modelDetails, setModelDetails] = useState(
-    {
-      ModelName: "",
-      ModelUserName: "",
-      ModelCountryName: "",
-      ModelJobName: ""
-    }
-  );
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
+        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`,
+        {
+          params : {
+            username: username,
+            user: username
+          },
+        });
         if (response.status === 200) {
           setUserData(response.data);
-          console.log(response.data.p_image);
-          //setUserData(data);
-          //console.log(userData.p_image);
-          setModelDetails({
-            ModelName: response.data.first_name,
-            ModelUserName: response.data.username,
-            ModelCountryName: response.data.thana,
-            ModelJobName: "Web Developer in Google",
-            image: `http://localhost:8000/${response.data.p_image}`
-          });
-          
               // Additional setup based on fetched userData
             } else {
               console.error('Failed to fetch user data');
@@ -63,11 +50,8 @@ const Compare = () => {
 
     fetchUserData();
   }, [username]);
-   console.log(userData);
-  
-//   console.log("bro");
-//   console.log(userPostData);
-
+   
+  console.log(userData);
   return (
     <div className='interface'>
         <Nav
@@ -82,9 +66,10 @@ const Compare = () => {
         following={following}
         setFollowing={setFollowing}
         profileImg={profileImg}
-        modelDetails={modelDetails}
         />
-        <CompareBox/>
+        <CompareBox
+        userData={userData}
+        />
       </div>
     </div>
   )

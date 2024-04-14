@@ -7,10 +7,10 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 
-const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
+const UserHome = ({setUserPostData,userPostData,profileImg,userData,images}) => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const userData= JSON.parse(localStorage.getItem('userData'));
+  const user= JSON.parse(localStorage.getItem('userData'));
   const { username } = useParams();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -55,7 +55,7 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userD,images}) => {
     <div>
 
         {posts && posts.length ?<FeedUser 
-                               userD ={userD}
+                               userData ={userData}
                                profileImg={profileImg}
                                posts={posts}
                                setPosts={setPosts}

@@ -55,7 +55,8 @@ const App = () => {
             <Route path='/OTP' element={<OTPInput />} />
             <Route path='/OTPP' element={<OTPInput />} />
             <Route path='/walk' element={<Buddy />} />
-            <Route path='/compare' element={<Compare />} />
+            <Route path='/comparebox' element={<Compare />} />
+            <Route path='/compare/:username' element={<Compare />} />
             <Route path='/nhome' element={<NHome />} />
             <Route path='/findfrined' element={<FindFriendlist />} />
             <Route path='/groups' element={<GroupHome />} />

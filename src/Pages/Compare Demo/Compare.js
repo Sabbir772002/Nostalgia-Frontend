@@ -1,19 +1,19 @@
 import { useState,useEffect } from 'react'
 import Left from '../../Components/LeftSide/Left'
 import ProfileMiddle from '../../Components/Profile/ProfileMiddle'
-import Overseer from '../../Components/EditPro/Overseer/Overseer'
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
-import "../Profile/Profile.css"
-import ProfileImg from "../../assets/profile.jpg"
+import EditPro from '../../Components/EditPro/EditPro'
+import Overseer from '../../Components/EditPro/Overseer/Overseer'
+import "./Compare.css"
+import CompareBox from "./CompareBox"
 import { useUser } from '../../context/UserContext';
-import img1 from "../../assets/User-post/img1.jpg"
-import img2 from "../../assets/User-post/img2.jpg"
-import img3 from "../../assets/User-post/img3.jpg"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
-const Profile = () => {
+import SearchIcon from '@mui/icons-material/Search';
+
+const Compare = () => {
   const { username } = useParams();
   console.log(username);
   const [userData, setUserData] = useState([]);
@@ -24,23 +24,36 @@ const Profile = () => {
   const [images, setImages] = useState(null);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-  const [profileImg, setProfileImg] = useState(ProfileImg);
+  const [profileImg, setProfileImg] = useState("");
+  const [data,setData] = useState("");
   const [userPostData, setUserPostData] = useState([]);
- 
-
+  const [modelDetails, setModelDetails] = useState(
+    {
+      ModelName: "",
+      ModelUserName: "",
+      ModelCountryName: "",
+      ModelJobName: ""
+    }
+  );
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`,
-        {
-          params: {
-            username: username,
-            user: user.username
-          }
-        });
+        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
         if (response.status === 200) {
           setUserData(response.data);
-          console.log(response.data);
-          } else {
+          console.log(response.data.p_image);
+          //setUserData(data);
+          //console.log(userData.p_image);
+          setModelDetails({
+            ModelName: response.data.first_name,
+            ModelUserName: response.data.username,
+            ModelCountryName: response.data.thana,
+            ModelJobName: "Web Developer in Google",
+            image: `http://localhost:8000/${response.data.p_image}`
+          });
+          
+              // Additional setup based on fetched userData
+            } else {
               console.error('Failed to fetch user data');
             }
           } catch (error) {
@@ -48,10 +61,12 @@ const Profile = () => {
           }
     };
 
-  useEffect(() => {
     fetchUserData();
   }, [username]);
-
+   console.log(userData);
+  
+//   console.log("bro");
+//   console.log(userPostData);
 
   return (
     <div className='interface'>
@@ -63,38 +78,16 @@ const Profile = () => {
         profileImg={profileImg}
         />
       <div className="home">
-        <Left 
+      <Left 
         following={following}
         setFollowing={setFollowing}
-        profileImg={profileImg}        
-        />
-
-        <ProfileMiddle 
-        following={following}
-        search={search}
-        images={images}
-        setImages={setImages}
-        name={name}
-        setName={setName}
-        userName={userName}
-        setUserName={setUserName}
         profileImg={profileImg}
-        setProfileImg={setProfileImg}
-        userData={userData}
-        setUserData={setUserData}
-        userPostData={userPostData}
-        setUserPostData={setUserPostData}
-        fetchUserData={fetchUserData}
+        modelDetails={modelDetails}
         />
-        <Right 
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        following={following}
-        setFollowing={setFollowing}
-        />
+        <CompareBox/>
       </div>
     </div>
   )
 }
 
-export default Profile
+export default Compare;
