@@ -181,10 +181,89 @@ const BuddyList = () => {
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
             </div>
-        ))}
-    </div>   
-  )
-}
+          </div>
+        </div>
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Date</th>
+              <th>End</th>
+              <th>Time</th>
+              <th>Request</th>
+              <th>View Info</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userlist.map(user => (
+              <tr key={user.id}>
+                <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
+                <td>{user.w_creator}</td>
+                <td>{user.location}</td>
+                <td>{user.date}</td>
+                <td>{user.end}</td>
+                <td>{user.time}</td>
+                {user.w_creator == userData.username && (
+                  <td><Button variant="primary" onClick={() => submitrequest()}>Owner</Button></td>
+              )}
+              {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
+                  <td><Button variant="success" onClick={() => submitrequest()} >Member</Button></td>
+              )}
+              {user.member == 1 && user.not_ac == 1 && (
+                <td><Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={() => submitrequest()}>Requested</Button></td>
+              )} 
+              {user.member == 1 && user.cancel == 1 && (
+                <td><Button variant="gray" onClick={() => submitrequest()}>Cancel</Button></td>
+            )}
+              {(user.w_creator != userData.username && user.member == 0 ) && (
+                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
+              )}
+
+              <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* User Info Modal */}
+        <Modal show={showUserInfoModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>User Info</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+  <Tabs defaultActiveKey="details">
+ {userData && selectedUser && userData.username == selectedUser.w_creator && (
+             <Tab eventKey="request" title="Request">
+                  <RequestList fmembers={fetchmembers} user={selectedUser} />
+                  </Tab>
+                )}
+    
+    <Tab eventKey="details" title="Details">
+      {selectedUser && (
+        <div>
+          <p><strong>Name:</strong> {selectedUser.w_creator}</p>
+          <p><strong>Location:</strong> {selectedUser.location}</p>
+          <p><strong>Date:</strong> {selectedUser.date}</p>
+          <p><strong>End:</strong> {selectedUser.end}</p>
+          <p><strong>Time:</strong> {selectedUser.time}</p>
+        </div>
+      )}
+    </Tab>
+    <Tab eventKey="members" title="Members">
+      {selectedUser && <MemberList members={members} />}
+    </Tab>
+  </Tabs>
+</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </div>
+  );
+};
 
 export default BuddyList;
-
