@@ -24,7 +24,7 @@ const ProfileInputPost = ({handleSubmit,
                 <input 
                 type="text" 
                 id="i-input" 
-                placeholder={`What's in your mind ${userD.name}?`}
+                placeholder={`What's in your mind ${userD.username}?`}
                 required
                 value={body}
                 onChange={(e)=>setBody(e.target.value)}
