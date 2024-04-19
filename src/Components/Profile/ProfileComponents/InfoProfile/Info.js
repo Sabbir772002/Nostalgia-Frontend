@@ -18,8 +18,6 @@ const Info = ({
   setUserData,
   profileImg,
   setProfileImg,
-  name,
-  setName,
   userName,
   setUserName,
   fetchUserData,
@@ -45,7 +43,6 @@ const Info = ({
       setCoverImg(coverImg);
     }
   };
-
   const user = JSON.parse(localStorage.getItem('userData'));
 const navigate = useNavigate();
   const logoutUser = () => {

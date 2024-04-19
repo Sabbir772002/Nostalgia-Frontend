@@ -15,8 +15,6 @@ const ProfileMiddle = ({following,
                         setImages,
                         profileImg,
                         setProfileImg,
-                        name,
-                        setName,
                         userName,
                         setUserName,
                         userData,
@@ -85,15 +83,13 @@ const user= JSON.parse(localStorage.getItem('userData'));
         setProfileImg={setProfileImg}
         userPostData={userPostData}
         following={following}
-        name={name}
-        setName={setName}
         userName={userName}
         setUserName={setUserName}
         fetchUserData={fetchUserData}
         />
         {userData && user.username == userData.username &&(
         <ProfileInputPost
-        userData={userData}
+        userD={userData}
         profileImg={profileImg}
         handleSubmit={handleSubmit}
         body ={body}
