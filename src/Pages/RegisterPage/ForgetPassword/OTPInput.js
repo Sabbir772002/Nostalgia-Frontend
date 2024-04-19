@@ -7,7 +7,7 @@ const EmailVerificationForm = () => {
   const location = useLocation();
   const code = location.state ? location.state.code : null;
   const username = location.state ? location.state.username : null;
- const navigate=useNavigate();
+  const navigate=useNavigate();
   useEffect(() => {
     startTimer();
   }, []);
