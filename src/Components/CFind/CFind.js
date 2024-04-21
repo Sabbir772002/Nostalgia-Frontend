@@ -16,16 +16,16 @@ const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { // Destructure p
         <Card.Body className="member-card pt-2 pb-2">
             <div className="thumb-lg member-thumb mx-auto">
               <img
-                src= {`http://localhost:8000/${caregiver.pp}`}
+                src= {`http://localhost:8000/${caregiver.img}`}
 
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
               />
             </div>
             <div>
-              <h4>{caregiver.first_name} {caregiver.last_name}</h4>
+              <h4>{caregiver.name}</h4>
               <p className="text-muted">
-                @{caregiver.username} <span> </span
+                @{caregiver.phone} <span> </span
                 ><span><a href="#" className="text-pink"></a></span>
               </p>
             </div>
@@ -68,7 +68,7 @@ const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { // Destructure p
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 Request Now
               </Button>
-              <Link to={`/profile/${caregiver.username}`}>
+              <Link to={`/profile/${caregiver.name}`}>
              
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 View Profile

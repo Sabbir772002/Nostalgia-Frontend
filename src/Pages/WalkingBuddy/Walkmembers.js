@@ -11,6 +11,7 @@ const MemberList = ({ members }) => {
             <th>Name</th>
             <th>Age</th>
             <th>Gender</th>
+            
             <th>Actions</th>
           </tr>
         </thead>
