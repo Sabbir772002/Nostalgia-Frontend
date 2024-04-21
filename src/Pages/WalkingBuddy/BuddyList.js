@@ -50,8 +50,6 @@ const BuddyList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowInputBoxModal(false);
-    delete formData.time;
-
     try {
       await axios.post('http://localhost:8000/walk', formData);
       console.log('Walk data sent successfully:', formData);

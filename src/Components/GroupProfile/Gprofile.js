@@ -12,7 +12,7 @@ const GProfile = ({following,
                         images,
                         setImages,
                         profileImg,
-                        fmembers,
+                        gprofile,
                         fetchPosts,
                         posts,
                         setPosts,
@@ -29,14 +29,14 @@ const GProfile = ({following,
     <div className='profileMiddle'>
         <Info 
         group={group}
-        fmembers={fmembers}
+        gprofile={gprofile}
         />
         {group && group.member == 1 &&(
         <ProfileInputPost
         handleSubmit={handleSubmit}
         group={group}
         user={userData}
-        fmembers={fmembers}
+        fmembers={gprofile}
         fetchPosts={fetchPosts}
         />
         )} 

@@ -31,7 +31,7 @@ const Comments = ({ cmt, post }) => {
                 <div className='commentList1'>
                     <div className="commentHead">
                         <div><img src={`http://localhost:8000/${cmt.author_img}`} alt="Profile" /></div>
-                        <p><span>{cmt.username}</span>{cmt.content}</p>
+                        <p><span>{cmt.author}</span>{cmt.content}</p>
                     </div>
 
                     <div className="commentFooter">

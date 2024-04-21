@@ -24,11 +24,11 @@ const GroupProfile = () => {
   const [group, setgroup] = useState("");
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    fmembers();
+    gprofile();
   } 
   , [username]);
   
-    const fmembers = async () => {
+    const gprofile = async () => {
       try {
         const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`,
         {
@@ -38,9 +38,9 @@ const GroupProfile = () => {
         });
         if (response.status === 200) {
           console.log("i am in group profile");
+
           console.log(response.data);
           setgroup(response.data);
-          console.log(group);
           } else {
               console.error('Failed to fetch user data');
             }
@@ -89,7 +89,7 @@ const GroupProfile = () => {
         <Gprofile 
         group={group}
         setgroup={setgroup}
-        fmembers={fmembers}
+        gprofile={gprofile}
         fetchPosts={fetchPosts}
         posts={posts}
         setPosts={setPosts} 

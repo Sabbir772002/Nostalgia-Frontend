@@ -15,7 +15,7 @@ import axios from 'axios';
 import { Button } from "react-bootstrap";
 import RequestList from './Request';
 import MemberList from './Members';
-const Info = ({ group}) => {
+const Info = ({ group,gprofile}) => {
   const [coverImg, setCoverImg] = useState(Info3);
   const importProfile = useRef();
   const importCover = useRef();
@@ -40,7 +40,6 @@ const navigate = useNavigate();
       setCoverImg(coverImg);
     }
   };
-
   console.log("in info page");
   // console.log(group);
   const handleJoin =async () => {
@@ -84,12 +83,13 @@ const [members, setMembers] = useState([]);
           params: { username: group.username }
         });
         console.log(response.data);
-      setMembers(response.data);
+        setMembers(response.data);
 
       } catch (error) {
       console.error('Error fetching user list:', error);
     }
   };
+
   useEffect(() => {
     fmembers();
     fetchData();
@@ -100,7 +100,7 @@ const [members, setMembers] = useState([]);
       const response = await axios.get('http://localhost:8000/requestmembers', {
         params: { username: group.username }
       });
-     // fmembers();
+      fmembers();
       setRmembers(response.data);
     } catch (error) {
       console.error('Error fetching user list:', error);
@@ -146,11 +146,11 @@ const [members, setMembers] = useState([]);
   <Tabs defaultActiveKey="request">
  {1 && 1 && 1 == 1 && (
              <Tab eventKey="request" title="Request">
-                  <RequestList fmembers={fmembers} members={members} Rmembers={Rmembers} setRmembers={setMembers} guser={group.username} />
+                  <RequestList fmembers={fmembers} members={members} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
                   </Tab>
                 )}
     <Tab eventKey="members" title="Members">
-     <MemberList fmembers={fmembers} members={members} guser={group.username} />
+     <MemberList members={members} group={group} />
     </Tab>
   </Tabs>
 </Modal.Body>
