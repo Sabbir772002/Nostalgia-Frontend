@@ -21,6 +21,8 @@ import Caregiver from './Pages/Caregiver/Caregiver';
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
+import Trip from './Pages/Trip/Trip';
+import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
@@ -61,6 +63,9 @@ const App = () => {
             <Route path='/findfrined' element={<FindFriendlist />} />
             <Route path='/groups' element={<GroupHome />} />
             <Route path='/group/:username' element={<GroupProfile />} />
+            <Route path='/event' element={<Event />} />
+            <Route path='/trip' element={<Trip />} />
+            
           </Routes>
         </div>
       </UserProvider>

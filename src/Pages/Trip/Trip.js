@@ -31,15 +31,15 @@ import Uimg3 from "../../assets/User-post/img3.jpg"
 
 
 import "./Buddy.css"
-import Fndbox from "./Eventlist"
+import Fndbox from "./Triplist"
 import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
-import Eventlist from './Eventlist'
-const Event = () => {
+import Triplist from './Triplist'
+const Trip = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
@@ -110,7 +110,7 @@ const Event = () => {
     <div className="bot">
    
         <Left />
-        <Eventlist/>
+        <Triplist/>
         
     </div>
 
@@ -118,4 +118,4 @@ const Event = () => {
   )
 }
 
-export default  Event;
+export default  Trip;
