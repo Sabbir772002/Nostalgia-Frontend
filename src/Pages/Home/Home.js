@@ -57,7 +57,11 @@ const Home = () => {
 
     <div className="home">
    
-        <Left />
+    <Left />
+      {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
 
         <Middle posts={posts}
         fetchPosts={fetchPosts}
@@ -65,11 +69,14 @@ const Home = () => {
         />
 
         <Right
+        
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         following={following}
         setFollowing={setFollowing}
         />
+         </>
+      )}
     </div>
 
     </div>

@@ -13,11 +13,8 @@ const Caregiver = () => {
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
  // console.log(userData);
- 
-      
      const [caregiverlist, setCaregiverlist] = useState([]);
       useEffect(() => {
-          // Fetch data from Django backend
           axios.get('http://localhost:8000/caregiver')
               .then(response => {
                  // console.log("mere fnd");
