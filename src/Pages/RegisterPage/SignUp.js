@@ -49,7 +49,7 @@ const SignUp = () => {
         }
     };
     const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('');
 
   const handleEmailVerification = async () => {
     try {
@@ -207,7 +207,7 @@ const SignUp = () => {
                     {error.password && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.password}</span>}
 
                     <div className='divBtn'>
-                        <small className='FG'>Forgot Password?</small>
+                        <small className='FG'><Link to="/forget">Forgot Password?</Link></small>
                         <button className='loginBtn'>SIGN UP</button>
                     </div>
                 </form>

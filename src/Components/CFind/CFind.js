@@ -8,49 +8,25 @@ import { Link } from 'react-router-dom';
 import img3 from "../../assets/User-post/img3.jpg";
 import { useLocation } from 'react-router-dom';
 
-const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { // Destructure props to directly access userData
-    const location = useLocation();
-    //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-    const userData= JSON.parse(localStorage.getItem('userData'));
-  
-   // console.log(userData);
-    
-        const [body,setBody] =useState("");
-        const [importFile,setImportFile] =useState("");
-        
-  
-       const [fndlist, setfndlist] = useState([]);
-  
-        useEffect(() => {
-            // Fetch data from Django backend
-            axios.get('http://localhost:8000/friends')
-                .then(response => {
-                   // console.log("mere fnd");
-                   // console.log(response.data.users);
-                    setfndlist(response.data.users);
-                   // console.log(fndlist);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        }, []);
-  
+const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { 
+  // Destructure props to directly access userData
+   
 
     return (
         <Card className="text-center card-box" style={{ width: '300px',height: '460px' }}> 
         <Card.Body className="member-card pt-2 pb-2">
             <div className="thumb-lg member-thumb mx-auto">
               <img
-                src= {`http://localhost:8000/${caregiver.pp}`}
+                src= {`http://localhost:8000/${caregiver.img}`}
 
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
               />
             </div>
             <div>
-              <h4>{caregiver.first_name} {caregiver.last_name}</h4>
+              <h4>{caregiver.name}</h4>
               <p className="text-muted">
-                @{caregiver.username} <span> </span
+                @{caregiver.phone} <span> </span
                 ><span><a href="#" className="text-pink"></a></span>
               </p>
             </div>
@@ -93,7 +69,7 @@ const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { // Destructure p
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 Request Now
               </Button>
-              <Link to={`/profile/${caregiver.username}`}>
+              <Link to={`/profile/${caregiver.name}`}>
              
               <Button variant="secondary" className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
                 View Profile

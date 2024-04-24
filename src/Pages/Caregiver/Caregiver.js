@@ -14,22 +14,15 @@ const Caregiver = () => {
   const userData= JSON.parse(localStorage.getItem('userData'));
  // console.log(userData);
  
- 
- 
- 
- 
- 
- 
- 
       
      const [caregiverlist, setCaregiverlist] = useState([]);
       useEffect(() => {
           // Fetch data from Django backend
-          axios.get('http://localhost:8000/friends')
+          axios.get('http://localhost:8000/caregiver')
               .then(response => {
                  // console.log("mere fnd");
-                 // console.log(response.data.users);
-                  setCaregiverlist(response.data.users);
+                 console.log(response.data);
+                  setCaregiverlist(response.data);
                  // console.log(fndlist);
               })
               .catch(error => {
@@ -51,7 +44,7 @@ const [images,setImages] =  useState(null);
   setSearch={setSearch}
   showMenu={showMenu}
   setShowMenu={setShowMenu}
-  />    <div className="home">
+  />    <div className="boxi">
    
         <Left/>
 <div className='fndlist'>

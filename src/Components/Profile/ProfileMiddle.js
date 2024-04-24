@@ -15,14 +15,14 @@ const ProfileMiddle = ({following,
                         setImages,
                         profileImg,
                         setProfileImg,
-                        name,
-                        setName,
                         userName,
                         setUserName,
-                        userD,
-                        setUserD,
+                        userData,
+                        setUserData,
                         userPostData,
-                        setUserPostData}) => {
+                        setUserPostData,
+                        fetchUserData
+                    }) => {
 
   const [body,setBody] =useState("")
   const [importFile,setImportFile] =useState("")
@@ -71,27 +71,25 @@ const ProfileMiddle = ({following,
        
     },[userPostData,search])
 
-   
-
+  
     const { username } = useParams();
-const userData= JSON.parse(localStorage.getItem('userData'));
+const user= JSON.parse(localStorage.getItem('userData'));
   return (
     <div className='profileMiddle'>
         <Info 
-        userD ={userD}
-        setUserD={setUserD}
+        userData ={userData}
+        setUserData={setUserData}
         profileImg={profileImg}
         setProfileImg={setProfileImg}
         userPostData={userPostData}
         following={following}
-        name={name}
-        setName={setName}
         userName={userName}
         setUserName={setUserName}
+        fetchUserData={fetchUserData}
         />
-        {userData && userD.username == userData.username &&(
+        {userData && user.username == userData.username &&(
         <ProfileInputPost
-        userD={userD}
+        userD={userData}
         profileImg={profileImg}
         handleSubmit={handleSubmit}
         body ={body}
@@ -104,7 +102,7 @@ const userData= JSON.parse(localStorage.getItem('userData'));
         )}
         
         <UserHome 
-        userD={userD}
+        userData={userData}
         profileImg={profileImg}
         setUserPostData={setUserPostData}
         userPostData={searchResults}

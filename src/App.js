@@ -9,19 +9,25 @@ import Login from './Pages/RegisterPage/Login';
 import ImgBox from './Pages/Ex/Ex';
 import SignUp from './Pages/RegisterPage/SignUp';
 import Medi from './Pages/Medication/Medi';
+import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
+import DD from './Pages/Ex/DD';
 import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
 import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import Compare from './Pages/Compare/Compare';
 import NHome from './Pages/NHome/NHome';
 import Caregiver from './Pages/Caregiver/Caregiver';
-
 import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
+import Trip from './Pages/Trip/Trip';
+import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
+import GroupHome from './Pages/Groups/GroupHome/GroupHome';
+import GroupProfile from './Pages/Groups/Profile/GroupProfile';
+
 
 
 const App = () => {
@@ -41,7 +47,8 @@ const App = () => {
             <Route path='/notification' element={<Notification />} />
             <Route path='/' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
-            <Route path='/medication' element={<Medi />} />
+            <Route path='/med' element={<Medi />} />
+            <Route path='/medication' element={<MediHome />} />
             <Route path='/caregiver' element={<Caregiver />} />
             <Route path='/friend' element={<Friend />} />
             <Route path='/image' element={<ImgBox />} />
@@ -50,10 +57,17 @@ const App = () => {
             <Route path='/Reset' element={<Reset />} />
             <Route path='/OTP' element={<OTPInput />} />
             <Route path='/OTPP' element={<OTPInput />} />
-            <Route path='/buddy' element={<Buddy />} />
-            <Route path='/compare' element={<Compare />} />
+            <Route path='/walk' element={<Buddy />} />
+            <Route path='/comparebox' element={<Compare />} />
+            <Route path='/caregiver' element={<Caregiver />} />
+            <Route path='/compare/:username' element={<Compare />} />
             <Route path='/nhome' element={<NHome />} />
             <Route path='/findfrined' element={<FindFriendlist />} />
+            <Route path='/groups' element={<GroupHome />} />
+            <Route path='/group/:username' element={<GroupProfile />} />
+            <Route path='/DD' element={<DD />} />
+            <Route path='/event' element={<Event />} />
+            <Route path='/trip' element={<Trip />} />
           </Routes>
         </div>
       </UserProvider>

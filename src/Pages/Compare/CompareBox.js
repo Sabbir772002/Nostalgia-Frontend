@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const CompareBox = () => {
+const CompareBox = ({userData}) => {
   const [image1, setImage1] = useState(null);
-  const [image2, setImage2] = useState(null);
+  const [image2, setImage2] = useState(userData.pp);
+  // const [image2, setImage2] = useState(null);
   const [compareResult, setCompareResult] = useState('');
   const [leftImage, setLeftImage] = useState(null);
-  const [rightImage, setRightImage] = useState(null);
-
-
+  const [rightImage, setRightImage] = useState(`http://localhost:8000${userData.pp}`);
 
   const handleImage1Upload = (e) => {
     setImage1(e.target.files[0]);
@@ -20,18 +20,19 @@ const CompareBox = () => {
     setImage2(e.target.files[0]);
     setRightImage(URL.createObjectURL(e.target.files[0]));
   };
-
   const handleUpload = async () => {
-    if (!image1 || !image2) {
+    console.log(userData.pp);
+    console.log("image 2 above!");
+    if (!image1 || !userData.pp) {
       console.error('Please select both images');
       return;
     }
-
     const formData = new FormData();
     formData.append('image1', image1);
-    formData.append('image2', image2);
+    formData.append('image2', userData.pp);
 
     try {
+      console.log(formData);
       const response = await axios.post('http://127.0.0.1:8000/compare', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -53,9 +54,12 @@ const CompareBox = () => {
 
         </div>
         <div className="col-md-6 text-center" style={{ borderLeft: '1px solid black' }}>
-          <input type="file" accept="image/*" onChange={handleImage2Upload} />
-          {rightImage && <img src={rightImage} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />}
-        </div>
+          {/* <input type="file" accept="image/*" onChange={handleImage2Upload} /> */}
+          <h5> Profile Image of:  <Link to={`/profile/${userData.username}`}>{userData.first_name} {userData.last_name}</Link></h5>
+          {/* {rightImage && <img src={`http://localhost:8000${userData.pp}`} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />} */}
+          <img src={`http://localhost:8000/${userData.pp}`} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />
+          {/* {rightImage && <img src={rightImage} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />} */}
+          </div>
       </div>
       <div className="row justify-content-center mb-4">
         <div className="col-md-7 text-center">

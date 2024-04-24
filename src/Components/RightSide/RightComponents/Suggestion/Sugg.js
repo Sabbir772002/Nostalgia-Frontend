@@ -1,7 +1,7 @@
 import React from 'react'
 import Simg1 from "../../../../assets/Suggestion/img-1.jpg"
 import Simg2 from "../../../../assets/Suggestion/img-2.jpg"
-import "../Suggestion/Sugg.css"
+import "./Sugg.css"
 
 const Sugg = () => {
   return (

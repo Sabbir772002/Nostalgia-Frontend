@@ -33,12 +33,12 @@ import moment from 'moment';
 
 
 
-const PostUser = ({posts,post,setPosts,userD}) => {
+const PostUser = ({posts,post,setPosts,userData}) => {
 
   const [comments,setComments] =useState([
     {
         id:1,
-        profilePic:userD.image,
+        profilePic:userData.pp,
         likes:23,
         username:"Violet",
         time:"3 Hours Ago",
@@ -46,7 +46,7 @@ const PostUser = ({posts,post,setPosts,userD}) => {
     },
     {
         id:2,
-        profilePic:userD.image,
+        profilePic:userData.pp,
         likes:5,
         username:"Brandon",
         time:"1 Hour Ago",
@@ -54,7 +54,7 @@ const PostUser = ({posts,post,setPosts,userD}) => {
     },
     {
         id:3,
-        profilePic:userD.image,
+        profilePic:userData.pp,
         likes:50,
         username:"Lilly",
         time:"30 Mins Ago",
@@ -95,8 +95,8 @@ const handleDelete=(id)=>{
      e.preventDefault()
 
     const id= comments && comments.length ? comments[comments.length -1].id +1 : 1
-    const profilePic =userD.image
-    const username=userD.name
+    const profilePic =userData.pp
+    const username=userData.pp
     const comment =commentInput
     const time= moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
 
@@ -115,15 +115,15 @@ const handleDelete=(id)=>{
 
   const [socialIcons,setSocialIcons] = useState(false)
 
-
+console.log("yellow blue green");
 
   return (
     <div className='post'>
       <div className='post-header'>
         <div className='post-user' style={{cursor:"pointer"}}>
-            <img src={userD.image} className='p-img' alt="" />
-            <h2>{userD.name}</h2>
-            <p className='datePara'>{post.datetime}</p>
+            <img src={`http://localhost:8000${post.author_img}`} className='p-img' alt="" />
+            <h2>{userData.username}</h2>
+            <p className='datePara'>{post.post_date}</p>
         </div>
          
          <div className='delete'>
@@ -241,7 +241,7 @@ const handleDelete=(id)=>{
         <div className="sticky">
           {comments.map((cmt)=>(
             <Comments 
-            userD={userD}
+            userD={userData.pp}
             className="classComment"
             cmt={cmt}
             key={cmt.id}

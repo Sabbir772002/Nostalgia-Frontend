@@ -12,6 +12,14 @@ import Profile from "../../assets/profile.jpg"
 
 const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
+const handlemsg = () => {
+  console.log("here is msg");
+  const targetOrigin = 'http://localhost:3001/app'; // Set the target domain
+  const message = { data: userData }; // Data to send
+
+  // Send message to the window of App2
+  window.postMessage(message, targetOrigin);
+};
 
   
   return (
@@ -23,7 +31,6 @@ const userData = JSON.parse(localStorage.getItem('userData'));
         </div>
 
       <div className="n-form-button" >
-
         <form className='n-form' onSubmit={(e)=>e.preventDefault()} >
           <SearchIcon className='search-icon'/>
           <input type="text" 
@@ -41,11 +48,12 @@ const userData = JSON.parse(localStorage.getItem('userData'));
       </Link>
 
         <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
-           
+        <a onClick={handlemsg} href="http://localhost:3001/app" style={{marginTop: "8px"}}>
         <TbMessage className='nav-icons'/>
         <LiaUserFriendsSolid 
         className='nav-icons'
         onClick={()=>setShowMenu(true)}/>
+        </a>
       </div>
 
 
