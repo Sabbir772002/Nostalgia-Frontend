@@ -22,34 +22,100 @@ const MediHome = () => {
     { name: 'Medication E', dosage: '25mg', times: ['Night'], image: 'http://localhost:8000/media/d.png' },
     { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
   ]);
+
+  const today = new Date();
+  // Calculate end date: Today's date + 30 days
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 30);
+
+  const [newMedication, setNewMedication] = useState
+  ({
+    user:userData.username,
+    name: '',
+    dosage: '',
+    morning: false,
+    noon: false,
+    night: false,
+    after: '',
+    note: '',
+    start_date: today.toISOString().split('T')[0],
+    end_date: endDate.toISOString().split('T')[0]
+  });
+  useEffect(() => {
+    axios.get('http://localhost:8000/medication',
+    {
+      params: {
+        username: userData.username
+      }
+    })
+    .then((response) => {
+      console.log(response.data);
+      setMedicationSchedule(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, [newMedication]);
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [alertTime, setAlertTime] = useState('');
-  
-  
-
   // State variable for new medication input
-  const [newMedication, setNewMedication] = useState
-  ({
-    name: '',
-    dosage: '',
-    times: [],
-    note: ''
-  });
+  
+    const handleTimeCheckboxChange = (time) => {
+    setNewMedication(prevState => ({
+      ...prevState,
+      [time]: !prevState[time]
+    }));
+  };
 
   // Function to handle adding medication
   const handleAddMedication = () => {
-    // Update medication schedule with new medication
-    setMedicationSchedule([...medicationSchedule, newMedication]);
+    // Update medication schedule with new medicatiom
+    
+    // setMedicationSchedule([...medicationSchedule, newMedication]);
     // Add new medication to notes
-    setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
+    // setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
+     console.log(newMedication);
+
+    axios.post('http://127.0.0.1:8000/medication', newMedication)
+    .then(response => {
+      // Handle successful response if needed
+      console.log('Medication added successfully:', response.data);
+    })
+    .catch(error => {
+      // Handle error if needed
+      console.error('Error adding medication:', error);
+    });
+  axios.get('http://localhost:8000/medication',
+    {
+      params: {
+        username: userData.username
+      }
+    })
+    .then((response) => {
+      console.log(response.data);
+      setMedicationSchedule(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  // Calculate today's date
+  const today = new Date();
+  // Calculate end date: Today's date + 30 days
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 30);
     // Clear the new medication form fields
     setNewMedication({
+      user:userData.username,
       name: '',
       dosage: '',
-      times: [],
-      note: ''
-    });
+      morning: false,
+      noon: false,
+      night: false,
+      after: '',
+      note: '',
+      start_date: today.toISOString().split('T')[0],
+      end_date: endDate.toISOString().split('T')[0]  });
   };
 
   // Function to display system notification
@@ -73,6 +139,14 @@ const MediHome = () => {
     }, 60000); // Check every minute
     return () => clearInterval(interval);
   }, [alertTime]);
+  
+  const timefind = () => {
+    const currentTime = new Date().getHours();
+    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
+    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
+    return ['Night','Morning', 'Noon'];
+  };
+  const timebox=timefind();
 
   // Function to sort medication by current time frame (Morning, Noon, Night)
   const sortMedicationByTime = () => {
@@ -85,11 +159,13 @@ const MediHome = () => {
   // Function to sort medication by next time frame
   const sortMedicationByNextTimeFrame = () => {
     const currentTimeFrame = sortMedicationByTime();
+    console.log("akhon somoy");
+    console.log(currentTimeFrame);
     const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
     const nextMedications = medicationSchedule.filter(med => !med.times.includes(currentTimeFrame));
     return [...currentMedications, ...nextMedications];
   };
-
+  const medicationbox=sortMedicationByNextTimeFrame();
   // Function to handle setting alert time
   const handleSetAlertTime = () => {
     setShowModal(false);
@@ -142,8 +218,6 @@ const MediHome = () => {
       const [importFile,setImportFile] =useState("")
    
    const [search,setSearch] =useState("")
-
-    
   const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
@@ -164,7 +238,7 @@ const MediHome = () => {
 
       <div className="rounded med scrollable medication-schedule">
         <h4 className="headmed">Medication Schedule</h4>
-        {['Morning', 'Noon', 'Night'].map((timeFrame, index) => (
+        {timebox.map((timeFrame, index) => (
          <div className="m-2 row d-flex" key={index}>
          <h5>{timeFrame}</h5>
          {sortMedicationByNextTimeFrame().map((med, medIndex) => (
@@ -184,79 +258,97 @@ const MediHome = () => {
         ))}
       </div>
 
-    <div  className="med scrollable notes rounded">
-        <h4 className="note">Notes</h4>
-        {notes.map((note, index) => (
-          <div key={index}>
-            <h5>{note.name}</h5>
-            <p>{note.note}</p>
-          </div>
-        ))}
-    </div>
+      <div className="med scrollable notes rounded">
+  <h4 className="note">Notes</h4>
+  {sortMedicationByNextTimeFrame().map((note, index) => (
+    note.note !== null && (
+      <div className="med notes m-2" key={index}>
+        <h5>{note.name}</h5>
+        <p>{note.note}</p>
+      </div>
+    )
+  ))}
+</div>
 
-        <div className="med addmed rounded">
-          <h4 className="m-1 headmed">Add Medication</h4>
-          <div className="m-1 form-group">
-            <label className="m-1">Medication Name</label>
-            <input
-              type="text"
-              className="m-1 form-control"
-              value={newMedication.name}
-              onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
-            />
-          </div>
-          <div className="m-1 form-group">
-            <label className="m-1" >Dosage</label>
-            <input
-              type="text"
-              className="m-1 form-control"
-              value={newMedication.dosage}
-              onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
-            />
-          </div>
-          <div className="m-1 form-group">
-            <label className="m-1">Times per Day</label>
-            <div>
-              {['Morning', 'Noon', 'Night'].map(time => (
-                <div key={time} className="form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id={time}
-                    value={time}
-                    checked={newMedication.times.includes(time)}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-                      setNewMedication(prevState => {
-                        if (isChecked) {
-                          return { ...prevState, times: [...prevState.times, time] };
-                        } else {
-                          return { ...prevState, times: prevState.times.filter(t => t !== time) };
-                        }
-                      });
-                    }}
-                  />
-                  <label className="m-1form-check-label" htmlFor={time}>{time}</label>
-                </div>
-              ))}
+<div className="med addmed rounded scrollbox">
+      <h4 className="m-1 headmed">Add Medication</h4>
+      <div className="m-1 form-group">
+        <label className="m-1">Medication Name</label>
+        <input
+          type="text"
+          className="m-1 form-control"
+          value={newMedication.name}
+          onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+        />
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">Dosage</label>
+        <input
+          type="text"
+          className="m-1 form-control"
+          value={newMedication.dosage}
+          onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
+        />
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">Times per Day</label>
+        <div>
+          {['Morning', 'Noon', 'Night'].map(time => (
+            <div key={time} className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id={time}
+                checked={newMedication[time.toLowerCase()]}
+                onChange={() => handleTimeCheckboxChange(time.toLowerCase())}
+              />
+              <label className="m-1 form-check-label" htmlFor={time}>{time}</label>
             </div>
-          </div>
-
-          <div className="m-1 form-group">
-            <label className="m-1">Note</label>
-            <input
-              type="text"
-              className="m-1 form-control"
-              value={newMedication.note}
-              onChange={(e) => setNewMedication({ ...newMedication, note: e.target.value })}
-            />
-          </div>
-          <button className="m-1 btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
+          ))}
         </div>
-        </div>
-
-
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">Note</label>
+        <input
+          type="text"
+          className="m-1 form-control"
+          value={newMedication.note}
+          onChange={(e) => setNewMedication({ ...newMedication, note: e.target.value })}
+        />
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">Start Date</label>
+        <input
+          type="date"
+          className="m-1 form-control"
+          value={newMedication.start_date}
+          onChange={(e) => setNewMedication({ ...newMedication, start_date: e.target.value })}
+        />
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">End Date</label>
+        <input
+          type="date"
+          className="m-1 form-control"
+          value={newMedication.end_date}
+          onChange={(e) => setNewMedication({ ...newMedication, end_date: e.target.value })}
+        />
+      </div>
+      <div className="m-1 form-group">
+        <label className="m-1">After</label>
+        <input
+          type="text"
+          className="m-1 form-control"
+          value={newMedication.after}
+          onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
+        />
+      </div>
+      
+      <button className="m-1 btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
+      </div>
+          </div>
         
+      
      <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
           <div className="modal-dialog">
             <div className="modal-content">
