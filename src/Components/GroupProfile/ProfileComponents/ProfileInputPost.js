@@ -7,13 +7,14 @@ import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOu
 import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
-
+  
   const [post, setpost] = useState({
     username: userData.username,
     content: '', // State variable for content
@@ -54,9 +55,10 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
         }
         formData.append(key, value);  
       });
-      console.log(formData);
+      //console.log(formData);
       const response = await axios.post('http://localhost:8000/addgroupost', formData);
       console.log(response.data); 
+      console.log(group.username);
       alert('Group Post created successfully');
       i=1;
       // Reset form data

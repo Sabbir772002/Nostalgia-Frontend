@@ -166,9 +166,8 @@ const handleCommentSubmit = async (e) => {
               </div>
             )}
           </div>
-
           <div className="like-comment-details">
-            <span className='post-like'>{postbox.upvote} people Upvoted it,</span>
+            <span className='post-like'>{postbox.upvote}  Upvote</span>
             <span className='post-comment'>{comments.length} comments</span>
           </div>
 

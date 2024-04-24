@@ -99,15 +99,18 @@ const Post = ({ post, posts }) => {
     <div className='post'>
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
+
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
+
             <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
+                <Link to={`/group/${post.group_username}`}>
                 <h2 className='' style={{ marginBottom: '5px' }}>{post.group_name}</h2>
+                </Link>
                 <h4 className='ml-2 item-align-center text-align-center' style={{ color: 'gray', fontSize: '14px', marginLeft: '5px', marginTop: '0' }}>{postbox.author}</h4>
                 {/* <h5 className='ml-2 datePara'>{postbox.post_date}</h5> */}
                 </div>
                 </div>
-
         </Link>
 
         <div className='delete'>

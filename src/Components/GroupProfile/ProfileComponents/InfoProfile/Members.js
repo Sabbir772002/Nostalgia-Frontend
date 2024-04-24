@@ -2,7 +2,7 @@
 import React, { useState,useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import axios from 'axios';
-const MemberList = ({guser,fmembers,members}) => {
+const MemberList = ({Rmembers,guser,group,members}) => {
     console.log("grope manush koi...");
     // const [members, setMembers] = useState([]);
     // const fetchbox= async () => {
@@ -20,8 +20,9 @@ const MemberList = ({guser,fmembers,members}) => {
     // };
     // useEffect(() => {
     //   fetchbox();
-    // }, [guser]);
-    // fetchbox(); 
+    // }, [Rmembers]);
+    const user = JSON.parse(localStorage.getItem('userData'));
+
     return (
       <Table striped bordered hover>
         <thead>
@@ -29,7 +30,10 @@ const MemberList = ({guser,fmembers,members}) => {
             <th>Name</th>
             <th>Member Since</th>
             <th>Gender</th>
+            {user.username==group.admin && (
+
             <th>Actions</th>
+            )}
           </tr>
         </thead>
         <tbody>

@@ -29,9 +29,8 @@ const EditProfile = () => {
     p_image: null,
     thana: '',
   });
-
   useEffect(() => {
-    // Fetch user data from the server when the component mounts
+    console.log("yo bat");
     fetchUserData();
   }, []);
   const [img, setimg] = useState(null);
@@ -45,6 +44,8 @@ const EditProfile = () => {
         //delete userData.p_image;
        // delete userData.walk_type;
         setUser(userData);
+        console.log("demon what the helll......");
+        console.log(userData);
         setimg(userData.p_image ? `http://localhost:8000/${userData.p_image}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
         console.log(response.data);
       }
@@ -75,10 +76,17 @@ const EditProfile = () => {
     try {
       //console.log(user);
       const formData = new FormData();
+      console.log("ye kya hai");
+      console.log(user);
       Object.entries(user).forEach(([key, value]) => {
         if (key === 'p_image' && !(value instanceof File)) {
           console.log("No image provided.");
           return;
+        }
+        if(key == 'walk_type'){
+          console.log("walk type");
+          console.log(value);
+
         }
         formData.append(key, value);
       });
@@ -92,7 +100,10 @@ const EditProfile = () => {
       console.error('Error updating user data:', error);
     }
   };
-
+  useEffect(() => {
+    fetchUserData();
+  }
+  , [username]);
   return (
    
             <div className="container-xl px-4 mt-4">

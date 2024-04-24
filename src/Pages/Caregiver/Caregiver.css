@@ -1,11 +1,11 @@
 .interface{
     width: 100%;
 }
-.home{
+.boxi{
     width: 100vw;
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 1fr 2.6fr 1.4fr;
+    grid-template-columns: 1fr 4fr;
     column-gap: 20px;
     background-color:rgb(240, 242, 245);
     padding: 0px 10px;

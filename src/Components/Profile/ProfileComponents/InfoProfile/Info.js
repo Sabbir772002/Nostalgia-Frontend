@@ -142,8 +142,15 @@ const delete_fnd = async () => {
               </button>
             </Link>
           ) : (
-            userData.type != null && userData.type == "Sent" && userData.good==1 ? (
+            (userData.type != null && userData.type == "Sent" && userData.good==1) ? (
               <Link to='' onClick={delete_fnd}>
+                <button>
+                  <FontAwesomeIcon icon={faUserFriends} />
+                  {userData.type}
+                </button>
+              </Link>
+            ) : (userData.is_fnf==1) ? (
+              <Link to=''>
                 <button>
                   <FontAwesomeIcon icon={faUserFriends} />
                   {userData.type}
