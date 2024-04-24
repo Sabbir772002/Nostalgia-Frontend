@@ -68,7 +68,6 @@ const Left = ({profileImg,
         <span>Walking Buddy</span>
       </div> 
       </Link>
-
       <Link to="/caregiver" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#CareGiver")} className={btnActive === "#CareGiver" ? "active" : ""}>
        <BsPeople className='margin'/>
