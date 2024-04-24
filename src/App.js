@@ -27,6 +27,8 @@ import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
+import Chat from './Pages/Chat/ChatBox';
+
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
@@ -64,6 +66,7 @@ const App = () => {
             <Route path='/DD' element={<DD />} />
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
+            <Route path='/chat' element={<Chat />} />
           </Routes>
         </div>
       </UserProvider>
