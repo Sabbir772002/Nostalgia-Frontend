@@ -109,9 +109,14 @@ const Trip = () => {
 
     <div className="bot">
    
-        <Left />
+    <Left />
+      {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
         <Triplist/>
-        
+        </>
+      )}
     </div>
 
     </div>

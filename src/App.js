@@ -26,9 +26,6 @@ import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
-
-
-
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);

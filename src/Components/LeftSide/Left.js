@@ -11,6 +11,9 @@ import {RiFileListLine} from "react-icons/ri";
 import {FiSettings} from "react-icons/fi";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Profile from "../../assets/profile.jpg";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHospitalUser } from '@fortawesome/free-solid-svg-icons';
+import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 
 
 const Left = ({profileImg,
@@ -20,6 +23,7 @@ const Left = ({profileImg,
   const [btnActive,setBtnActive] =useState("#")
   const [logOutExit,setLogOutExit] =useState(false)
 
+
   return (
     <div className="L-features">
       <Link to="/home" style={{textDecoration:"none",color:"black"}}>
@@ -28,13 +32,6 @@ const Left = ({profileImg,
           <span>Home</span>
         </div>
       </Link>
-
-      {/* <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={()=>setBtnActive("#explore")} className={btnActive === "#explore" ? "active" : ""}>
-        <AiOutlineSearch className='margin'/>
-         <span>Explore</span>
-      </div>
-      </Link> */}
       <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
         <BsPeople className='margin'/>
@@ -71,6 +68,7 @@ const Left = ({profileImg,
         <span>Walking Buddy</span>
       </div> 
       </Link>
+
       <Link to="/caregiver" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#CareGiver")} className={btnActive === "#CareGiver" ? "active" : ""}>
        <BsPeople className='margin'/>
@@ -105,4 +103,5 @@ const Left = ({profileImg,
   )
 }
 
-export default Left
+export default Left;
+

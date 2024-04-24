@@ -108,9 +108,15 @@ const Event = () => {
         />
 
     <div className="bot">
-   
         <Left />
+      {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
         <Eventlist/>
+        </>
+      )}
+
         
     </div>
 

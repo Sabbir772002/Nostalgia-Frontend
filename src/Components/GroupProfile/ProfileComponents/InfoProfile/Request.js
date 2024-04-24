@@ -3,7 +3,7 @@ import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const RequestList = ({guser,fmembers,Rmembers,setRmembers}) => {
+const RequestList = ({guser,fmembers,Rmembers,setRmembers,group}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [selectedId, setSelectedId] = useState(null); // State for selected member ID
   const navigate = useNavigate();
@@ -25,8 +25,8 @@ const RequestList = ({guser,fmembers,Rmembers,setRmembers}) => {
 
   const actions = async (id, action) => {
     try {
-      console.log(id);
       const response = await axios.post('http://localhost:8000/grouprequest', {user_id:id,group:guser, type: action});
+      console.log("in actions");  
       console.log(response.data);
       // fetchData();
       setRmembers(response.data);
@@ -36,7 +36,6 @@ const RequestList = ({guser,fmembers,Rmembers,setRmembers}) => {
       console.error('Error performing action:', error);
     }
   };
-
   return (
     <Table striped bordered hover>
       <thead>
@@ -45,8 +44,10 @@ const RequestList = ({guser,fmembers,Rmembers,setRmembers}) => {
           <th>Age</th>
           <th>Gender</th>
           <th>View</th>
-          <th>Actions</th>
-        </tr>
+          {user.username==group.admin && (
+
+<th>Actions</th>
+)}        </tr>
       </thead>
       <tbody>
         {Rmembers && Rmembers.map(member => (
