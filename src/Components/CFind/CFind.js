@@ -8,16 +8,12 @@ import { Link } from 'react-router-dom';
 import img3 from "../../assets/User-post/img3.jpg";
 import { useLocation } from 'react-router-dom';
 
-<<<<<<< HEAD
 const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => { 
   // Destructure props to directly access userData
-   
+  
 
-=======
 
-const CFind = ({caregiverlist,setCaregiverlist,caregiver}) => {
-   // Destructure props to directly access userData
->>>>>>> f28e558279b88ec3230f58090aff30ead7e3da13
+
     return (
         <Card className="text-center card-box" style={{ width: '300px',height: '460px' }}> 
         <Card.Body className="member-card pt-2 pb-2">
