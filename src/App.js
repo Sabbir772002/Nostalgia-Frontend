@@ -27,6 +27,11 @@ import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
+
+import HomeScreen from "./screens/home/HomeScreen";
+import LoginScreen from "./screens/auth/login/LoginScreen";
+import SignupScreen from "./screens/auth/signup/SignupScreen";
+import AppPaths from "./chat_lib/appPaths";
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
@@ -64,6 +69,10 @@ const App = () => {
             <Route path='/DD' element={<DD />} />
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
+            <Route path={AppPaths.HOME} exact component={HomeScreen} />
+            <Route path={AppPaths.CHAT_ROOM} exact component={HomeScreen} />
+            <Route path={AppPaths.LOGIN} exact component={LoginScreen} />
+            <Route path={AppPaths.SIGN_UP} exact component={SignupScreen} />
           </Routes>
         </div>
       </UserProvider>
