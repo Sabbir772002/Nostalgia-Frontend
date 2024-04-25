@@ -147,7 +147,7 @@ console.log("yellow blue green");
         post.content : `${(post.content).slice(0,300)}...`
         }</p>
 
-        {post.img && (<img src={post.img} alt="" className="post-img" />)}
+{post.blog_img && (<img src={`http://localhost:8000/${post.blog_img}`} alt="" className="post-img" />)}
       
       <div className="post-foot">
        <div className="post-footer">

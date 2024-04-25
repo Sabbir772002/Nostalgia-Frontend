@@ -13,6 +13,9 @@
     overflow-y: auto;
     max-height: 100vh;
   }
+  .scrollbox {
+    overflow-y: auto;
+  }
   
   .medication-schedule,
   .notes {

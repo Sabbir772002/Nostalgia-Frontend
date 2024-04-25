@@ -75,7 +75,7 @@ const Overseer = () => {
       formData.username= formData.username+"@"+user.username;
       formData.address= formData.Location;
       formData.dob="2021-09-01";
-      formData.thana="1";
+      formData.thana="Dhaka";
       formData.nid="5288";
       formData.gender="Male";
       const response = await axios.post('http://localhost:8000/add_overseer', formData);

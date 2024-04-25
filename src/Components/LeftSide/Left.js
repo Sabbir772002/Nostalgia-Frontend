@@ -68,21 +68,20 @@ const Left = ({profileImg,
         <span>Walking Buddy</span>
       </div> 
       </Link>
-
       <Link to="/caregiver" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#CareGiver")} className={btnActive === "#CareGiver" ? "active" : ""}>
        <BsPeople className='margin'/>
         <span>CareGiver</span>
       </div>
       </Link>  
-      <Link to="" style={{textDecoration:"none",color:"black"}}>
+      <Link to="/trip" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={()=>setBtnActive("#Trip")} className={btnActive === "#Trip" ? "active" : ""}>
         <AiOutlineSearch className='margin'/>
          <span>Trip</span>
       </div>
       </Link>
 
-      <Link to="" style={{textDecoration:"none",color:"black"}}>
+      <Link to="/event" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box'  onClick={()=>setBtnActive("#Event")} className={btnActive === "#Event" ? "active" : ""}>
           <FiTrendingUp className='margin'/>
         <span>Event</span>
@@ -103,4 +102,5 @@ const Left = ({profileImg,
   )
 }
 
-export default Left
+export default Left;
+

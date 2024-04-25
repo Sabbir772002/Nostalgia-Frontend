@@ -103,6 +103,10 @@ useEffect(() => {
     <div className="btw">
    
         <Left />
+      {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
         <FindFlist
         fndlist={fndlist}
         setfndlist={setfndlist}
@@ -114,6 +118,8 @@ useEffect(() => {
         following={following}
         setFollowing={setFollowing}
         /> */}
+         </>
+      )}
     </div>
 
     </div>

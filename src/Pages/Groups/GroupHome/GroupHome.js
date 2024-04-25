@@ -34,38 +34,40 @@ const GroupHome = () => {
   }, []);
 
 
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
+      const [body,setBody] =useState("");
+      const [importFile,setImportFile] =useState("");
    
-   const [search,setSearch] =useState("")
+   const [search,setSearch] =useState("");
 
     
-  const [following,setFollowing] =useState("")
+  const [following,setFollowing] =useState("");
         
-  const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
+  const [showMenu,setShowMenu] =useState(false);
+  const [images,setImages] =  useState(null);
+  console.log(userData);
 
   return (
     <div className='interface'>
-        <Nav 
+      <Nav 
         search={search}
         setSearch={setSearch}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
-        />
-
-    <div className="home">
-   
+      />
+      <div className="home">
         <Left />
-
-        <Middle posts={posts}
-        fetchPosts={fetchPosts}
-        />
-       <Right/>
+        {userData.username.includes("@") ? (
+          <h1 className="error mt-4">You are not allowed to view this page</h1>
+        ) : (
+          <>
+            <Middle posts={posts} fetchPosts={fetchPosts} />
+            <Right />
+          </>
+        )}
+      </div>
     </div>
-
-    </div>
-  )
+  );
+  
 }
 
 export default GroupHome
