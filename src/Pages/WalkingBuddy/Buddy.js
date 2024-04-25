@@ -47,11 +47,8 @@ const Buddy = () => {
  // console.log(userData);
   
       const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-      
+      const [importFile,setImportFile] =useState("")   
 
-   
-   
 
   const [fndlist,setfndlist] =useState([
     {

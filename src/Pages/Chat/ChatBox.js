@@ -33,8 +33,8 @@ import Uimg3 from "../../assets/User-post/img3.jpg";
 
 
 import "./Chat.css";
-import Right from '../../Components/RightSide/Right';
-import Nav from '../../Components/Navigation/Nav';
+
+
 import { useLocation } from 'react-router-dom';
 
 const Chat = () => {
@@ -52,12 +52,7 @@ const Chat = () => {
 
   return (
     <div className='interface'>
-      <Nav 
-        search={search}
-        setSearch={setSearch}
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-      />
+     
 
       <div className="chat">
         <div className="container">
@@ -153,7 +148,7 @@ const Chat = () => {
         </div>
       </div>
 
-      <Right />
+      
     </div>
   );
 }
