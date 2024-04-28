@@ -81,7 +81,7 @@ const InputPost = ({fetchPosts}) => {
           <input 
             type="text" 
             id="i-input" 
-            placeholder="What's in your mind Vijay?"
+            placeholder={`What's in your mind ${userData.first_name}?`}
             required
             value={post.content} // Use formData.content instead of body
             onChange={handleChange} // Use handleChange for content change

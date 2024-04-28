@@ -265,4 +265,3 @@ const BuddyList = () => {
 };
 
 export default BuddyList;
-

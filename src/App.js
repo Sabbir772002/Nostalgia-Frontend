@@ -13,7 +13,6 @@ import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
 import DD from './Pages/Ex/DD';
-import BD from './Pages/Ex/BD';
 import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
 import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
@@ -28,7 +27,14 @@ import Event from './Pages/Event/Event';
 import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
-import Chat from './Pages/Chat/ChatBox';
+
+import HomeScreen from "./screens/home/HomeScreen";
+import LoginScreen from "./screens/auth/login/LoginScreen";
+import SignupScreen from "./screens/auth/signup/SignupScreen";
+import AppPaths from "./chat_lib/appPaths";
+// import Chat from './Pages/Chat/ChatBox';
+import BD from './Pages/Ex/BD';
+
 
 const App = () => {
   // Define state for friendProfile
@@ -65,10 +71,14 @@ const App = () => {
             <Route path='/groups' element={<GroupHome />} />
             <Route path='/group/:username' element={<GroupProfile />} />
             <Route path='/DD' element={<DD />} />
-            <Route path='/BD' element={<BD />} />
+            {/* <Route path='/BD' element={<BD />} /> */}
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
-            <Route path='/chat' element={<Chat />} />
+            {/* <Route path='/chat' element={<Chat />} /> */}
+            <Route path='/chat' element={HomeScreen} />
+            <Route path='/c/:chatId' element={HomeScreen} />
+            <Route path='/chat_login' element={LoginScreen} />
+            <Route path='/chat_signup' element={SignupScreen} />
           </Routes>
         </div>
       </UserProvider>
