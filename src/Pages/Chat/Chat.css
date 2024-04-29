@@ -1,16 +1,10 @@
-body{
-    background-color: #f4f7f6;
-    margin-top:20px;
-}
 .card {
-    background: #fff;
     transition: .5s;
     border: 0;
     margin-bottom: 30px;
     border-radius: .55rem;
     position: relative;
     width: 100%;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
 .chat-app .people-list {
     width: 280px;
@@ -19,6 +13,10 @@ body{
     top: 0;
     padding: 20px;
     z-index: 7
+}
+.box-right {
+    text-align: right;
+    padding-right: 20px;
 }
 
 .chat-app .chat {
@@ -254,46 +252,10 @@ body{
         overflow-x: auto
     }
 }
-
-.interface{
-    width: 100%;
-}
 .bot{
     width: 100vw;
-    min-height: 100vh;
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns:4fr;
     column-gap: 20px;
-    background-color:rgb(240, 242, 245);
     padding: 0px 10px;
-    position: relative;
-}
-@media screen and (max-width:1024px){
-    .home{
-        width: 100%;
-        
-        grid-template-columns: 20% 50% 30%;
-        padding: 0px 20px 0px 10px;
-    }
-}
-
-@media screen and (max-width:768px){
-    .home{
-        width: 100%;
-        display:grid;
-        grid-template-columns: 1fr;
-        padding: 0px 10px 0px 10px;
-        overflow: hidden;
-    }
-}
-
-@media screen and (max-width:430px){
-    .home{
-        width: 100%;
-        display:grid;
-        grid-template-columns: 1fr;
-        padding: 0px 0px;
-        overflow: hidden;
-        background-color: #f5f5f5
-    }
 }

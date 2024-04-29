@@ -13,6 +13,7 @@ import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
 import DD from './Pages/Ex/DD';
+import BD from './Pages/Ex/BD';
 import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
 import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
 import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
@@ -69,6 +70,7 @@ const App = () => {
             <Route path='/groups' element={<GroupHome />} />
             <Route path='/group/:username' element={<GroupProfile />} />
             <Route path='/DD' element={<DD />} />
+            <Route path='/BD' element={<BD />} />
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
           </Routes>

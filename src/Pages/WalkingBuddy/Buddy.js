@@ -104,7 +104,7 @@ const Buddy = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="bot">
+    <div className="tot">
    
         <Left />
         <BuddyList/>
