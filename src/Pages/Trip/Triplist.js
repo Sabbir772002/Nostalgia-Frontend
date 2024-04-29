@@ -17,7 +17,7 @@ const Triplist = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/walk', {
+      const response = await axios.get('http://localhost:8000/trip', {
         params: { username: userData.username }
       });
       setUserlist(response.data);
@@ -53,39 +53,47 @@ const Triplist = () => {
     delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/walk', formData);
+      await axios.post('http://localhost:8000/trip', formData);
       console.log('Walk data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
       setFormData({
-        walk_name: '',
-        w_creator: userData.username,
+        trip_name: '',
+        t_creator: userData.username,
         address: '',
-        walk_date: new Date().toISOString().split('T')[0], // Set to current date
+        start_date: new Date().toISOString().split('T')[0], // Set to current date
         end_date: new Date().toISOString().split('T')[0], // Set to current date
-        time: '',
-        privacy: 'Bondhu'
+        propose_date: new Date().toISOString().split('T')[0],
+        privacy: 'Bondhu',
+        guide: '', // If there's a specific guide, provide their ID
+        thana: "Dhaka" // If there's a specific thana (district), provide its ID
       });
+      
     } catch (error) {
       console.error('Error sending walk data:', error);
     }
   };
 
   const [formData, setFormData] = useState({
-    walk_name: '',
-    w_creator: userData.username,
-    address: '',
-    walk_date: new Date().toISOString().split('T')[0], // Set to current date
-    end_date: new Date().toISOString().split('T')[0], // Set to current date
-    time: '',
-    privacy: 'Bondhu'
-  });
+    
+      trip_name: '',
+      t_creator: userData.username,
+      address: '',
+      start_date: new Date().toISOString().split('T')[0], // Set to current date
+      end_date: new Date().toISOString().split('T')[0], // Set to current date
+      propose_date: new Date().toISOString().split('T')[0],
+      privacy: 'Bondhu',
+      creator: '', // You might want to set this to the ID of the current user
+      guide: '', // If there's a specific guide, provide their ID
+      thana: "Dhaka" // If there's a specific thana (district), provide its ID
+    });
+    
   const [members, setMembers] = useState([]);
   const fetchmembers = async (user) => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/walkmembers', {
+    const response = await axios.get('http://localhost:8000/tripmembers', {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -95,12 +103,12 @@ const Triplist = () => {
     };
     const submitrequest = async (walk) => {
       console.log("hatte jabo tomar sathe.... niba?");
-      if(walk.w_creator == userData.username){
+      if(walk.t_creator == userData.username){
         alert("You cannot request to join your own walk.");
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/walk_request', { 
+     const response= await axios.post('http://localhost:8000/trip_request', { 
       id: walk.id,
       username: userData.username
       });
@@ -142,29 +150,29 @@ const Triplist = () => {
           <div className="col-6">
             <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
               <Modal.Header closeButton>
-                <Modal.Title>Walking List</Modal.Title>
+                <Modal.Title>Trip List</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="walk_name">
-                    <Form.Label>Walk Name</Form.Label>
-                    <Form.Control type="text" value={formData.walk_name} onChange={handleChange} />
+                  <Form.Group controlId="trip_name">
+                    <Form.Label>Trip Name</Form.Label>
+                    <Form.Control type="text" value={formData.trip_name} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="address">
-                    <Form.Label>Address</Form.Label>
+                    <Form.Label>Destination</Form.Label>
                     <Form.Control type="text" value={formData.address} onChange={handleChange} />
                   </Form.Group>
-                  <Form.Group controlId="walk_date">
+                  <Form.Group controlId="start_date">
                     <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.walk_date} onChange={handleChange} />
+                    <Form.Control type="date" value={formData.start_date} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="end_date">
                     <Form.Label>End Date</Form.Label>
                     <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
                   </Form.Group>
-                  <Form.Group controlId="time">
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control type="time" value={formData.time} onChange={handleChange} />
+                  <Form.Group controlId="guide">
+                    <Form.Label>Guide"</Form.Label>
+                    <Form.Control type="text" value={formData.guide} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="privacy">
                     <Form.Label>Privacy</Form.Label>
@@ -179,7 +187,7 @@ const Triplist = () => {
             </Modal>
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
-              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
+              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Trip</Button>
             </div>
           </div>
         </div>
@@ -209,7 +217,7 @@ const Triplist = () => {
                 {user.w_creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
-              {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
+              {user.member == 1 && user.not_ac == 0  && !(user.t_creator == userData.username) &&(
                   <td><Button variant="success" onClick={() => submitrequest(user)} >Member</Button></td>
               )}
               {user.member == 1 && user.not_ac == 1 && (
@@ -218,7 +226,7 @@ const Triplist = () => {
               {user.member == 1 && user.cancel == 1 && (
                 <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
             )}
-              {(user.w_creator != userData.username && user.member == 0 ) && (
+              {(user.t_creator != userData.username && user.member == 0 ) && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
               )}
 
