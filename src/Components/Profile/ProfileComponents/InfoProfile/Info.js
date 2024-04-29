@@ -8,9 +8,12 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { BiMessage, BiLogOut } from 'react-icons/bi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { FaCheckCircle } from 'react-icons/fa';
+
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
 import axios from 'axios';
+import { height } from '@mui/system';
 const Info = ({
   userPostData,
   following,
@@ -92,7 +95,6 @@ const delete_fnd = async () => {
       // Handle errors if any
   }
 };
-  
   return (
     <div className='info'>
       <div className='info-cover'>
@@ -101,11 +103,15 @@ const delete_fnd = async () => {
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
-        <div className='profileDiv'>
-          <IoCameraOutline className='profileSvg' onClick={() => importProfile.current.click()} />
-        </div>
+          {userData && userData.verify===1 ?(
+                    <div className='profileDiv bg-light' style={{width:24,height:24}}>
+                    <FaCheckCircle className='text-primary' style={{ width: 25, height: 25 }} />
+                    </div>
+              ) :(
+                <></>
+              )
+            }
       </div>
-
       <input type='file' ref={importProfile} onChange={handleFile1} style={{ display: 'none' }} />
       <input type='file' ref={importCover} onChange={handleFile2} style={{ display: 'none' }} />
       <div className='info-follow'>

@@ -27,7 +27,7 @@
     width: 40px;
     height: 40px;
     font-size: 30px;
-    background-color:#fff;
+    background-color: transparent;
     position: absolute;
     top: 30px;
     right: -10px;
@@ -39,8 +39,8 @@
     border-radius: 50%;
 }
 .profileDiv{
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
     background-color: #fff;
     position:absolute;
     top: 275px;
@@ -53,7 +53,7 @@
     border-radius: 50%;
 }
 .coverSvg,.profileSvg{
-    font-size: 30px;
+    font-size: 24x;
 }
 
 .info-cover img:nth-child(2){

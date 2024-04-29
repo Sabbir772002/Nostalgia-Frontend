@@ -61,8 +61,6 @@ const Home = () => {
     // Fetch posts when component mounts
     fetchPosts();
   }, []);
-
-
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
    
@@ -73,7 +71,6 @@ const Home = () => {
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null)
-
   return (
     <div className='interface'>
         <Nav 
@@ -82,16 +79,12 @@ const Home = () => {
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         />
-
     <div className="home">
-   
         <Left />
-
         <Middle posts={posts}
         fetchPosts={fetchPosts}
 
         />
-
         <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
