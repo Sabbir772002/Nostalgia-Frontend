@@ -91,7 +91,7 @@ const Eventlist = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/walkmembers', {
+    const response = await axios.get('http://localhost:8000/eventmembers', {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -101,12 +101,12 @@ const Eventlist = () => {
     };
     const submitrequest = async (walk) => {
       console.log("hatte jabo tomar sathe.... niba?");
-      if(walk.w_creator == userData.username){
+      if(walk.e_creator == userData.username){
         alert("You cannot request to join your own walk.");
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/walk_request', { 
+     const response= await axios.post('http://localhost:8000/event_request', { 
       id: walk.id,
       username: userData.username
       });
@@ -234,7 +234,7 @@ const Eventlist = () => {
                 {user.E_creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
-              {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
+              {user.Member == 1  && !(user.w_creator == userData.username) &&(
                   <td><Button variant="success" onClick={() => submitrequest(user)} >Member</Button></td>
               )}
               {user.member == 1 && user.not_ac == 1 && (
@@ -243,8 +243,8 @@ const Eventlist = () => {
               {user.member == 1 && user.cancel == 1 && (
                 <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
             )}
-              {(user.E_creator != userData.username && user.member == 0 ) && (
-                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
+              {(user.E_creator != userData.username && user.Member == 0) && (
+                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Join</Button></td>
               )}
 
               <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
