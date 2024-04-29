@@ -3,7 +3,7 @@ import AuthRequired from "../../Components/auth/AuthRequired";
 import ChatBody from "../../Components/chatbody/ChatBody";
 import Sidebar from "../../Components/sidebar/sidebar";
 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
   const [currentChattingMember, setCurrentChattingMember] = useState({});
   const [onlineUserList, setOnlineUserList] = useState([]);
 
@@ -12,15 +12,15 @@ const HomeScreen = () => {
       <div className="container-fluid p-0">
         <div className="container-fluid">
           <div className="row g-0">
-            <Sidebar
+            {/* <Sidebar
               setCurrentChattingMember={setCurrentChattingMember}
               onlineUserList={onlineUserList}
-              
-            />
+              {...props}
+            /> */}
             <ChatBody
               setOnlineUserList={setOnlineUserList}
               currentChattingMember={currentChattingMember}
-             
+              {...props}
             />
           </div>
         </div>
@@ -29,4 +29,4 @@ const HomeScreen = () => {
   );
 };
 
-export default AuthRequired(HomeScreen);
+export default HomeScreen;

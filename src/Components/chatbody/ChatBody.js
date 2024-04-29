@@ -8,7 +8,9 @@ import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
 let socket = new WebSocket(
-  ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId()}/chat/`
+  // ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId()}/chat/`
+  ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId}/chat/`
+  // ServerUrl.WS_BASE_URL + `ws/users/sabbir/chat/`
 );
 let typingTimer = 0;
 let isTypingSignalSent = false;
@@ -63,7 +65,6 @@ const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
       setOnlineUserList(data.userList);
     }
   };
-
   const messageSubmitHandler = (event) => {
     event.preventDefault();
     if (inputMessage) {

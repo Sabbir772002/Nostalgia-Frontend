@@ -2,7 +2,6 @@
 import Constants from "../chat_lib/constants";
 import CookieUtil from "./cookieUtil";
 import { jwtDecode } from "jwt-decode";
-
 const is_date = (date) => {
   if (Object.prototype.toString.call(date) === "[object Date]") {
     return true;
@@ -36,7 +35,6 @@ const getUserId = () => {
   }
   return "";
 };
-
 const getFormatedChatUser = (chatUsers, onlineUserList) => {
   const userId = getUserId();
   return chatUsers.reduce((acumulator, item) => {
@@ -65,12 +63,10 @@ const getFormatedChatUser = (chatUsers, onlineUserList) => {
 const getActiveChatId = (match) => {
   return match && match.params ? match.params.chatId : null;
 };
-
 const CommonUtil = {
   getTimeFromDate: getTimeFromDate,
-  getUserId: getUserId,
+  getUserId: 1,
   getFormatedChatUser: getFormatedChatUser,
   getActiveChatId: getActiveChatId,
 };
-
 export default CommonUtil;
