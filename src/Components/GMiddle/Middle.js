@@ -23,7 +23,7 @@ const Middle = ({posts,fetchPosts}) => {
   
   return (
     <div className='M-features'>
-      <h1 className='mt-3 bg-light rounded text-black'> Group Timeline</h1>
+      <h1 className='mt-3 rounded text-black'> Group Timeline</h1>
         <Homepage 
           posts={posts}
           fetchPosts={fetchPosts}

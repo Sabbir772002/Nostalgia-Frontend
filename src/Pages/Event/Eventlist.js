@@ -14,13 +14,13 @@ const Eventlist = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userlist, setUserlist] = useState([]);
   const userData = JSON.parse(localStorage.getItem('userData'));
-
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/walk', {
+      const response = await axios.get('http://localhost:8000/event', {
         params: { username: userData.username }
       });
-      setUserlist(response.data);
+      setUserlist(response.data.events);
+      console.log(userlist);
     } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -29,7 +29,6 @@ const Eventlist = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value; // By default, use the selected value
@@ -40,31 +39,34 @@ const Eventlist = () => {
       console.log("yo");
       console.log(newValue);
     }
-
     setFormData(prevFormData => ({
       ...prevFormData,
       [id]: newValue
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowInputBoxModal(false);
     delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/walk', formData);
-      console.log('Walk data sent successfully:', formData);
+      await axios.post('http://localhost:8000/event', formData);
+      console.log('Event data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
       setFormData({
-        walk_name: '',
-        w_creator: userData.username,
+        title: '',
+        e_creator: userData.username,
         address: '',
-        walk_date: new Date().toISOString().split('T')[0], // Set to current date
+        start_date: new Date().toISOString().split('T')[0], // Set to current date
+        create_date: new Date().toISOString().split('T')[0], // Set to current date
         end_date: new Date().toISOString().split('T')[0], // Set to current date
-        time: '',
-        privacy: 'Bondhu'
+        start_time: '',
+        end_time: '',
+        type: '',
+        privacy: 'Bondhu',
+        thana: "Dhaka"
+
       });
     } catch (error) {
       console.error('Error sending walk data:', error);
@@ -72,13 +74,17 @@ const Eventlist = () => {
   };
 
   const [formData, setFormData] = useState({
-    walk_name: '',
-    w_creator: userData.username,
+    title: '',
+    e_creator: userData.username,
     address: '',
-    walk_date: new Date().toISOString().split('T')[0], // Set to current date
+    start_date: new Date().toISOString().split('T')[0], // Set to current date
+    create_date: new Date().toISOString().split('T')[0], // Set to current date
     end_date: new Date().toISOString().split('T')[0], // Set to current date
-    time: '',
-    privacy: 'Bondhu'
+    start_time: '',
+    end_time: '',
+    type: '',
+    privacy: 'Bondhu',
+    thana: "Dhaka"
   });
   const [members, setMembers] = useState([]);
   const fetchmembers = async (user) => {
@@ -137,35 +143,52 @@ const Eventlist = () => {
       <div className="box">
         <div className="mt-3 row">
           <div className="col-6">
-            <h1 className="toto">Buddy List</h1>
+            <h1 className="toto">Event List</h1>
           </div>
           <div className="col-6">
             <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
               <Modal.Header closeButton>
-                <Modal.Title>Walking List</Modal.Title>
+                <Modal.Title>Event List</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="walk_name">
-                    <Form.Label>Walk Name</Form.Label>
-                    <Form.Control type="text" value={formData.walk_name} onChange={handleChange} />
+                  <Form.Group controlId="title">
+                    <Form.Label>Event Title</Form.Label>
+                    <Form.Control type="text" value={formData.title} onChange={handleChange} />
                   </Form.Group>
+                  <Form.Group controlId="Description">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control type="text" value={formData.description} onChange={handleChange} />
+                  </Form.Group>       
+                  <Form.Group controlId="type">
+                    <Form.Label>Type</Form.Label>
+                    <Form.Control type="text" value={formData.type} onChange={handleChange} />
+                  </Form.Group>  
                   <Form.Group controlId="address">
                     <Form.Label>Address</Form.Label>
                     <Form.Control type="text" value={formData.address} onChange={handleChange} />
                   </Form.Group>
-                  <Form.Group controlId="walk_date">
+                  <Form.Group controlId="start_date">
                     <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.walk_date} onChange={handleChange} />
+                    <Form.Control type="date" value={formData.start_date} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="end_date">
                     <Form.Label>End Date</Form.Label>
                     <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
                   </Form.Group>
-                  <Form.Group controlId="time">
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control type="time" value={formData.time} onChange={handleChange} />
+                  <Form.Group controlId="start_time">
+                    <Form.Label> Start Time</Form.Label>
+                    <Form.Control type="time" value={formData.start_time} onChange={handleChange} />
                   </Form.Group>
+                  <Form.Group controlId="end_time">
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="time" value={formData.end_time} onChange={handleChange} />
+                  </Form.Group>
+                  <Form.Group controlId="thana">
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Control type="text" value={formData.thana} onChange={handleChange} />
+                  </Form.Group>
+                  
                   <Form.Group controlId="privacy">
                     <Form.Label>Privacy</Form.Label>
                     <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
@@ -179,7 +202,7 @@ const Eventlist = () => {
             </Modal>
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
-              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
+              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Event</Button>
             </div>
           </div>
         </div>
@@ -187,26 +210,28 @@ const Eventlist = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Name</th>
+              <th>Title</th>
+              <th>Creator</th>
               <th>Location</th>
-              <th>Date</th>
-              <th>End</th>
-              <th>Time</th>
-              <th>Request</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
               <th>View Info</th>
             </tr>
           </thead>
           <tbody>
-            {userlist.map(user => (
+            {userlist && userlist.map(user => (
               <tr key={user.id}>
-                <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
-                <td>{user.w_creator}</td>
-                <td>{user.location}</td>
-                <td>{user.date}</td>
-                <td>{user.end}</td>
-                <td>{user.time}</td>
-                {user.w_creator == userData.username && (
+                {/* <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td> */}
+                <td>{user.Event_title}</td>
+                <td>{user.E_creator}</td>
+                <td>{user.Address}</td>
+                <td>{user.start_date}</td>
+                <td>{user.end_date}</td>
+                <td>{user.start_time}</td>
+                <td>{user.end_time}</td>
+                {user.E_creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
               {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
@@ -218,7 +243,7 @@ const Eventlist = () => {
               {user.member == 1 && user.cancel == 1 && (
                 <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
             )}
-              {(user.w_creator != userData.username && user.member == 0 ) && (
+              {(user.E_creator != userData.username && user.member == 0 ) && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
               )}
 
