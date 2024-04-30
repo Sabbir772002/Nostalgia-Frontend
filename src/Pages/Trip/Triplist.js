@@ -20,7 +20,7 @@ const Triplist = () => {
       const response = await axios.get('http://localhost:8000/trip', {
         params: { username: userData.username }
       });
-      setUserlist(response.data);
+      setUserlist(response.data.trips);
     } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -50,7 +50,7 @@ const Triplist = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowInputBoxModal(false);
-    delete formData.time;
+    // delete formData.time;
 
     try {
       await axios.post('http://localhost:8000/trip', formData);
@@ -145,7 +145,7 @@ const Triplist = () => {
       <div className="box">
         <div className="mt-3 row">
           <div className="col-6">
-            <h1 className="toto">Buddy List</h1>
+            <h1 className="toto">Trip List</h1>
           </div>
           <div className="col-6">
             <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
@@ -195,47 +195,44 @@ const Triplist = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Name</th>
               <th>Location</th>
               <th>Date</th>
               <th>End</th>
-              <th>Time</th>
-              <th>Request</th>
+              <th>Creator</th>
+              <th>Privacy</th>
+              <th>Status</th>
               <th>View Info</th>
             </tr>
           </thead>
           <tbody>
-            {userlist.map(user => (
+            {userlist && userlist.map(user => (
               <tr key={user.id}>
-                <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
-                <td>{user.w_creator}</td>
+                {/* <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td> */}
                 <td>{user.location}</td>
-                <td>{user.date}</td>
-                <td>{user.end}</td>
-                <td>{user.time}</td>
-                {user.w_creator == userData.username && (
+                <td>{user.start_date}</td>
+                <td>{user.end_date}</td>
+                <td>{user.creator}</td>
+                <td>{user.privacy}</td>
+                {user.creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
-              {user.member == 1 && user.not_ac == 0  && !(user.t_creator == userData.username) &&(
+              {user.member == 1  && !(user.creator == userData.username) &&(
                   <td><Button variant="success" onClick={() => submitrequest(user)} >Member</Button></td>
               )}
-              {user.member == 1 && user.not_ac == 1 && (
+              { user.join == 1 && !(user.creator == userData.username) && (
                 <td><Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={() => submitrequest(user)}>Requested</Button></td>
               )} 
               {user.member == 1 && user.cancel == 1 && (
-                <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
+                <td><Button variant="gray" onClick={() => submitrequest(user)}>Canceled</Button></td>
             )}
-              {(user.t_creator != userData.username && user.member == 0 ) && (
-                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
+              {(user.creator != userData.username && user.member == 0 && user.join==0 ) && (
+                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Join</Button></td>
               )}
-
               <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
               </tr>
             ))}
           </tbody>
         </table>
-
         {/* User Info Modal */}
         <Modal show={showUserInfoModal} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -243,7 +240,7 @@ const Triplist = () => {
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.username == selectedUser.w_creator && (
+ {userData && selectedUser && userData.username == selectedUser.creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
@@ -252,16 +249,16 @@ const Triplist = () => {
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
-          <p><strong>Name:</strong> {selectedUser.w_creator}</p>
+          <p><strong>Name:</strong> {selectedUser.creator}</p>
           <p><strong>Location:</strong> {selectedUser.location}</p>
-          <p><strong>Date:</strong> {selectedUser.date}</p>
-          <p><strong>End:</strong> {selectedUser.end}</p>
+          <p><strong>Date:</strong> {selectedUser.start_date}</p>
+          <p><strong>End:</strong> {selectedUser.end_date}</p>
           <p><strong>Time:</strong> {selectedUser.time}</p>
         </div>
       )}
     </Tab>
     <Tab eventKey="members" title="Members">
-      {selectedUser && <MemberList members={members} />}
+      {selectedUser && <MemberList members={members} fetchmembers={fetchmembers} />}
     </Tab>
   </Tabs>
 </Modal.Body>

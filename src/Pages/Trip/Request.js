@@ -12,20 +12,19 @@ const RequestList = ({user, fmembers}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/walk!members', {
+      const response = await axios.get('http://localhost:8000/trip!members', {
         params: { id: user.id }
       });
      // fmembers();
       setRmembers(response.data);
-    } catch (error) {
-      console.error('Error fetching user list:', error);
+    } catch (error) {   
+         console.error('Error fetching user list:', error);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-
   const viewProfile = (userId) => {
     navigate(`/profile/${userId}`);
   };
@@ -43,7 +42,7 @@ const RequestList = ({user, fmembers}) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      const response = await axios.post('http://localhost:8000/handlemember', { id:id,walk_id:user.id, type: action});
+      const response = await axios.post('http://localhost:8000/handletripmember', { id:id,tid:user.id, type: action});
       console.log(response.data);
       fetchData();
       fmembers();
@@ -64,7 +63,7 @@ const RequestList = ({user, fmembers}) => {
         </tr>
       </thead>
       <tbody>
-        {Rmembers.map(member => (
+      {Rmembers && Rmembers.map(member => (
           <tr key={member.id}>
             <td>{member.first_name}</td>
             <td>{member.dob}</td>
