@@ -1,7 +1,7 @@
 .interface{
     width: 100%;
 }
-.bot{
+.tot{
     width: 100vw;
     min-height: 100vh;
     display: grid;
