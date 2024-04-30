@@ -175,7 +175,6 @@ const time=sortMedicationByTime();
     const targetTime = new Date();
     targetTime.setHours(targetTime.getHours() + hours);
     targetTime.setMinutes(targetTime.getMinutes() + minutes);
-
     // Show notification after 1 minute
     setTimeout(() => {
       showNotification('Time to take medication!');
@@ -189,10 +188,10 @@ const time=sortMedicationByTime();
       // Stop playing sound after 1 minute
       setTimeout(() => {
         clearInterval(interval);
-        notificationSound.pause(); // Pause the sound
+        notificationSound.pause();// Pause the sound
       }, 60000); // Stop after 1 minute // Check every minute
     }, 60000);
-
+    
     // Set up intervals for each hour/minute combination
     const interval = setInterval(() => {
       const currentTime = new Date();
@@ -218,7 +217,7 @@ const time=sortMedicationByTime();
   };
   const handleSetAlertTime=()=>{
     const fromdata=new formdata();
-    
+
   }
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
