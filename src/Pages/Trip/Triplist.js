@@ -171,7 +171,7 @@ const Triplist = () => {
                     <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="guide">
-                    <Form.Label>Guide"</Form.Label>
+                    <Form.Label>Guide</Form.Label>
                     <Form.Control type="text" value={formData.guide} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="privacy">
