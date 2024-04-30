@@ -252,7 +252,6 @@ const Eventlist = () => {
             ))}
           </tbody>
         </table>
-
         {/* User Info Modal */}
         <Modal show={showUserInfoModal} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -265,7 +264,6 @@ const Eventlist = () => {
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
                 )}
-    
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
