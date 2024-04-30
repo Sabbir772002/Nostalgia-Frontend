@@ -5,7 +5,7 @@ import "./Sugg.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-const Sugg = () => {
+const Friends = () => {
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -42,9 +42,9 @@ const Sugg = () => {
 
 
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/friendsugg`, {
+    axios.get(`http://127.0.0.1:8000/friends`, {
       params: {
-        user_id: user.username
+        user_id: user.id
       }
     })
       .then(response => {
@@ -111,21 +111,22 @@ const Sugg = () => {
         <hr/>
 
    </div> */}
-      <h2 className="mt-3font-weight-bold ">People May You Know</h2>
+      <h2 className="mt-3font-weight-bold ">Your Friends</h2>
       {fndlist && fndlist.slice(0,7).map((fnd, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${fnd.p_image}`} alt="" />
+            <img  src= {`http://localhost:8000/${fnd.pp}`} alt="" />
             <h3>{fnd.first_name} {fnd.last_name}</h3>
           </div>
+
           <div className="s-right">
             <Link to={`/profile/${fnd.username}`}><button>View</button></Link>
-             <Link to={`/compare/${fnd.username}`}><button>Comapre</button> </Link>
+              <button>Message</button>
           </div>
         </div>
       ))}
       <div className="text-center">
-      <Link to='/findfrined'><button className="SM-btn">Find Friends</button></Link>
+      <Link to='/friend'><button className="SM-btn">ALl Friends</button></Link>
       </div>
 
 
@@ -262,4 +263,4 @@ const Sugg = () => {
   )
 }
 
-export default Sugg;
+export default Friends;

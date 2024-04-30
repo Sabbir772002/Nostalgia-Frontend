@@ -103,7 +103,8 @@ const Triplist = () => {
     };
     const submitrequest = async (walk) => {
       console.log("hatte jabo tomar sathe.... niba?");
-      if(walk.t_creator == userData.username){
+
+      if(walk.creator == userData.username){
         alert("You cannot request to join your own walk.");
         return;
       }
@@ -113,6 +114,7 @@ const Triplist = () => {
       username: userData.username
       });
       fetchData();
+      console.log("ye he");
       if(response.data.user == userData.username){
         alert("You have already requested to join this walk. Please wait for the owner to accept your request.");
         return;
@@ -213,7 +215,7 @@ const Triplist = () => {
                 <td>{user.end_date}</td>
                 <td>{user.creator}</td>
                 <td>{user.privacy}</td>
-                {user.creator == userData.username && (
+                {user.creator == userData.username &&(
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
               {user.member == 1  && !(user.creator == userData.username) &&(

@@ -29,7 +29,6 @@ const ShowGroup = () => {
       [id]: newValue
     }));
   };
-
   const [fndlist, setfndlist] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
@@ -256,7 +255,6 @@ const ShowGroup = () => {
           )}
         </Modal.Body>
       </Modal>
-
       {/* Button to open modal */}
     </div>
   )

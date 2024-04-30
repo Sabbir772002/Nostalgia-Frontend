@@ -101,7 +101,7 @@ const Eventlist = () => {
     };
     const submitrequest = async (walk) => {
       console.log("hatte jabo tomar sathe.... niba?");
-      if(walk.e_creator == userData.username){
+      if(walk.E_creator == userData.username){
         alert("You cannot request to join your own walk.");
         return;
       }
