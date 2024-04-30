@@ -27,7 +27,9 @@ const MediHome = () => {
   // Calculate end date: Today's date + 30 days
   const endDate = new Date(today);
   endDate.setDate(endDate.getDate() + 30);
-
+  const [morningTime, setMorningTime] = useState('08:00');
+  const [noonTime, setNoonTime] = useState('12:00');
+  const [nightTime, setNightTime] = useState('20:00');
   const [newMedication, setNewMedication] = useState
   ({
     user:userData.username,
@@ -36,7 +38,7 @@ const MediHome = () => {
     morning: false,
     noon: false,
     night: false,
-    after: '',
+    after: 'After Meal',
     note: '',
     start_date: today.toISOString().split('T')[0],
     end_date: endDate.toISOString().split('T')[0]
@@ -112,7 +114,7 @@ const MediHome = () => {
       morning: false,
       noon: false,
       night: false,
-      after: '',
+      after: 'After Meal',
       note: '',
       start_date: today.toISOString().split('T')[0],
       end_date: endDate.toISOString().split('T')[0]  });
@@ -155,7 +157,7 @@ const MediHome = () => {
     if (currentTime >= 12 && currentTime < 18) return 'Noon';
     return 'Night';
   };
-
+const time=sortMedicationByTime();
   // Function to sort medication by next time frame
   const sortMedicationByNextTimeFrame = () => {
     const currentTimeFrame = sortMedicationByTime();
@@ -167,7 +169,7 @@ const MediHome = () => {
   };
   const medicationbox=sortMedicationByNextTimeFrame();
   // Function to handle setting alert time
-  const handleSetAlertTime = () => {
+  const handlealert = () => {
     setShowModal(false);
     const [hours, minutes] = alertTime.split(':').map(time => parseInt(time));
     const targetTime = new Date();
@@ -214,6 +216,10 @@ const MediHome = () => {
     // Clear the interval after the specified time
     setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
   };
+  const handleSetAlertTime=()=>{
+    const fromdata=new formdata();
+    
+  }
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
    
@@ -222,6 +228,43 @@ const MediHome = () => {
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null)
+  const [done,setDone] =useState(false);
+  const fetchdone = () => { 
+    axios.get('http://127.0.0.1:8000/done',
+    {
+      params: {
+        username: userData.username,
+        date: moment().format('YYYY-MM-DD'),
+        time: time
+      }
+    }).then((response) => {
+      console.log(response.data);
+      setDone(response.data.done);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+    useEffect(() => {
+      fetchdone();
+    }, [time]);
+  const handlenow = () => {
+    // setDone(!done);
+    const formdata = new FormData();
+    formdata.append('type', done?'notdone':'done');
+    formdata.append('username', userData.username);
+    formdata.append('date', moment().format('YYYY-MM-DD'));
+    formdata.append('time',time);
+    axios.post('http://127.0.0.1:8000/done', formdata)
+    .then(response => {
+      fetchdone();
+      console.log('Medication done status updated successfully:', response.data);
+    })
+    .catch(error => {
+      // Handle error if needed
+      console.error('Error updating medication done status:', error);
+    });
+  }
 
   return (
     <div className='interface'>
@@ -237,10 +280,26 @@ const MediHome = () => {
 
 
       <div className="rounded med scrollable medication-schedule">
-        <h4 className="headmed">Medication Schedule</h4>
+        <h4 className="headmed">Medication Schedule({moment().format('h:mm A')})</h4>
         {timebox.map((timeFrame, index) => (
          <div className="m-2 row d-flex" key={index}>
+        <div className="row">
+          <div className="col-md-6">
          <h5>{timeFrame}</h5>
+         </div>
+        <div className="col-md-6 text-right">
+         {(timeFrame==time) ? (
+         <input
+                type="checkbox"
+                className="form-check-input"
+                id={"done"}
+                checked={done}
+                onChange={() => handlenow()}
+              />
+        ):<></>
+         }
+         </div>
+          </div>
          {sortMedicationByNextTimeFrame().map((med, medIndex) => (
            med.times.includes(timeFrame) && (
              <div className="col-md-4" key={medIndex}>
@@ -249,6 +308,7 @@ const MediHome = () => {
                  <Card.Body>
                    <Card.Title>{med.name}</Card.Title>
                    <Card.Text>Dosage: {med.dosage}</Card.Text>
+                   <Card.Text>Take: {med.after}</Card.Text>
                  </Card.Body>
                </Card>
              </div>
@@ -269,7 +329,6 @@ const MediHome = () => {
     )
   ))}
 </div>
-
 <div className="med addmed rounded scrollbox">
       <h4 className="m-1 headmed">Add Medication</h4>
       <div className="m-1 form-group">
@@ -335,49 +394,69 @@ const MediHome = () => {
         />
       </div>
       <div className="m-1 form-group">
-        <label className="m-1">After</label>
-        <input
-          type="text"
-          className="m-1 form-control"
-          value={newMedication.after}
-          onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
-        />
-      </div>
+  <label className="m-1">Take At</label>
+  <select
+    className="m-1 form-control"
+    value={newMedication.after}
+    onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
+  >
+    <option value="After Meal">After Meal</option>
+    <option value="Before Meal">Before Meal</option>
+  </select>
+</div>
+
       
       <button className="m-1 btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
       </div>
           </div>
-        
-      
-     <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Set Alert Time</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Select Time (24-hour format)</label>
-                  <input
-                    type="time"
-                    className="form-control"
-                    value={alertTime}
-                    onChange={(e) => setAlertTime(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
-              </div>
-            </div>
-          </div>
+          <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title">Set Alert Time</h5>
+        <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
+      </div>
+      <div className="modal-body">
+        <div className="form-group">
+          <label>Morning Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={morningTime}
+            onChange={(e) => setMorningTime(e.target.value)}
+          />
         </div>
+        <div className="form-group">
+          <label>Noon Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={noonTime}
+            onChange={(e) => setNoonTime(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Night Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={nightTime}
+            onChange={(e) => setNightTime(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
+      </div>
+    </div>
+  </div>
+</div>
+     
         <div className="fixed-bottom d-flex justify-content-end m-3">
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
         </div>
 
-      
+
     </div>
   )
 }
