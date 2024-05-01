@@ -4,7 +4,7 @@ import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
-import moment from 'moment/moment';
+import moment, { now } from 'moment/moment';
 import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
 import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -85,6 +85,14 @@ const MediHome = () => {
       console.log(error);
     });
   }, [newMedication]);
+  const timefind = () => {
+    const currentTime = new Date().getHours();
+    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
+    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
+    return ['Night','Morning', 'Noon'];
+  };
+  const timebox=timefind();
+  
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [alertTime, setAlertTime] = useState('');
@@ -166,38 +174,6 @@ const MediHome = () => {
   });
   setImage(null);
   };
-
-  // Function to display system notification
-  const showNotification = (message) => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(message);
-        }
-      });
-    }
-  };
-
-  // Function to display alert at specific time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = new Date().getHours();
-      if (currentTime === parseInt(alertTime)) {
-        showNotification('Time to take medication!');
-      }
-    }, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, [alertTime]);
-  
-  const timefind = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
-    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
-    return ['Night','Morning', 'Noon'];
-  };
-  const timebox=timefind();
-
-  // Function to sort medication by current time frame (Morning, Noon, Night)
   const sortMedicationByTime = () => {
     const currentTime = new Date().getHours();
     if (currentTime >= 6 && currentTime < 12) return 'Morning';
@@ -205,89 +181,26 @@ const MediHome = () => {
     return 'Night';
   };
 const time=sortMedicationByTime();
-  // Function to sort medication by next time frame
-  const sortMedicationByNextTimeFrame = () => {
-    const currentTimeFrame = sortMedicationByTime();
-    console.log("akhon somoy");
-    console.log(currentTimeFrame);
-    const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
-    const nextMedications = medicationSchedule.filter(med => !med.times.includes(currentTimeFrame));
-    return [...currentMedications, ...nextMedications];
-  };
-  const medicationbox=sortMedicationByNextTimeFrame();
-  // Function to handle setting alert time
-  const handlealert = () => {
-    setShowModal(false);
-    const [hours, minutes] = alertTime.split(':').map(time => parseInt(time));
-    const targetTime = new Date();
-    targetTime.setHours(targetTime.getHours() + hours);
-    targetTime.setMinutes(targetTime.getMinutes() + minutes);
-    // Show notification after 1 minute
-    setTimeout(() => {
-      showNotification('Time to take medication!');
-      // Play notification sound
-      const notificationSound = new Audio(notificationSoundFile);
-      notificationSound.play();
-      const interval = setInterval(() => {
-        notificationSound.play();
-      }, 1000); // Play every second
-    
-      // Stop playing sound after 1 minute
-      setTimeout(() => {
-        clearInterval(interval);
-        notificationSound.pause();// Pause the sound
-      }, 60000); // Stop after 1 minute // Check every minute
-    }, 60000);
-    
-    // Set up intervals for each hour/minute combination
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      if (currentTime.getHours() === targetTime.getHours() && currentTime.getMinutes() === targetTime.getMinutes()) {
-        showNotification('Time to take medication!');
-        // Play notification sound
-        const notificationSound = new Audio(notificationSoundFile);
-        notificationSound.play();
-        const interval = setInterval(() => {
-          notificationSound.play();
-        }, 1000); // Play every second
-      
-        // Stop playing sound after 1 minute
-        setTimeout(() => {
-          clearInterval(interval);
-          notificationSound.pause(); // Pause the sound
-        }, 60000); // Stop after 1 minute
-      }
-    }, 60000); // Check every minute
-
-    // Clear the interval after the specified time
-    setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
-  };
-  const [gap,setgap]=useState('30');
-  const handleSetAlertTime=()=>{
-    const fromdata=new FormData();
-    fromdata.append('username',userData.username);
-    fromdata.append('morning',morningTime);
-    fromdata.append('noon',noonTime);
-    fromdata.append('night',nightTime);
-    fromdata.append('gap',gap);
-    axios.post('http://localhost:8000/medtime',fromdata)
-    .then(response => {
-      console.log('Alert time set successfully:', response.data);
-    })
-    .catch(error => {
-      console.error('Error setting alert time:', error);
-    });
-    setShowModal(false);
-
+const [nowtime,setnowtime]=useState("");
+const donetime=()=>{
+  console.log(time);
+    console.log("akhono somoy hoini"); 
+     if(time=='Morning'){
+    setnowtime(morningTime);
   }
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-   
-   const [search,setSearch] =useState("")
-  const [following,setFollowing] =useState("")
-        
-  const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
+  else if(time=='Noon'){
+
+    setnowtime(noonTime);
+  }
+  else{
+    setnowtime(nightTime);
+    console.log("akhon rat");
+    console.log(nightTime);
+  }
+}
+useEffect(() => {
+  donetime();
+}, [time]);
   const [done,setDone] =useState(false);
   const fetchdone = () => { 
     axios.get('http://127.0.0.1:8000/done',
@@ -324,7 +237,112 @@ const time=sortMedicationByTime();
       // Handle error if needed
       console.error('Error updating medication done status:', error);
     });
+  };
+  // Function to sort medication by next time frame
+  const sortMedicationByNextTimeFrame = () => {
+    const currentTimeFrame = sortMedicationByTime();
+    console.log("akhon somoy");
+    console.log(currentTimeFrame);
+    const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
+    const nextMedications = medicationSchedule.filter(med => !med.times.includes(currentTimeFrame));
+    return [...currentMedications, ...nextMedications];
+  };
+  const medicationbox=sortMedicationByNextTimeFrame();
+  const showNotification = (message) => {
+    if (!('Notification' in window)) {
+      alert('This browser does not support system notifications');
+    } else if (Notification.permission === 'granted') {
+      new Notification(message);
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification(message);
+        }
+      });
+    }
+  };
+  const handleAlert = (time) => {
+    setShowModal(false);
+    const [hours, minutes] = time.split(':').map(time => parseInt(time));
+    console.log(hours);
+    console.log(minutes);
+    const targetTime = new Date();
+    targetTime.setHours(hours);
+    targetTime.setMinutes(minutes);
+    const playNotification = () => {
+        showNotification('Time to take medication!');
+        const notificationSound = new Audio(notificationSoundFile);
+        const playPromise = notificationSound.play();
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Autoplay started successfully
+                setTimeout(() => {
+                    notificationSound.pause();
+                    setTimeout(playNotification, 2000); // Play notification again after 1 minute
+                }, 60000); // Stop after 1 minute
+            }).catch(error => {
+                console.error('Autoplay was prevented:', error);
+            });
+        }
+    };
+    fetchdone();
+    if(done){
+      return;
+    }
+    const restDuration = 5 * 60000; // 5 minutes in milliseconds
+    const notificationDuration = 60000; // 1 minute in milliseconds
+    const playNotificationAndRest = () => {
+        playNotification(); // Play notification
+        setTimeout(() => {
+            clearInterval(interval); // Clear the interval
+            setTimeout(() => {
+                interval = setInterval(playNotificationAndRest, notificationDuration + restDuration); // Set interval for next cycle
+                playNotificationAndRest(); // Start the next cycle
+            }, notificationDuration); // Wait for 1 minute before starting the next cycle
+        }, notificationDuration); // Play notification for 1 minute
+    };
+
+    let interval = setInterval(playNotificationAndRest, notificationDuration + restDuration); // Initial call
+
+    // Clear the interval after the specified time
+    const now = new Date();  
+    let clearTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0).getTime();
+    if (clearTime < now.getTime()) {
+        clearTime += 24 * 60 * 60 * 1000; // If the time has already passed, set it for the next day
+    }
+    setTimeout(() => clearInterval(interval), clearTime - now.getTime());
+};
+useEffect(() => {
+    console.log('Now time:', nowtime);  
+    handleAlert(nowtime);
+});
+
+  const [gap,setgap]=useState('30');
+  const handleSetAlertTime=()=>{
+    const fromdata=new FormData();
+    fromdata.append('username',userData.username);
+    fromdata.append('morning',morningTime);
+    fromdata.append('noon',noonTime);
+    fromdata.append('night',nightTime);
+    fromdata.append('gap',gap);
+    axios.post('http://localhost:8000/medtime',fromdata)
+    .then(response => {
+      console.log('Alert time set successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error setting alert time:', error);
+    });
+    setShowModal(false);
   }
+      const [body,setBody] =useState("")
+      const [importFile,setImportFile] =useState("")
+   
+   const [search,setSearch] =useState("")
+  const [following,setFollowing] =useState("")
+        
+  const [showMenu,setShowMenu] =useState(false)
+  const [images,setImages] =  useState(null)
+ 
   return (
     <div className='interface'>
         <Nav 
