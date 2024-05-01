@@ -138,7 +138,6 @@ const [nidimg,setnidimg] = useState(null);
     }
   }
   return (
-   
             <div className="container-xl px-4 mt-4">
                 <hr className="mt-0 mb-4" />
                 <div className="row">
@@ -167,9 +166,7 @@ const [nidimg,setnidimg] = useState(null);
                       </div>
                   </div>
               )}
-
-
-                        </div>
+                  </div>
                     </div>
                     <div className="col-xl-8">
                         <div className="card mb-4">
@@ -228,10 +225,8 @@ const [nidimg,setnidimg] = useState(null);
           </div>
         </div>
       )}
-
-      
     </div>
-            </div>
+  </div>
             
   );
 };
