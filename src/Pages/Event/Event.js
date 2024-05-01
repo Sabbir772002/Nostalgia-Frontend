@@ -14,7 +14,6 @@ import DPimg3 from "../../assets/DP/img3.jpg"
 import DPimg4 from "../../assets/DP/img4.jpg"
 import DPimg5 from "../../assets/DP/img5.jpg"
 import DPimg6 from "../../assets/DP/img6.jpg"
-
 import cover from "../../assets/Info-Dp/img-3.jpg"
 
 import Cover1 from "../../assets/Friends-Cover/cover-1.jpg"

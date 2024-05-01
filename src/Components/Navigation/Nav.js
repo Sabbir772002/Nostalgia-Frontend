@@ -48,19 +48,19 @@ const handlemsg = () => {
       </Link>
 
         <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
-        <a onClick={handlemsg} href="http://localhost:3001/app" style={{marginTop: "8px"}}>
+        <Link to="/msg" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <TbMessage className='nav-icons'/>
-        <LiaUserFriendsSolid 
+        </Link>
+        <Link to="/friend" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
+        <LiaUserFriendsSolid
         className='nav-icons'
         onClick={()=>setShowMenu(true)}/>
-        </a>
+        </Link>
       </div>
-
 
        <div className="n-profile" >
           {/* <Link to="/profile">  */}
            <Link to={`/profile/${userData.username}`}>
-          
             <img src={profileImg ? (profileImg) : Profile} className='n-img' style={{marginBottom:"-7px"}}/>
           </Link>
       </div>

@@ -174,38 +174,6 @@ const [members, setMembers] = useState([]);
   )}
 </button>
         )}
-
-        <div className='info-details'>
-          <div className='info-col-1'>
-            <div className='info-details-list'>
-              <LocationOnOutlinedIcon />
-              <span>{group.Topic}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <WorkOutlineRoundedIcon />
-              <span>{group.G_name}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <CalendarMonthRoundedIcon />
-              <span>Joined in 2023-08-12</span>
-            </div>
-          </div>
-
-          <div className='info-col-2'>
-            <div>
-              <h2>5,000</h2>
-              <span>Followers</span>
-            </div>
-            <div>
-            </div>
-            <div>
-              <h2></h2>
-              <span>Following</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
