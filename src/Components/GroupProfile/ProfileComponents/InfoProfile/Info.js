@@ -84,7 +84,6 @@ const [members, setMembers] = useState([]);
         });
         console.log(response.data);
         setMembers(response.data);
-
       } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -100,7 +99,6 @@ const [members, setMembers] = useState([]);
       const response = await axios.get('http://localhost:8000/requestmembers', {
         params: { username: group.username }
       });
-      fmembers();
       setRmembers(response.data);
     } catch (error) {
       console.error('Error fetching user list:', error);
@@ -146,7 +144,7 @@ const [members, setMembers] = useState([]);
   <Tabs defaultActiveKey="request">
  {1 && 1 && 1 == 1 && (
              <Tab eventKey="request" title="Request">
-                  <RequestList fmembers={fmembers} members={members} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
+                  <RequestList fmembers={fmembers} members={members} fetchData={fetchData} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
                   </Tab>
                 )}
     <Tab eventKey="members" title="Members">
