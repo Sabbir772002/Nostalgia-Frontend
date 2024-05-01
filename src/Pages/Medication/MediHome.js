@@ -29,8 +29,28 @@ const MediHome = () => {
   const endDate = new Date(today);
   endDate.setDate(endDate.getDate() + 30);
   const [morningTime, setMorningTime] = useState('08:00');
-  const [noonTime, setNoonTime] = useState('12:00');
+  const [noonTime, setNoonTime] = useState('14:00');
   const [nightTime, setNightTime] = useState('20:00');
+  const fetchtime = () =>{
+    axios.get('http://localhost:8000/medtime',
+    {
+      params: {
+        username: userData.username
+      }
+    })
+    .then((response) => {
+      setMorningTime(response.data.morning);
+      setNoonTime(response.data.noon);
+      setNightTime(response.data.night);
+      setgap(response.data.gap);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(() => {
+    fetchtime();
+  }, [userData.username]);
   const [newMedication, setNewMedication] = useState
   ({
     user:userData.username,
@@ -242,13 +262,14 @@ const time=sortMedicationByTime();
     // Clear the interval after the specified time
     setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
   };
+  const [gap,setgap]=useState('30');
   const handleSetAlertTime=()=>{
     const fromdata=new FormData();
     fromdata.append('username',userData.username);
     fromdata.append('morning',morningTime);
     fromdata.append('noon',noonTime);
     fromdata.append('night',nightTime);
-    fromdata.append('gap',10);
+    fromdata.append('gap',gap);
     axios.post('http://localhost:8000/medtime',fromdata)
     .then(response => {
       console.log('Alert time set successfully:', response.data);
@@ -256,6 +277,7 @@ const time=sortMedicationByTime();
     .catch(error => {
       console.error('Error setting alert time:', error);
     });
+    setShowModal(false);
 
   }
       const [body,setBody] =useState("")
@@ -495,6 +517,15 @@ const time=sortMedicationByTime();
             className="form-control"
             value={nightTime}
             onChange={(e) => setNightTime(e.target.value)}
+          />
+          </div>
+           <div className="form-group">
+          <label>Alert Between</label>
+          <input
+            type="text"
+            className="form-control"
+            value={gap}
+            onChange={(e) => setgap(e.target.value)}
           />
         </div>
       </div>
