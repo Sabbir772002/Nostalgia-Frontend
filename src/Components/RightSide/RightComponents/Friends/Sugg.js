@@ -126,7 +126,7 @@ const Friends = () => {
         </div>
       ))}
       <div className="text-center">
-      <Link to='/friend'><button className="SM-btn">ALl Friends</button></Link>
+      <Link to='/friend'><button className="SM-btn">ALL Friends</button></Link>
       </div>
 
 

@@ -185,7 +185,7 @@ const Eventlist = () => {
                     <Form.Control type="time" value={formData.end_time} onChange={handleChange} />
                   </Form.Group>
                   <Form.Group controlId="thana">
-                    <Form.Label>End Time</Form.Label>
+                    <Form.Label>Thana</Form.Label>
                     <Form.Control type="text" value={formData.thana} onChange={handleChange} />
                   </Form.Group>
                   
@@ -217,6 +217,7 @@ const Eventlist = () => {
               <th>End Date</th>
               <th>Start Time</th>
               <th>End Time</th>
+              <th>Status</th>
               <th>View Info</th>
             </tr>
           </thead>
