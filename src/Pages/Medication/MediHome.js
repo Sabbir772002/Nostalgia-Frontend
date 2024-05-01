@@ -22,7 +22,8 @@ const MediHome = () => {
     { name: 'Medication E', dosage: '25mg', times: ['Night'], image: 'http://localhost:8000/media/d.png' },
     { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
   ]);
-
+  const [image, setImage] = useState(null);
+ 
   const today = new Date();
   // Calculate end date: Today's date + 30 days
   const endDate = new Date(today);
@@ -41,8 +42,14 @@ const MediHome = () => {
     after: 'After Meal',
     note: '',
     start_date: today.toISOString().split('T')[0],
-    end_date: endDate.toISOString().split('T')[0]
+    end_date: endDate.toISOString().split('T')[0],
+    img: null
   });
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+    setNewMedication({ ...newMedication, img: e.target.files[0] });
+    
+  };
   useEffect(() => {
     axios.get('http://localhost:8000/medication',
     {
@@ -78,8 +85,25 @@ const MediHome = () => {
     // Add new medication to notes
     // setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
      console.log(newMedication);
-
-    axios.post('http://127.0.0.1:8000/medication', newMedication)
+    const nedmed = new FormData();
+    nedmed.append('user',userData.username);
+    nedmed.append('name',newMedication.name);
+    nedmed.append('dosage',newMedication.dosage);
+    nedmed.append('morning',newMedication.morning?1:0);
+    nedmed.append('noon',newMedication.noon?1:0);
+    nedmed.append('night',newMedication.night?1:0);
+    nedmed.append('after',newMedication.after);
+    nedmed.append('note',newMedication.note);
+    nedmed.append('start_date',newMedication.start_date);
+    nedmed.append('end_date',newMedication.end_date);
+    nedmed.append('img',image);
+    console.log(nedmed);
+    axios.post('http://127.0.0.1:8000/medication',nedmed,
+      {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    })
     .then(response => {
       // Handle successful response if needed
       console.log('Medication added successfully:', response.data);
@@ -117,7 +141,10 @@ const MediHome = () => {
       after: 'After Meal',
       note: '',
       start_date: today.toISOString().split('T')[0],
-      end_date: endDate.toISOString().split('T')[0]  });
+      end_date: endDate.toISOString().split('T')[0],
+      img: null
+  });
+  setImage(null);
   };
 
   // Function to display system notification
@@ -216,7 +243,19 @@ const time=sortMedicationByTime();
     setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
   };
   const handleSetAlertTime=()=>{
-    const fromdata=new formdata();
+    const fromdata=new FormData();
+    fromdata.append('username',userData.username);
+    fromdata.append('morning',morningTime);
+    fromdata.append('noon',noonTime);
+    fromdata.append('night',nightTime);
+    fromdata.append('gap',10);
+    axios.post('http://localhost:8000/medtime',fromdata)
+    .then(response => {
+      console.log('Alert time set successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error setting alert time:', error);
+    });
 
   }
       const [body,setBody] =useState("")
@@ -264,7 +303,6 @@ const time=sortMedicationByTime();
       console.error('Error updating medication done status:', error);
     });
   }
-
   return (
     <div className='interface'>
         <Nav 
@@ -303,7 +341,7 @@ const time=sortMedicationByTime();
            med.times.includes(timeFrame) && (
              <div className="col-md-4" key={medIndex}>
                <Card className="mb-3">
-                 <Card.Img src={med.image} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
+                 <Card.Img src={`http://localhost:8000/${med.image}`} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
                  <Card.Body>
                    <Card.Title>{med.name}</Card.Title>
                    <Card.Text>Dosage: {med.dosage}</Card.Text>
@@ -392,6 +430,22 @@ const time=sortMedicationByTime();
           onChange={(e) => setNewMedication({ ...newMedication, end_date: e.target.value })}
         />
       </div>
+      <div className="m-2 form-group">
+      <label>Med Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        className="form-control-file"
+        onChange={handleImageChange}
+      />
+      {image && (
+        <div>
+          <img src={URL.createObjectURL(image)} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
+
+        </div>
+        
+      )}
+      </div>
       <div className="m-1 form-group">
   <label className="m-1">Take At</label>
   <select
@@ -454,8 +508,6 @@ const time=sortMedicationByTime();
         <div className="fixed-bottom d-flex justify-content-end m-3">
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
         </div>
-
-
     </div>
   )
 }

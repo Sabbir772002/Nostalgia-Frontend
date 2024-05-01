@@ -9,6 +9,7 @@ import { BiMessage, BiLogOut } from 'react-icons/bi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FaCheckCircle } from 'react-icons/fa';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
@@ -173,38 +174,20 @@ const delete_fnd = async () => {
             )
           )
         }
-
-
         <div className='info-details'>
           <div className='info-col-1'>
-            <div className='info-details-list'>
+          <div className='info-details-list'>
               <LocationOnOutlinedIcon />
+              <span>{userData.thana}</span>
+            </div>
+            <div className='info-details-list'>
+              <MailOutlineIcon />
               <span>{userData.email}</span>
             </div>
 
             <div className='info-details-list'>
               <WorkOutlineRoundedIcon />
-              <span>{userData.first_name}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <CalendarMonthRoundedIcon />
-              <span>Joined in 2023-08-12</span>
-            </div>
-          </div>
-
-          <div className='info-col-2'>
-            <div>
-              <h2>5,000</h2>
-              <span>Followers</span>
-            </div>
-            <div>
-              <h2>{userPostData.length}</h2>
-              <span>Posts</span>
-            </div>
-            <div>
-              <h2>{following}</h2>
-              <span>Following</span>
+              <span>{userData.gender}</span>
             </div>
           </div>
         </div>
