@@ -9,18 +9,18 @@ const CompareBox = ({userData}) => {
   const [compareResult, setCompareResult] = useState('');
   const [leftImage, setLeftImage] = useState(null);
   const [rightImage, setRightImage] = useState(`http://localhost:8000${userData.pp}`);
-
+  const [process, setProcess] = useState(false);
   const handleImage1Upload = (e) => {
     setImage1(e.target.files[0]);
     setLeftImage(URL.createObjectURL(e.target.files[0]));
 
   };
-
   const handleImage2Upload = (e) => {
     setImage2(e.target.files[0]);
     setRightImage(URL.createObjectURL(e.target.files[0]));
   };
   const handleUpload = async () => {
+    setProcess(true); 
     console.log(userData.pp);
     console.log("image 2 above!");
     if (!image1 || !userData.pp) {
@@ -36,6 +36,7 @@ const CompareBox = ({userData}) => {
       const response = await axios.post('http://127.0.0.1:8000/compare', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      setProcess(false);
       console.log('Upload success:', response.data);
       setCompareResult(response.data.result);
       // Handle success (e.g., show a success message)
@@ -78,6 +79,14 @@ const CompareBox = ({userData}) => {
           </div>
         </div>
       )}
+    {process && (
+        <div className="modal text-center bg-transparent fade-in" style={{ left: '42%', width: '200px' }}>
+          <div className="modal-content">
+            <div className="processing-circle"></div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

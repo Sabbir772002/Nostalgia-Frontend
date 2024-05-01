@@ -115,25 +115,26 @@ const [nidimg,setnidimg] = useState(null);
       nidv.append('nid',nidimg);
       nidv.append('username',username);
       console.log(nidv.get('nid'));
-      
-
 
   const response = await axios.post(`http://127.0.0.1:8000/nidimg`, nidv);
   if (response.status === 201) {
-    // If the response is successful, hide the modal and show an alert
+    setProcessing(false); // Hide processing indicator
     alert("NID verified");
     // Call fetchUserData() or do whatever you want to do next
     fetchUserData();
-  
       }else{
+        setProcessing(false);
+
         alert("Try with Clear Image or Correct Information");
       }
     }catch (error) {
+      setProcessing(false); 
+
       console.error('Error updating user data:', error);
       alert("Try with Clear image or Correct Information")
     }
     finally {
-      setProcessing(false); // Hide processing indicator
+      setProcessing(false);
     }
   }
   return (
@@ -221,11 +222,9 @@ const [nidimg,setnidimg] = useState(null);
                 </div>
                 <div>
                 {processing && (
-        <div className="modal  fade-in" style={{ width: '200px' }}>
-          <div className="modal-content text-center bg-primary">
-          <div className="text-center"> 
-            <div className="processing-circle text-center" ></div>
-            </div>
+        <div className="modal text-center bg-transparent fade-in" style={{ left: '48%', width: '200px' }}>
+          <div className="modal-content">
+            <div className="processing-circle"></div>
           </div>
         </div>
       )}
