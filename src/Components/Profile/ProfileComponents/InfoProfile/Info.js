@@ -96,6 +96,7 @@ const delete_fnd = async () => {
       // Handle errors if any
   }
 };
+console.log(userData);
   return (
     <div className='info'>
       <div className='info-cover'>

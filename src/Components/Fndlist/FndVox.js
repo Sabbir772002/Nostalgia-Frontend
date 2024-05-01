@@ -42,11 +42,13 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
     return (
         <Card className="text-center card-box" style={{ width: '320px', height: '460px' }}>
             <Card.Body className="member-card pt-2 pb-2">
-                <div className="thumb-lg member-thumb mx-auto">
+                <div className="thumb-lg member-thumb">
                     <img
                         src={`http://localhost:8000/${fnd.pp}`}
-                        className="rounded-circle img-thumbnail"
+                        className="rounded-circle"
                         alt="profile-image"
+                        width="200"
+                        height="200"
                     />
                 </div>
                 <div>
