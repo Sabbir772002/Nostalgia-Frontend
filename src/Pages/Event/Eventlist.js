@@ -268,11 +268,14 @@ const Eventlist = () => {
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
-          <p><strong>Name:</strong> {selectedUser.w_creator}</p>
-          <p><strong>Location:</strong> {selectedUser.location}</p>
-          <p><strong>Date:</strong> {selectedUser.date}</p>
-          <p><strong>End:</strong> {selectedUser.end}</p>
-          <p><strong>Time:</strong> {selectedUser.time}</p>
+          <p><strong>Name:</strong> {selectedUser.E_creator}</p>
+          <p><strong>Location:</strong> {selectedUser.Address}</p>
+          <p><strong>Description:</strong> {selectedUser.Description}</p>
+          <p><strong>Start Date:</strong> {selectedUser.start_date}</p>
+          <p><strong>End Date:</strong> {selectedUser.end_date}</p>
+          <p><strong>Start Time:</strong> {selectedUser.start_time}</p>
+          <p><strong>End Time:</strong> {selectedUser.end_time}</p>
+          <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
         </div>
       )}
     </Tab>

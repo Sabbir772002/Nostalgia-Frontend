@@ -16,6 +16,7 @@ const EditProfile = () => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState(null);
   const { username } = useParams();
+  const [processing, setProcessing] = useState(false);
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -107,23 +108,32 @@ const [nidimg,setnidimg] = useState(null);
   , [username]);
   const handlenid = async (e) => {
     //e.preventDefault();
+    setProcessing(true); 
     try {
       //console.log(user);
       const nidv = new FormData();
       nidv.append('nid',nidimg);
       nidv.append('username',username);
       console.log(nidv.get('nid'));
-      const response = await axios.post(`http://127.0.0.1:8000/nidimg`, nidv);
-      //console.log('User data updated:', response.data);
-      if (response.status === 201) {
-        alert("NID verified");
-        fetchUserData();
+      
+
+
+  const response = await axios.post(`http://127.0.0.1:8000/nidimg`, nidv);
+  if (response.status === 201) {
+    // If the response is successful, hide the modal and show an alert
+    alert("NID verified");
+    // Call fetchUserData() or do whatever you want to do next
+    fetchUserData();
+  
       }else{
         alert("Try with Clear Image or Correct Information");
       }
     }catch (error) {
       console.error('Error updating user data:', error);
       alert("Try with Clear image or Correct Information")
+    }
+    finally {
+      setProcessing(false); // Hide processing indicator
     }
   }
   return (
@@ -209,7 +219,21 @@ const [nidimg,setnidimg] = useState(null);
                         </div>
                     </div>
                 </div>
+                <div>
+                {processing && (
+        <div className="modal  fade-in" style={{ width: '200px' }}>
+          <div className="modal-content text-center bg-primary">
+          <div className="text-center"> 
+            <div className="processing-circle text-center" ></div>
             </div>
+          </div>
+        </div>
+      )}
+
+      
+    </div>
+            </div>
+            
   );
 };
 
