@@ -23,15 +23,24 @@ const MediHome = () => {
     { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
   ]);
   const [image, setImage] = useState(null);
- 
+  const [nowtime,setnowtime]=useState("");
+  const timefind = () => {
+    const currentTime = new Date().getHours();
+    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
+    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
+    return ['Night','Morning', 'Noon'];
+  };
+  const timebox=timefind();
   const today = new Date();
-  // Calculate end date: Today's date + 30 days
   const endDate = new Date(today);
   endDate.setDate(endDate.getDate() + 30);
   const [morningTime, setMorningTime] = useState('08:00');
   const [noonTime, setNoonTime] = useState('14:00');
   const [nightTime, setNightTime] = useState('20:00');
   const fetchtime = () =>{
+    const timetot=timebox[0].toLocaleLowerCase();
+    console.log("here it is...");
+    console.log(timetot);
     axios.get('http://localhost:8000/medtime',
     {
       params: {
@@ -43,6 +52,8 @@ const MediHome = () => {
       setNoonTime(response.data.noon);
       setNightTime(response.data.night);
       setgap(response.data.gap);
+      setnowtime(response.data[timetot]);
+     console.log("now time(fetch time):", nowtime);
     })
     .catch((error) => {
       console.log(error);
@@ -50,7 +61,7 @@ const MediHome = () => {
   }
   useEffect(() => {
     fetchtime();
-  }, [userData.username]);
+  },  []);
   const [newMedication, setNewMedication] = useState
   ({
     user:userData.username,
@@ -65,6 +76,8 @@ const MediHome = () => {
     end_date: endDate.toISOString().split('T')[0],
     img: null
   });
+  let intervalId;
+  const [done,setDone] =useState(false);
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
     setNewMedication({ ...newMedication, img: e.target.files[0] });
@@ -85,14 +98,6 @@ const MediHome = () => {
       console.log(error);
     });
   }, [newMedication]);
-  const timefind = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
-    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
-    return ['Night','Morning', 'Noon'];
-  };
-  const timebox=timefind();
-  
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [alertTime, setAlertTime] = useState('');
@@ -104,7 +109,6 @@ const MediHome = () => {
       [time]: !prevState[time]
     }));
   };
-
   // Function to handle adding medication
   const handleAddMedication = () => {
     // Update medication schedule with new medicatiom
@@ -181,7 +185,6 @@ const MediHome = () => {
     return 'Night';
   };
 const time=sortMedicationByTime();
-const [nowtime,setnowtime]=useState("");
 const donetime=()=>{
   console.log(time);
     console.log("akhono somoy hoini"); 
@@ -189,7 +192,6 @@ const donetime=()=>{
     setnowtime(morningTime);
   }
   else if(time=='Noon'){
-
     setnowtime(noonTime);
   }
   else{
@@ -198,10 +200,10 @@ const donetime=()=>{
     console.log(nightTime);
   }
 }
+
 useEffect(() => {
   donetime();
-}, [time]);
-  const [done,setDone] =useState(false);
+}, [timebox]);
   const fetchdone = () => { 
     axios.get('http://127.0.0.1:8000/done',
     {
@@ -212,17 +214,23 @@ useEffect(() => {
       }
     }).then((response) => {
       console.log(response.data);
-      setDone(response.data.done);
+      if(response.data.done==0){
+        setDone(false);
+      }
+      else if(response.data.done==1){
+        setDone(true);  
+      }
     })
     .catch((error) => {
       console.log(error);
     });
   }
+
     useEffect(() => {
       fetchdone();
-    }, [time]);
+    }, [nowtime]);
+
   const handlenow = () => {
-    // setDone(!done);
     const formdata = new FormData();
     formdata.append('type', done?'notdone':'done');
     formdata.append('username', userData.username);
@@ -238,8 +246,7 @@ useEffect(() => {
       console.error('Error updating medication done status:', error);
     });
   };
-  // Function to sort medication by next time frame
-  const sortMedicationByNextTimeFrame = () => {
+    const sortMedicationByNextTimeFrame = () => {
     const currentTimeFrame = sortMedicationByTime();
     console.log("akhon somoy");
     console.log(currentTimeFrame);
@@ -248,77 +255,9 @@ useEffect(() => {
     return [...currentMedications, ...nextMedications];
   };
   const medicationbox=sortMedicationByNextTimeFrame();
-  const showNotification = (message) => {
-    if (!('Notification' in window)) {
-      alert('This browser does not support system notifications');
-    } else if (Notification.permission === 'granted') {
-      new Notification(message);
-    } else if (Notification.permission !== 'denied') {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          new Notification(message);
-        }
-      });
-    }
-  };
-  const handleAlert = (time) => {
-    setShowModal(false);
-    const [hours, minutes] = time.split(':').map(time => parseInt(time));
-    console.log(hours);
-    console.log(minutes);
-    const targetTime = new Date();
-    targetTime.setHours(hours);
-    targetTime.setMinutes(minutes);
-    const playNotification = () => {
-        showNotification('Time to take medication!');
-        const notificationSound = new Audio(notificationSoundFile);
-        const playPromise = notificationSound.play();
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                // Autoplay started successfully
-                setTimeout(() => {
-                    notificationSound.pause();
-                    setTimeout(playNotification, 2000); // Play notification again after 1 minute
-                }, 60000); // Stop after 1 minute
-            }).catch(error => {
-                console.error('Autoplay was prevented:', error);
-            });
-        }
-    };
-    fetchdone();
-    if(done){
-      return;
-    }
-    const restDuration = 5 * 60000; // 5 minutes in milliseconds
-    const notificationDuration = 60000; // 1 minute in milliseconds
-    const playNotificationAndRest = () => {
-        playNotification(); // Play notification
-        setTimeout(() => {
-            clearInterval(interval); // Clear the interval
-            setTimeout(() => {
-                interval = setInterval(playNotificationAndRest, notificationDuration + restDuration); // Set interval for next cycle
-                playNotificationAndRest(); // Start the next cycle
-            }, notificationDuration); // Wait for 1 minute before starting the next cycle
-        }, notificationDuration); // Play notification for 1 minute
-    };
-
-    let interval = setInterval(playNotificationAndRest, notificationDuration + restDuration); // Initial call
-
-    // Clear the interval after the specified time
-    const now = new Date();  
-    let clearTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0).getTime();
-    if (clearTime < now.getTime()) {
-        clearTime += 24 * 60 * 60 * 1000; // If the time has already passed, set it for the next day
-    }
-    setTimeout(() => clearInterval(interval), clearTime - now.getTime());
-};
-useEffect(() => {
-    console.log('Now time:', nowtime);  
-    handleAlert(nowtime);
-});
-
   const [gap,setgap]=useState('30');
   const handleSetAlertTime=()=>{
+    console.log("yo yo kaj hbe na");
     const fromdata=new FormData();
     fromdata.append('username',userData.username);
     fromdata.append('morning',morningTime);
@@ -328,10 +267,13 @@ useEffect(() => {
     axios.post('http://localhost:8000/medtime',fromdata)
     .then(response => {
       console.log('Alert time set successfully:', response.data);
+    fetchtime();
     })
     .catch(error => {
       console.error('Error setting alert time:', error);
     });
+    console.log("here is updated timr bro, look at this is there any disperencey..................................");
+    console.log(nowtime);
     setShowModal(false);
   }
       const [body,setBody] =useState("")
@@ -341,8 +283,53 @@ useEffect(() => {
   const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
- 
+  const [images,setImages] =  useState(null);
+  useEffect(() => {
+    // Function to parse time string to hours and minutes
+    const parseTime = (timeString) => {
+      const [hours, minutes] = timeString.split(":");
+      return { hour: parseInt(hours), minute: parseInt(minutes) };
+    };
+
+    // Function to check and show notification
+    const checkNotification = () => {
+      const currentTime = new Date();
+      const currentHour = currentTime.getHours();
+      const currentMinute = currentTime.getMinutes();
+
+      const notificationTime = parseTime(nowtime);
+
+      // Check if it's time for notification and task is not done
+      if (
+        currentHour >= notificationTime.hour &&
+        currentMinute >= notificationTime.minute &&
+        done !== true
+      ) {
+        console.log("ar kotokhon bhai, matha mutha gelo...");
+        console.log(done);
+        showNotification();
+      }
+    };
+    // Check for notification every 10 seconds
+    const interval = setInterval(checkNotification, 10000);
+
+    // Cleanup function
+    return () => clearInterval(interval);
+  }, [nowtime, done]);
+
+  // Function to show notification
+  const showNotification = () => {
+    // Code to display notification
+    console.log('Notification: Task is not done!');
+    const audio = new Audio(notificationSoundFile);
+    audio.play();
+
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        audio.play();
+      }, 2000); 
+    }
+  };
   return (
     <div className='interface'>
         <Nav 
@@ -504,7 +491,7 @@ useEffect(() => {
           </div>
           <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
   <div className="modal-dialog">
-    <div className="modal-content">
+    <div className="modal-content bg-light">
       <div className="modal-header">
         <h5 className="modal-title">Set Alert Time</h5>
         <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
@@ -553,7 +540,6 @@ useEffect(() => {
     </div>
   </div>
 </div>
-     
         <div className="fixed-bottom d-flex justify-content-end m-3">
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
         </div>
