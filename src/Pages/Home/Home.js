@@ -27,7 +27,6 @@ const Home = () => {
 .catch(error => {
     console.error('Error fetching posts:', error);
 });
-
   };
   useEffect(() => {
     // Fetch posts when component mounts
@@ -35,26 +34,18 @@ const Home = () => {
   }, []);
 
 
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-   
-   const [search,setSearch] =useState("")
 
-    
   const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
-
+  
   return (
     <div className='interface'>
         <Nav 
-        search={search}
-        setSearch={setSearch}
+        setPosts={setPosts}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         />
-
     <div className="home">
    
     <Left />

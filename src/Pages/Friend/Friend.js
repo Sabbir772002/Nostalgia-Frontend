@@ -70,9 +70,6 @@ const Friend = () => {
         fetchfnd(setfndlist);
       }, []);
   
-  
-
-      
 
    const [search,setSearch] =useState("")
 

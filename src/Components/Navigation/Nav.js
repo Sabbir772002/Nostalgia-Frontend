@@ -7,21 +7,31 @@ import {AiOutlineHome} from "react-icons/ai"
 import {LiaUserFriendsSolid} from "react-icons/lia"
 import {IoNotificationsOutline} from "react-icons/io5"
 import {TbMessage} from "react-icons/tb"
-
+import {useState } from 'react';
+import { useNavigate } from 'react-router';
 import Profile from "../../assets/profile.jpg"
+import axios from 'axios';
 
-const Nav = ({search,setSearch,setShowMenu,profileImg}) => {
+const Nav = ({setPosts,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
-const handlemsg = () => {
-  console.log("here is msg");
-  const targetOrigin = 'http://localhost:3001/app'; // Set the target domain
-  const message = { data: userData }; // Data to send
+const [search,setSearch] =useState('');
+const navigate=useNavigate();
+const handlemsg = (e) =>{
+  e.preventDefault();
+  if(setPosts === undefined)navigate("/home");
+  if(setPosts === undefined)return;
+  if(search === "")setSearch(" ");
+  const box=axios.get('http://localhost:8000/search', { 
+    params: {
+        search: search,
+        username: userData.username
+    }}).then(response => {  
+      console.log(response.data);
+      setPosts(response.data);
+  })
+  console.log(search);
+}
 
-  // Send message to the window of App2
-  window.postMessage(message, targetOrigin);
-};
-
-  
   return (
     <nav>
         <div className="n-logo">
@@ -31,13 +41,14 @@ const handlemsg = () => {
         </div>
 
       <div className="n-form-button" >
-        <form className='n-form' onSubmit={(e)=>e.preventDefault()} >
+        <form className='n-form' onSubmit={handlemsg} >
           <SearchIcon className='search-icon'/>
           <input type="text" 
           placeholder='Search post'
           id='n-search'
           value={search}
           onChange={(e)=>setSearch(e.target.value)}
+          //onClick={handlemsg}
           />
         </form>
       </div>

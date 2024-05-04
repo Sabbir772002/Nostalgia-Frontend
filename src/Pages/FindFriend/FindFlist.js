@@ -8,29 +8,31 @@ const FindFlist = ({fndlist,setfndlist,fetchData}) => {
   const [searchText, setSearchText] = useState('');
   const [searchWithImages, setSearchWithImages] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const userData= JSON.parse(localStorage.getItem('userData'));
 const handleSearch = async (e) => {
     e.preventDefault();
 
     try {
       // Form data for the request
       const formData = new FormData();
-      formData.append('searchText', searchText);
+      formData.append('search', searchText);
       formData.append('searchWithImages', searchWithImages);
+      formData.append('username',userData.username);
       if (selectedImage) {
         formData.append('image', selectedImage);
       }
-
+      console.log('Form Data:', userData.username);  
       // API endpoint
-      const url = 'https://example.com/search';
-
-      const response = await axios.post(url, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const url = 'http://127.0.0.1:8000/searchfnd'
+      const response = await axios.get(url, {
+        params: {
+          search: searchText,
+         // searchWithImages: searchWithImages,
+          username: userData.username
         }
       });
-        fetchData();
-
+              //fetchData();
+        setfndlist(response.data.users);
       // Handle response data
       console.log('Response:', response.data);
     } catch (error) {
@@ -46,8 +48,6 @@ const handleSearch = async (e) => {
     setSelectedImage(e.target.files[0]);
   };
 
-
-
   return (
 <div className='fndlist'>
   <h1>Find Friends</h1>
@@ -58,20 +58,20 @@ const handleSearch = async (e) => {
             <button className="btn btn-success" type="submit">Search</button>
         </div>
       </div>
-      <div className="form-group">
+      {/* <div className="form-group">
         <div className="form-check">
           <input type="checkbox" className="mt-2 form-check-input" id="searchWithImages" checked={searchWithImages} onChange={() => setSearchWithImages(!searchWithImages)} />
           <label className="mt-2 form-check-label" htmlFor="searchWithImages">Search with Images? </label>
           <input type="file" className="form-control-file" id="imageUpload" onChange={handleImageChange} />
       </div>
-      </div>
+      </div> */}
     </form>
 
-
-
-    <h1 className="text-dark" rounded> People Matches You....</h1>
-
-        {fndlist.map((fnd)=>(
+    {fndlist.length === 0 && <h1 className="mt-2 text-dark">No People Found</h1>}
+    {fndlist.length>0 &&
+    <div>
+    <h1 className="mt-2 text-dark" rounded> People Matches You....</h1>
+        {fndlist.length>0 && fndlist.map((fnd)=>(
              <div className="d-inline-flex p-4">
 
             <FindF 
@@ -82,6 +82,8 @@ const handleSearch = async (e) => {
             />
             </div>
         ))}
+        </div>
+      }
     </div>   
   )
 }
