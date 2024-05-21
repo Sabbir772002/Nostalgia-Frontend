@@ -63,6 +63,7 @@ const Eventlist = () => {
         end_date: new Date().toISOString().split('T')[0], // Set to current date
         start_time: '',
         end_time: '',
+        Description: '',
         type: '',
         privacy: 'Bondhu',
         thana: "Dhaka"
@@ -81,6 +82,7 @@ const Eventlist = () => {
     create_date: new Date().toISOString().split('T')[0], // Set to current date
     end_date: new Date().toISOString().split('T')[0], // Set to current date
     start_time: '',
+    Description: '',
     end_time: '',
     type: '',
     privacy: 'Bondhu',
@@ -146,60 +148,66 @@ const Eventlist = () => {
             <h1 className="toto">Event List</h1>
           </div>
           <div className="col-6">
-            <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Event List</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="title">
-                    <Form.Label>Event Title</Form.Label>
-                    <Form.Control type="text" value={formData.title} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="Description">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control type="text" value={formData.description} onChange={handleChange} />
-                  </Form.Group>       
-                  <Form.Group controlId="type">
-                    <Form.Label>Type</Form.Label>
-                    <Form.Control type="text" value={formData.type} onChange={handleChange} />
-                  </Form.Group>  
-                  <Form.Group controlId="address">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" value={formData.address} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="start_date">
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.start_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="end_date">
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="start_time">
-                    <Form.Label> Start Time</Form.Label>
-                    <Form.Control type="time" value={formData.start_time} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="end_time">
-                    <Form.Label>End Time</Form.Label>
-                    <Form.Control type="time" value={formData.end_time} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="thana">
-                    <Form.Label>Thana</Form.Label>
-                    <Form.Control type="text" value={formData.thana} onChange={handleChange} />
-                  </Form.Group>
-                  
-                  <Form.Group controlId="privacy">
-                    <Form.Label>Privacy</Form.Label>
-                    <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
-                      <option value="Bondhu">Bondhu</option>
-                      <option value="Known">Known</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button className="mew mt-2" type="submit">Save</Button>
-                </Form>
-              </Modal.Body>
-            </Modal>
+          <div className={`modal ${showInputBoxModal ? 'd-block' : 'd-none'}`} tabIndex="-1" role="dialog">
+      <div className="modal-dialog" role="document">
+        <div className="modal-content bg-light">
+          <div className="modal-header">
+            <h5 className="modal-title">Event List</h5>
+            <button type="button" className="close" onClick={() => setShowInputBoxModal(false)}>
+              <span>&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="title">Event Title</label>
+                <input type="text" className="form-control" id="title" value={formData.title} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Description">Description</label>
+                <input type="text" className="form-control" id="Description" value={formData.Description} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Type</label>
+                <input type="text" className="form-control" id="type" value={formData.type} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="start_date">Start Date</label>
+                <input type="date" className="form-control" id="start_date" value={formData.start_date} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="end_date">End Date</label>
+                <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="start_time">Start Time</label>
+                <input type="time" className="form-control" id="start_time" value={formData.start_time} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="end_time">End Time</label>
+                <input type="time" className="form-control" id="end_time" value={formData.end_time} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="thana">Thana</label>
+                <input type="text" className="form-control" id="thana" value={formData.thana} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="privacy">Privacy</label>
+                <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
+                  <option value="Bondhu">Bondhu</option>
+                  <option value="Known">Known</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary mt-2">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Event</Button>
@@ -235,7 +243,7 @@ const Eventlist = () => {
                 {user.E_creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
-              {user.Member == 1  && !(user.w_creator == userData.username) &&(
+              {user.Member == 1  && !(user.E_creator == userData.username) &&(
                   <td><Button variant="success" onClick={() => submitrequest(user)} >Member</Button></td>
               )}
               {user.member == 1 && user.not_ac == 1 && (
@@ -254,13 +262,14 @@ const Eventlist = () => {
           </tbody>
         </table>
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={handleClose}>
+        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'white' }}>
+         <div className="bg-light">
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.username == selectedUser.w_creator && (
+ {userData && selectedUser && userData.username == selectedUser.E_creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
@@ -287,6 +296,7 @@ const Eventlist = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
+          </div>
         </Modal>
       </div>
     </div>

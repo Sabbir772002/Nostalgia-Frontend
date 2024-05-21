@@ -11,7 +11,6 @@ const FindFlist = ({fndlist,setfndlist,fetchData}) => {
   const userData= JSON.parse(localStorage.getItem('userData'));
 const handleSearch = async (e) => {
     e.preventDefault();
-
     try {
       // Form data for the request
       const formData = new FormData();
@@ -83,7 +82,7 @@ const handleSearch = async (e) => {
             </div>
         ))}
         </div>
-      }
+}
     </div>   
   )
 }

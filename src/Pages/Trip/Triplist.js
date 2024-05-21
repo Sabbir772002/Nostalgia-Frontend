@@ -149,45 +149,94 @@ const Triplist = () => {
           <div className="col-6">
             <h1 className="toto">Trip List</h1>
           </div>
-          <div className="col-6">
-            <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Trip List</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="trip_name">
-                    <Form.Label>Trip Name</Form.Label>
-                    <Form.Control type="text" value={formData.trip_name} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="address">
-                    <Form.Label>Destination</Form.Label>
-                    <Form.Control type="text" value={formData.address} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="start_date">
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.start_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="end_date">
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="guide">
-                    <Form.Label>Guide</Form.Label>
-                    <Form.Control type="text" value={formData.guide} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="privacy">
-                    <Form.Label>Privacy</Form.Label>
-                    <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
-                      <option value="Bondhu">Bondhu</option>
-                      <option value="Known">Known</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button className="mew mt-2" type="submit">Save</Button>
-                </Form>
-              </Modal.Body>
-            </Modal>
-            {/* Button to open Input Box Modal */}
+          <div className="col-6 ">              
+            {showInputBoxModal && (
+                <div className="modal show d-block" tabIndex="-1" role="dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content" style={{ backgroundColor: 'white' }}>
+                            <div className="modal-header">
+                                <h5 className="modal-title">New Trip</h5>
+                                <button type="button" className="close" aria-label="Close" onClick={() => setShowInputBoxModal(false)}>
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group">
+                                        <label htmlFor="trip_name">Trip Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="trip_name"
+                                            name="trip_name"
+                                            value={formData.trip_name}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="address">Destination</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="address"
+                                            name="address"
+                                            value={formData.address}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="start_date">Start Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            id="start_date"
+                                            name="start_date"
+                                            value={formData.start_date}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="end_date">End Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            id="end_date"
+                                            name="end_date"
+                                            value={formData.end_date}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="guide">Guide</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="guide"
+                                            name="guide"
+                                            value={formData.guide}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="privacy">Privacy</label>
+                                        <select
+                                            className="form-control"
+                                            id="privacy"
+                                            name="privacy"
+                                            value={formData.privacy}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="Bondhu">Bondhu</option>
+                                            <option value="Known">Known</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" className="btn btn-primary mew mt-2">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Trip</Button>
             </div>
@@ -235,7 +284,7 @@ const Triplist = () => {
             ))}
           </tbody>
         </table>
-        {/* User Info Modal */}
+        <div className="bg-light">
         <Modal show={showUserInfoModal} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
@@ -268,6 +317,7 @@ const Triplist = () => {
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
         </Modal>
+        </div>
       </div>
     </div>
   );

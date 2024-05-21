@@ -71,8 +71,8 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                         {/* {(fnd.abedon == 1 && fnd.is_fnf == 0) && (
                             <Dropdown.Item eventKey="Accept">Accept</Dropdown.Item>
                         )} */}
-                        <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
-                        <Dropdown.Item eventKey="Bondhu">Bondhu</Dropdown.Item>
+                        <Dropdown.Item eventKey="Known">Aquaintance</Dropdown.Item>
+                        <Dropdown.Item eventKey="Bondhu">Friend</Dropdown.Item>
                     </DropdownButton>
                     </div>
                     <div className="col-6">

@@ -101,10 +101,10 @@ const InputPost = ({fetchPosts}) => {
               <span className='photo-dis'>Video</span>
             </div>
 
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <KeyboardVoiceRoundedIcon className="input-svg" style={{fontSize:"38px",color:"green"}}/>
               <span className='photo-dis'>Audio</span>
-            </div>
+            </div> */}
 
             <div className="pv-upload">
               <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
