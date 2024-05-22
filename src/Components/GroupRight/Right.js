@@ -10,10 +10,10 @@ const Right = ({following,setFollowing,showMenu,setShowMenu}) => {
     <div className={showMenu ? "R-Side active" : "R-Side unActive"}>
       <ShowGroup/>
       
-      <Sugg 
+      {/* <Sugg 
       following={following}
       setFollowing={setFollowing}
-      />
+      /> */}
     </div>
   )
 }

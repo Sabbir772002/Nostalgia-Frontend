@@ -8,13 +8,15 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 const Comments = ({ cmt, post }) => {
     const [booleonLike, setBooleonLike] = useState(false);
-    const [likeCount, setLikeCount] = useState(cmt.likes);
+    const [likeCount, setLikeCount] = useState(cmt.likes?cmt.likes:0);
     const [showComment, setShowComment] = useState(false);
     const [commentInput, setCommentInput] = useState({
         author: '',
         content: '',
         blog: post.id,
     });
+    const [selectedSentiment, setSelectedSentiment] = useState('');
+    const [showSentimentDropdown, setShowSentimentDropdown] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +24,29 @@ const Comments = ({ cmt, post }) => {
     };
 
     const handleReplyClick = () => {
-        setShowComment(showComment); // Toggle the showComment state
+        setShowComment(prevShowComment => !prevShowComment); // Toggle the showComment state
+    };
+
+    const handleSentimentChange = (e) => {
+        setSelectedSentiment(e.target.value);
+        setCommentInput(prevState => ({ ...prevState, content: e.target.value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (commentInput.content.trim() === '') return;
+
+        // Make an API call to submit the comment
+        axios.post('http://localhost:8000/api/comments', commentInput)
+            .then(response => {
+                // Handle the successful response here
+                setCommentInput({ ...commentInput, content: '' });
+                setSelectedSentiment('');
+            })
+            .catch(error => {
+                // Handle the error here
+                console.error('There was an error submitting the comment!', error);
+            });
     };
 
     return (
@@ -36,7 +60,7 @@ const Comments = ({ cmt, post }) => {
 
                     <div className="commentFooter">
                         <p>{cmt.time}</p>
-                        <h4>{booleonLike ? likeCount + 1 : likeCount} likes</h4>
+                        <h6>likes by {booleonLike ? likeCount + 1 : likeCount+0} </h6>
                     </div>
                 </div>
 
@@ -51,12 +75,30 @@ const Comments = ({ cmt, post }) => {
                 </div>
                 <div>
                     <div>
-
                         {showComment && (
                             <div className="commentSection">
-                                <form onSubmit=''>
+                                <form onSubmit={handleSubmit}>
                                     <div className="cmtGroup">
-                                        <SentimentSatisfiedRoundedIcon className='emoji' />
+                                        <SentimentSatisfiedRoundedIcon
+                                            className='emoji'
+                                            onClick={() => setShowSentimentDropdown(!showSentimentDropdown)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                        {showSentimentDropdown && (
+                                            <select
+                                                id="sentimentSelect"
+                                                name="sentiment"
+                                                value={selectedSentiment}
+                                                onChange={handleSentimentChange}
+                                                className="sentimentDropdown"
+                                            >
+                                                <option value="">Select a sentiment</option>
+                                                <option value="Happy">Happy</option>
+                                                <option value="Sad">Sad</option>
+                                                <option value="Angry">Angry</option>
+                                                <option value="Surprised">Surprised</option>
+                                            </select>
+                                        )}
                                         <input
                                             type="text"
                                             id="commentInput"
@@ -71,7 +113,6 @@ const Comments = ({ cmt, post }) => {
                                 </form>
                             </div>
                         )}
-
                     </div>
                 </div>
             </div>

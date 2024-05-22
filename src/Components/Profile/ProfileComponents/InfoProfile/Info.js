@@ -183,7 +183,7 @@ console.log(userData);
             </div>
             <div className='info-details-list'>
               <MailOutlineIcon />
-              <span>{userData.email}</span>
+              <span>{userData.phone}</span>
             </div>
 
             <div className='info-details-list'>

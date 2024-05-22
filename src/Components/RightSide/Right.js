@@ -15,7 +15,7 @@ const Right = ({following,setFollowing,showMenu,setShowMenu}) => {
       <Friends
       /> 
        <Sugg />
-      <Online />
+      {/* <Online /> */}
 
       {/* <FollowingU 
       following={following}

@@ -19,7 +19,6 @@ const UserHome = ({fetchPosts,posts,setposts}) => {
   //     setShowModal(true);
   //   }
   // }, [username, userData]);
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
