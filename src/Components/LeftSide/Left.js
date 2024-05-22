@@ -14,6 +14,14 @@ import Profile from "../../assets/profile.jpg";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHospitalUser } from '@fortawesome/free-solid-svg-icons';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { FaWalking } from 'react-icons/fa';
+import { FaHandHoldingHeart } from 'react-icons/fa';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { FaSuitcaseRolling } from 'react-icons/fa';
+import { FaUserPlus } from 'react-icons/fa';
+import { FaUsers } from 'react-icons/fa';
+import { FaHome } from 'react-icons/fa';
+
 
 
 const Left = ({profileImg,
@@ -28,13 +36,13 @@ const Left = ({profileImg,
     <div className="L-features">
       <Link to="/home" style={{textDecoration:"none",color:"black"}}>
         <div onClick={()=>setBtnActive("#")} id='L-box' className={btnActive === "#" ? "active" : ""} >
-          <AiOutlineHome className='margin'/>
+          <FaHome className='margin'/>
           <span>Home</span>
         </div>
       </Link>
       <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
-        <BsPeople className='margin'/>
+        <FaUsers className='margin'/>
         <span>Friends</span>
       </div>
       </Link>
@@ -42,14 +50,14 @@ const Left = ({profileImg,
       
       <Link to="/findfrined" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#FFriends")} className={btnActive === "#FFriends" ? "active" : ""}>
-        <BsPerson className='margin'/>
+        <FaUserPlus className='margin'/>
         <span>Find Friend</span>
       </div>
      </Link>
 
      <Link to="/groups" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
-        <BsPeople className='margin'/>
+      <FaUsers className='margin' />
         <span>Groups</span>
       </div>
       </Link>
@@ -64,26 +72,26 @@ const Left = ({profileImg,
       <Link to="/walk" style={{textDecoration:"none",color:"black"}}>
 
       <div id='L-box' onClick={() => setBtnActive("#walk")} className={btnActive === "#walk" ? "active" : ""}>
-        <BsPeople className='margin'/>
+      <FaWalking className='margin' />
         <span>Walking Buddy</span>
       </div> 
       </Link>
       <Link to="/caregiver" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#CareGiver")} className={btnActive === "#CareGiver" ? "active" : ""}>
-       <BsPeople className='margin'/>
+       <FaHandHoldingHeart className='margin'/>
         <span>CareGiver</span>
       </div>
       </Link>  
       <Link to="/trip" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={()=>setBtnActive("#Trip")} className={btnActive === "#Trip" ? "active" : ""}>
-        <AiOutlineSearch className='margin'/>
+        <FaSuitcaseRolling  className='margin' />
          <span>Trip</span>
       </div>
       </Link>
 
       <Link to="/event" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box'  onClick={()=>setBtnActive("#Event")} className={btnActive === "#Event" ? "active" : ""}>
-          <FiTrendingUp className='margin'/>
+          <FaCalendarAlt  className='margin'/>
         <span>Event</span>
       </div>
       </Link>
