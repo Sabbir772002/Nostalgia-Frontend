@@ -38,10 +38,10 @@ const Chat = () => {
         setnewfnd(dummyUsers[0].name);
 
     }, []);
+
     useEffect(() => {
-       // socket.disconnect();
         socket.emit('set username', userData.username);
-            console.log(userData.username);
+        console.log(userData.username);
             socket.on('chat message', (message) => {
             console.log('New message received:', message);
             setMessages((prevMessages) => [...prevMessages, message]);
@@ -54,11 +54,11 @@ const Chat = () => {
             } else {
                 console.log('chat-history element not found');
             }
-        });  
-    //    return () => {
-
-    //     socket.disconnect();
-    //      };
+        });
+    
+        return () => {
+            socket.disconnect();
+        };
     }, []);
     
 

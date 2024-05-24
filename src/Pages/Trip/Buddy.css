@@ -1,6 +1,16 @@
 .interface{
     width: 100%;
 }
+.bot{
+    width: 100vw;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    column-gap: 20px;
+    background-color:rgb(240, 242, 245);
+    padding: 0px 10px;
+    position: relative;
+}
 .hoi{
     width: 100vw;
     min-height: 100vh;
