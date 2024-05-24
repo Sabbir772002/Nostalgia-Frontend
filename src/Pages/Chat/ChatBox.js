@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import Nav from '../../Components/Navigation/Nav';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 import axios from 'axios';
 
 const useSocket = (url) => {
     const [socket, setSocket] = useState(null);
+
 
     useEffect(() => {
         const socketInstance = io(url);
@@ -22,35 +23,49 @@ const useSocket = (url) => {
 };
 
 const Chat = () => {
+    const { fnd } = useParams();
+    const [newfnd, setNewfnd] = useState("");
+    
+    useEffect(() => {
+        if (fnd) {
+            const capitalizedFnd = fnd.charAt(0).toUpperCase() + fnd.slice(1);
+            setNewfnd(capitalizedFnd);
+                    }
+    }, [fnd]);
+    
     const location = useLocation();
     const userData = JSON.parse(localStorage.getItem('userData'));
 
+    console.log(fnd);
     const [users, setUsers] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket('http://localhost:5000');
-    const [newfnd, setNewfnd] = useState("");
+   
 
     useEffect(() => {
-        const dummyUsers = [
-            { id: 1, name: 'Vincent Porter' },
-            { id: 2, name: 'Aiden Chavez' },
-            { id: 3, name: 'Mike Thomas' },
-            { id: 4, name: 'Christian Kelly' },
-            { id: 5, name: 'Monica Ward' },
-            { id: 6, name: 'Dean Henry' },
-            { id: 11, name: 'Vincent Porter' },
-            { id: 21, name: 'Aiden Chavez' },
-            { id: 31, name: 'Mike Thomas' },
-            { id: 41, name: 'Christian Kelly' },
-            { id: 51, name: 'Monica Ward' },
-            { id: 61, name: 'Dean Henry' }
-        ];
-        setUsers(dummyUsers);
-        setNewfnd(dummyUsers[0].name);
+        // Fetch unique users
+        axios.get('http://localhost:5000/api/userbox/' + userData.username)
+            .then(response => {
+                const userList = response.data.map((username, index) => ({
+                    id: index + 1,
+                    name: username
+                }));
+                setUsers(userList);
+                if (userList.length > 0 && newfnd == "") {
+                    setNewfnd(userList[0].name);
+                }
+                if (fnd) {
+                    setNewfnd(fnd);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching users:', error);
+            });
     }, []);
+
 
     useEffect(() => {
         if (!socket) return;
@@ -61,17 +76,15 @@ const Chat = () => {
         socket.on('disconnect', () => {
             console.log('Socket disconnected');
         });
-
         socket.on('chat message', (message) => {
             console.log('New message received:', message);
 
-            const messageExists = messages.some(msg => msg.id === message.id);
+            const messageExists = messages.some(msg => msg === message);
 
             if (!messageExists) {
                 setMessages(prevMessages => [...prevMessages, message]);
             }
         });
-
         return () => {
             socket.off('connect');
             socket.off('disconnect');
@@ -124,11 +137,10 @@ const Chat = () => {
         });
         }
     };
-
     const handleNameClick = (name) => {
         setNewfnd(name);
+        // console.log(userData);
     };
-
 
     return (
         <div className='interface'>
@@ -167,7 +179,6 @@ const Chat = () => {
                                         </div>
                                     </li>
                                 ))}
-
                                 </ul>
                             </div>
                         </div>
@@ -207,7 +218,7 @@ const Chat = () => {
                                                 <>
                                                     <div className="message-data box-right">
                                                         <span className="message-data-time">{message.time}</span>
-                                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"/>
+                                                    <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} />
                                                     </div>
                                                     <div className="message other-message float-right">{message.content}</div>
                                                 </>

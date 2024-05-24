@@ -121,7 +121,7 @@ const Friends = () => {
 
           <div className="s-right">
             <Link to={`/profile/${fnd.username}`}><button>View</button></Link>
-              <button>Message</button>
+             <Link to={`/chat/${fnd.username}`}><button>Message</button></Link>
           </div>
         </div>
       ))}

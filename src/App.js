@@ -75,6 +75,7 @@ const App = () => {
             {/* <Route path='/BD' element={<BD />} /> */}
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
+            <Route path='/chat/:fnd' element={<Chat />} />
             <Route path='/chat' element={<Chat />} />
             {/* <Route path='/chat' element={Chat} /> */}
             {/* <Route path='/c/:chatId' element={HomeScreen} />
