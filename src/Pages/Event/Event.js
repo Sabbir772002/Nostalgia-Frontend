@@ -106,7 +106,7 @@ const Event = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="bot">
+    <div className="hoi">
         <Left />
       {userData.username.includes("@") ? (
         <h1 className="error mt-4">You are not allowed to view this page</h1>

@@ -107,7 +107,7 @@ const Trip = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="bot">
+    <div className="hoi">
    
     <Left />
       {userData.username.includes("@") ? (

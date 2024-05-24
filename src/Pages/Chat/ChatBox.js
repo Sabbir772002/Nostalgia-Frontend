@@ -14,7 +14,7 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-    const socket = io('http://localhost:5000');
+    const socket = io('http://localhost:4000');
     const [newfnd,setnewfnd]=useState("");
 
 
