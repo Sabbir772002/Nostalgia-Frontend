@@ -59,9 +59,9 @@ const handlemsg = (e) =>{
       </Link>
 
         <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
-        {/* <Link to="/msg" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
+        <Link to="/chat" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <TbMessage className='nav-icons'/>
-        </Link> */}
+        </Link>
         <Link to="/friend" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <LiaUserFriendsSolid
         className='nav-icons'
