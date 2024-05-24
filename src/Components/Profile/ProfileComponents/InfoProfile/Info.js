@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 import './Info.css';
 import axios from 'axios';
 import { height } from '@mui/system';
+import { FaUserEdit } from 'react-icons/fa';
+
 const Info = ({
   userPostData,
   following,
@@ -145,7 +147,7 @@ console.log(userData);
         { userData.username === user.username ? (
             <Link to={`/profile/edit/${user.username}`}>
               <button>
-                <BiLogOut />
+                <FaUserEdit />
                 Edit Profile
               </button>
             </Link>
