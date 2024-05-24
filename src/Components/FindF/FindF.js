@@ -80,6 +80,7 @@ const handleSelect = (option) => {
                 src={`http://localhost:8000/${fnd.pp}`}
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
+                style={{ width: '200px', height: '200px' }}
               />
             </div>
             <div>

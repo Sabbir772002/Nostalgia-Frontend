@@ -21,7 +21,9 @@ import { FaSuitcaseRolling } from 'react-icons/fa';
 import { FaUserPlus } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
 import { FaHome } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
+import { BiLogOut } from 'react-icons/bi';
+import { MdGroup } from 'react-icons/md';
 
 
 const Left = ({profileImg,
@@ -31,6 +33,15 @@ const Left = ({profileImg,
   const [btnActive,setBtnActive] =useState("#")
   const [logOutExit,setLogOutExit] =useState(false)
 
+ const navigate = useNavigate();
+  const logoutUser = () => {
+    // Remove 'userData' from localStorage or perform logout actions
+    localStorage.removeItem('userData');
+    // console.log("logout "+user.username);
+    localStorage.clear();
+    navigate('/')
+    // Add other logout logic here
+  };
 
   return (
     <div className="L-features">
@@ -57,7 +68,7 @@ const Left = ({profileImg,
 
      <Link to="/groups" style={{textDecoration:"none",color:"black"}}>
       <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
-      <FaUsers className='margin' />
+      < MdGroup className='margin' />
         <span>Groups</span>
       </div>
       </Link>
@@ -96,12 +107,12 @@ const Left = ({profileImg,
       </div>
       </Link>
 
-      <Link to="" style={{textDecoration:"none",color:"black"}}>
+      <Link to="/" style={{textDecoration:"none",color:"black"}} onClick={logoutUser}>
 
       <div id='L-box' onClick={()=>setBtnActive("#settings")} className={btnActive === "#settings" ? "active" : ""}>
-        <FiSettings 
+        <BiLogOut
         className='margin'/>
-        <span>Settings</span>
+        <span>Log Out</span>
       </div>
       </Link>
 
