@@ -16,7 +16,6 @@ import DPimg5 from "../../assets/DP/img5.jpg"
 import DPimg6 from "../../assets/DP/img6.jpg"
 
 import cover from "../../assets/Info-Dp/img-3.jpg"
-
 import Cover1 from "../../assets/Friends-Cover/cover-1.jpg"
 import Cover2 from "../../assets/Friends-Cover/cover-2.jpg"
 import Cover3 from "../../assets/Friends-Cover/cover-3.jpg"
@@ -107,7 +106,7 @@ const Trip = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="bot">
+    <div className="hoi">
    
     <Left />
       {userData.username.includes("@") ? (
@@ -118,7 +117,6 @@ const Trip = () => {
         </>
       )}
     </div>
-
     </div>
   )
 }
