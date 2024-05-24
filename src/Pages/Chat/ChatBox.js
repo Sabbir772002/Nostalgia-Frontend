@@ -1,209 +1,188 @@
-// import React from 'react';
-// import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import Nav from '../../Components/Navigation/Nav';
+import { useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Chat.css';
 
-// import img1 from "../../assets/Post Images/img1.jpg";
-// import img2 from "../../assets/Post Images/img2.jpg";
-// import img3 from "../../assets/Post Images/img3.jpg";
-// import img4 from "../../assets/Post Images/img4.jpg";
-// import img5 from "../../assets/Post Images/img5.jpg";
-// import img6 from "../../assets/Post Images/img6.jpg";
-// import { Container, Row, Col, Card, InputGroup, FormControl, ListGroup, Image, Button } from 'react-bootstrap';
-// import { FaSearch, FaCamera, FaImage, FaCogs, FaQuestion, FaCircle } from 'react-icons/fa';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import './Chat.css';
-// import Nav from '../../Components/Navigation/Nav';
-// import { useLocation } from 'react-router-dom';
-// const Chat = () => {
-//   const location = useLocation();
-//   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-//   const userData= JSON.parse(localStorage.getItem('userData'));
+const Chat = () => {
+    const location = useLocation();
+    const userData = JSON.parse(localStorage.getItem('userData'));
 
-//   const [body,setBody] = useState("");
-//   const [importFile,setImportFile] = useState("");
+    const [users, setUsers] = useState([]);
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const [search, setSearch] = useState('');
+    const [showMenu, setShowMenu] = useState(false);
+    const socket = io('http://localhost:4000');
 
-//   const [search,setSearch] = useState("");
-//   const [following,setFollowing] = useState("");
-//   const [showMenu,setShowMenu] = useState(false);
-//   const [images,setImages] =  useState(null);
+    useEffect(() => {
+        const dummyUsers = [
+            { id: 1, name: 'Vincent Porter' },
+            { id: 2, name: 'Aiden Chavez' },
+            { id: 3, name: 'Mike Thomas' },
+            { id: 4, name: 'Christian Kelly' },
+            { id: 5, name: 'Monica Ward' },
+            { id: 6, name: 'Dean Henry' },
+            { id: 11, name: 'Vincent Porter' },
+            { id: 21, name: 'Aiden Chavez' },
+            { id: 31, name: 'Mike Thomas' },
+            { id: 41, name: 'Christian Kelly' },
+            { id: 51, name: 'Monica Ward' },
+            { id: 61, name: 'Dean Henry' }
+        ];
+        setUsers(dummyUsers);
 
-//   return (
-//     <div className='interface'>
-//       <Nav 
-//         search={search}
-//         setSearch={setSearch}
-//         showMenu={showMenu}
-//         setShowMenu={setShowMenu}
-//       />
+        socket.on('chat message', (message) => {
+            console.log('New message received:', message);
+            setMessages((prevMessages) => [...prevMessages,message]);
+            
+            const chatHistory = document.getElementById('chat-history');
+            console.log('chatHistory:', chatHistory); 
+            if (chatHistory) {
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+                console.log('Scrolled to bottom of chat history');
+            } else {
+                console.log('chat-history element not found');
+            }
+        });
+        
+        
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
-// <div className="bot mt-2" style={{ position: 'fixed', marginBottom: '20px'}}>
-//   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-// <div class="row clearfix">
-//     <div class="col-lg-12">
-//         <div class="card chat-app">
-//             <div id="plist" class="people-list">
-//             <div className="input-group">
-//                 <div className="input-group-prepend">
-//                     <span className="input-group-text" style={{height: '38px'}}><i className="fa fa-search" style={{fontSize: '16px'}}></i></span>
-//                 </div>
-//                 <input type="text" className="form-control" style={{height: '38px'}} placeholder="Search..."/>
-//             </div>
-//                 <ul class="list-unstyled chat-list mt-2 mb-0" style={{ maxHeight: '500px', overflowY: 'auto', marginBottom:"20px" }}>
-//                 <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>  <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Vincent Porter</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-//                         </div>
-//                     </li>
-//                     <li class="clearfix active">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Aiden Chavez</div>
-//                             <div class="status"> <i class="fa fa-circle online"></i> online </div>
-//                         </div>
-//                     </li>
-//                     <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Mike Thomas</div>
-//                             <div class="status"> <i class="fa fa-circle online"></i> online </div>
-//                         </div>
-//                     </li>                                    
-//                     <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Christian Kelly</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> left 10 hours ago </div>
-//                         </div>
-//                     </li>
-//                     <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar8.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Monica Ward</div>
-//                             <div class="status"> <i class="fa fa-circle online"></i> online </div>
-//                         </div>
-//                     </li>
-//                     <li class="clearfix">
-//                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar"/>
-//                         <div class="about">
-//                             <div class="name">Dean Henry</div>
-//                             <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>
-//                         </div>
-//                     </li>
-//                 </ul>
-//             </div>
-//             <div class="chat">
-//                 <div class="chat-header clearfix">
-//                     <div class="row">
-//                         <div class="col-lg-6">
-//                             <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-//                                 <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar"/>
-//                             </a>
-//                             <div class="chat-about">
-//                                 <h6 class="m-b-0">Aiden Chavez</h6>
-//                                 <small>Last seen: 2 hours ago</small>
-//                             </div>
-//                         </div>
-//                         <div class="col-lg-6 box-right">
-//                               <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-//                               <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-//                               <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-//                               <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
-//                           </div>
+    const sendMessage = () => {
+        if (newMessage.trim() !== '') {
+            const message = {
+                sender: userData.username,
+                content: newMessage,
+                time: new Date().toLocaleTimeString()
+            };
+            socket.emit('chat message', message);
+          //  setMessages((prevMessages) => [...prevMessages, message]);
+            setNewMessage('');
+            const chatHistory = document.getElementById('chat-history');
+            chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+    
+        }
 
+    };
 
-//                     </div>
-//                 </div>
-//                 <div class="chat-history">
-//                     <ul class="m-b-0" style={{ maxHeight: '370px', overflowY: 'auto' }}>
-//                         <li class="clearfix">
-//                             <div class="message-data box-right">
-//                                 <span class="message-data-time">10:10 AM, Today</span>
-//                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"/>
-//                             </div>
-//                             <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-//                         </li>
-//                         <li class="clearfix">
-//                             <div class="message-data">
-//                                 <span class="message-data-time">10:12 AM, Today</span>
-//                             </div>
-//                             <div class="message my-message">Are we meeting today?</div>                                    
-//                         </li>                               
-//                         <li class="clearfix">
-//                             <div class="message-data">
-//                                 <span class="message-data-time">10:15 AM, Today</span>
-//                             </div>
-//                             <div class="message my-message">Project has been already finished and I have results to show you.</div>
-//                         </li>  <li class="clearfix">
-//                             <div class="message-data">
-//                                 <span class="message-data-time">10:15 AM, Today</span>
-//                             </div>
-//                             <div class="message my-message">Project has been already finished and I have results to show you.</div>
-//                         </li>  <li class="clearfix">
-//                             <div class="message-data">
-//                                 <span class="message-data-time">10:15 AM, Today</span>
-//                             </div>
-//                             <div class="message my-message">Project has been already finished and I have results to show you.</div>
-//                         </li>  <li class="clearfix">
-//                             <div class="message-data">
-//                                 <span class="message-data-time">10:15 AM, Today</span>
-//                             </div>
-//                             <div class="message my-message">Project has been already finished and I have results to show you.</div>
-//                         </li>
-//                     </ul>
-//                 </div>
-//                 <div class="chat-message clearfix">
-//                 <div className="input-group mb-0">
-//                       <div className="input-group-prepend">
-//                           <span className="input-group-text" style={{height: '38px'}}><i className="fa fa-send" style={{fontSize: '16px'}}></i></span>
-//                       </div>
-//                       <input type="text" className="form-control" style={{height: '38px'}} placeholder="Enter text here..."/>                                    
-//                   </div>
-//             </div>
-//             </div>
-//         </div>
-//     </div>
-// </div>
-// </div>
-// </div>
+    return (
+        <div className='interface'>
+            <Nav
+                search={search}
+                setSearch={setSearch}
+                showMenu={showMenu}
+                setShowMenu={setShowMenu}
+            />
+            <div className='bot mt-2' style={{ position: 'fixed', marginBottom: '20px' }}>
+                <div class='row clearfix'>
+                    <div class='card chat-app'>
+                        <div class='col-lg-3'>
+                            <div id='plist' class='people-list'>
+                                <h2>Friends List</h2>
+                                <div className='input-group'>
+                                    {/* <div className='input-group-prepend'>
+                                        <span className='input-group-text' style={{ height: '38px' }}>
+                                            <i className='fas fa-search' style={{ fontSize: '16px' }}></i>
+                                        </span>
+                                    </div> */}
+                                    <input type='text' className='form-control' style={{ height: '38px' }} placeholder='Search...' />
+                                </div>
+                                <hr />
+                                <ul class='list-unstyled chat-list mt-2 mb-0' style={{ maxHeight: '500px', overflowY: 'auto', marginBottom: '20px' }}>
+                                    {users.map((user) => (
+                                        <li key={user.id} className='clearfix'>
+                                            <img src='https://bootdey.com/img/Content/avatar/avatar1.png' alt='avatar' />
+                                            <div class='about'>
+                                                <div class='name'>{user.name}</div>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class='chat'>
+                            <div class='chat-header clearfix'>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <a href='javascript:void(0);' data-toggle='modal' data-target='#view_info'>
+                                            <img src='https://bootdey.com/img/Content/avatar/avatar2.png' alt='avatar' />
+                                        </a>
+                                        <div class='chat-about'>
+                                            <h6 class='m-b-0'>Aiden Chavez</h6>
+                                            <small>Last seen: 2 hours ago</small>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6 box-right'>
+                                        <a href='javascript:void(0);' class='btn btn-outline-secondary'>
+                                            <i class='fas fa-camera'></i>
+                                        </a>
+                                        <a href='javascript:void(0);' class='btn btn-outline-primary'>
+                                            <i class='fas fa-image'></i>
+                                        </a>
+                                        <a href='javascript:void(0);' class='btn btn-outline-info'>
+                                            <i class='fas fa-cogs'></i>
+                                        </a>
+                                        <a href='javascript:void(0);' class='btn btn-outline-warning'>
+                                            <i class='fas fa-question'></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='chat-history' id='chat-history'>
+                                <ul className='m-b-0' style={{ maxHeight: '370px', overflowY: 'auto' }}>
+                                    {messages.map((message, index) => (
+                                        <li key={index} className={message.sender === userData.username ? 'clearfix' : 'clearfix other'}>
+                                            {message.sender !== userData.username && (
+                                                <div className='message-data box-right'>
+                                                    <span className='message-data-time'>{message.time}</span>
+                                                    <img src='https://bootdey.com/img/Content/avatar/avatar7.png' alt='avatar' />
+                                                </div>
+                                            )}
+                                            <div className={message.sender === userData.username ? 'message my-message float-right' : 'message other-message'}>
+                                                {message.content}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div class='chat-message clearfix'>
+                                <div className='input-group mb-0'>
+                                    {/* <div className='input-group-prepend'>
+                                        <span className='input-group-text' style={{ height: '38px' }}>
+                                            <i className='fas fa-paper-plane' style={{ fontSize: '16px' }}></i>
+                                        </span>
+                                    </div> */}
+                                    <input
+                                        type='text'
+                                        className='form-control'
+                                        style={{ height: '38px' }}
+                                        placeholder='Enter text here...'
+                                        value={newMessage}
+                                        onChange={(e) => setNewMessage(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                sendMessage();
+                                            }
+                                        }}
+                                    />
+                                    <div className='input-group-append'>
+                                        <button className='btn btn-primary' type='button' onClick={sendMessage}>
+                                            Send
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
-//   );
-// }
-
-// export default Chat;
+export default Chat;

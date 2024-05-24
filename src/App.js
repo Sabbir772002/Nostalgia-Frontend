@@ -29,10 +29,11 @@ import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
 
 import HomeScreen from "./screens/home/HomeScreen";
+import ChatBody from "./Components/chatbody/ChatBody";
 import LoginScreen from "./screens/auth/login/LoginScreen";
 import SignupScreen from "./screens/auth/signup/SignupScreen";
 import AppPaths from "./chat_lib/appPaths";
-// import Chat from './Pages/Chat/ChatBox';
+import Chat from './Pages/Chat/ChatBox';
 import BD from './Pages/Ex/BD';
 
 
@@ -74,11 +75,11 @@ const App = () => {
             {/* <Route path='/BD' element={<BD />} /> */}
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
-            {/* <Route path='/chat' element={<Chat />} /> */}
-            <Route path='/chat' element={HomeScreen} />
-            <Route path='/c/:chatId' element={HomeScreen} />
+            <Route path='/chat' element={<Chat />} />
+            {/* <Route path='/chat' element={Chat} /> */}
+            {/* <Route path='/c/:chatId' element={HomeScreen} />
             <Route path='/chat_login' element={LoginScreen} />
-            <Route path='/chat_signup' element={SignupScreen} />
+            <Route path='/chat_signup' element={SignupScreen} /> */}
           </Routes>
         </div>
       </UserProvider>

@@ -12,11 +12,11 @@ const HomeScreen = (props) => {
       <div className="container-fluid p-0">
         <div className="container-fluid">
           <div className="row g-0">
-            {/* <Sidebar
+            <Sidebar
               setCurrentChattingMember={setCurrentChattingMember}
               onlineUserList={onlineUserList}
               {...props}
-            /> */}
+            />
             <ChatBody
               setOnlineUserList={setOnlineUserList}
               currentChattingMember={currentChattingMember}

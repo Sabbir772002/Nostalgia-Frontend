@@ -7,18 +7,45 @@ import SocketActions from "../../chat_lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
 import "./chatBodyStyle.css";
 
-let socket = new WebSocket(
-  // ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId()}/chat/`
-  ServerUrl.WS_BASE_URL + `ws/users/${CommonUtil.getUserId}/chat/`
-  // ServerUrl.WS_BASE_URL + `ws/users/sabbir/chat/`
-);
-let typingTimer = 0;
-let isTypingSignalSent = false;
-
 const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
+
+  const loggedInUserId = CommonUtil.getUserId();
+  const userId = "sabbir";
+  let socket;
+  useEffect(() => {
+     socket = new WebSocket(`ws://localhost:4000/ws/users/${userId}/chat/`);
+    socket.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const chatId = CommonUtil.getActiveChatId(match);
+      if (chatId === data.roomId) {
+        if (data.action === SocketActions.MESSAGE) {
+          data["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + data.userImage;
+          setMessages((prevState) => {
+            let messagesState = JSON.parse(JSON.stringify(prevState));
+            messagesState.results.unshift(data);
+            return messagesState;
+          });
+          setTyping(false);
+        } else if (data.action === SocketActions.TYPING && data.user !== userId) {
+          setTyping(data.typing);
+        }
+      }
+      if (data.action === SocketActions.ONLINE_USER) {
+        setOnlineUserList(data.userList);
+      }
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [match, userId, setOnlineUserList]);
 
   const fetchChatMessage = async () => {
     const currentChatId = CommonUtil.getActiveChatId(match);
@@ -37,34 +64,12 @@ const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
     fetchChatMessage();
   }, [CommonUtil.getActiveChatId(match)]);
 
-  const loggedInUserId = CommonUtil.getUserId();
   const getChatMessageClassName = (userId) => {
     return loggedInUserId === userId
       ? "chat-message-right pb-3"
       : "chat-message-left pb-3";
   };
 
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    const chatId = CommonUtil.getActiveChatId(match);
-    const userId = CommonUtil.getUserId();
-    if (chatId === data.roomId) {
-      if (data.action === SocketActions.MESSAGE) {
-        data["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + data.userImage;
-        setMessages((prevState) => {
-          let messagesState = JSON.parse(JSON.stringify(prevState));
-          messagesState.results.unshift(data);
-          return messagesState;
-        });
-        setTyping(false);
-      } else if (data.action === SocketActions.TYPING && data.user !== userId) {
-        setTyping(data.typing);
-      }
-    }
-    if (data.action === SocketActions.ONLINE_USER) {
-      setOnlineUserList(data.userList);
-    }
-  };
   const messageSubmitHandler = (event) => {
     event.preventDefault();
     if (inputMessage) {
@@ -72,7 +77,7 @@ const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
         JSON.stringify({
           action: SocketActions.MESSAGE,
           message: inputMessage,
-          user: CommonUtil.getUserId(),
+          user: loggedInUserId,
           roomId: CommonUtil.getActiveChatId(match),
         })
       );
@@ -85,7 +90,7 @@ const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
       JSON.stringify({
         action: SocketActions.TYPING,
         typing: typing,
-        user: CommonUtil.getUserId(),
+        user: loggedInUserId,
         roomId: CommonUtil.getActiveChatId(match),
       })
     );
@@ -93,20 +98,16 @@ const ChatBody = ({ match, currentChattingMember, setOnlineUserList }) => {
 
   const chatMessageTypingHandler = (event) => {
     if (event.keyCode !== Constants.ENTER_KEY_CODE) {
-      if (!isTypingSignalSent) {
-        sendTypingSignal(true);
-        isTypingSignalSent = true;
-      }
       clearTimeout(typingTimer);
-      typingTimer = setTimeout(() => {
-        sendTypingSignal(false);
-        isTypingSignalSent = false;
-      }, 3000);
+      sendTypingSignal(true);
     } else {
       clearTimeout(typingTimer);
-      isTypingSignalSent = false;
+      sendTypingSignal(false);
     }
   };
+
+  let typingTimer;
+  const TYPING_TIMEOUT = 3000; // 3 seconds
 
   return (
     <div className="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-10 pl-0 pr-0">
