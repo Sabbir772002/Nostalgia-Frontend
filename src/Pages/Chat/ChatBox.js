@@ -52,7 +52,7 @@ const Chat = () => {
             .then(response => {
                 const userList = response.data.map((username, index) => ({
                     id: index + 1,
-                    name: username.toLowerCase(), // Convert the name to lowercase
+                    name: username, // Convert the name to lowercase
                 }));
                 
                 // Remove duplicates by converting the array to a Set and back to an array
@@ -67,6 +67,7 @@ const Chat = () => {
                     console.log(fnd);
                     console.log("set of userlists")
                     setfd(uniqueUserList[0].name);
+                    msgbox();
                     findname(uniqueUserList[0].name);
                 }
             })
@@ -117,8 +118,10 @@ const Chat = () => {
 
             const messageExists = messages.some(msg => msg === message);
 
-            if (!messageExists && (message.sender === userData.username ||(message.sender==fd && message.receiver === userData.username))) {
+            if (!messageExists && (message.sender == userData.username ||(message.sender==fd && message.receiver == userData.username))) {
                 setMessages(prevMessages => [...prevMessages, message]);
+                const chatHistory = document.getElementById('chat-history');
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
             }
         });
         return () => {
@@ -149,21 +152,19 @@ const Chat = () => {
 
     const sendMessage = () => {
         if (newMessage.trim() !== '') {
+            
             const message = {
                 id: messages.length + 1,
                 sender: userData.username,
-                receiver: fnd,
+                receiver: fd,
                 content: newMessage,
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
                 img:0
             };
             socket.emit('set username', userData.username);
-            socket.emit('chat message', message);
-            
+            socket.emit('chat message', message);    
             setNewMessage('');
-            const chatHistory = document.getElementById('chat-history');
-            chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
                   // Save message to MongoDB using Axios
         axios.post('http://localhost:5000/api/messages', message)
         .then(response => {
@@ -184,15 +185,19 @@ const Chat = () => {
         .then(response => {
             console.log('Message Retrieve:', response.data);
             setMessages(response.data);
+
         })
         .catch(error => {
             console.error('Error fetching messages:', error);
         });
+        const chatHistory = document.getElementById('chat-history');
+        chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+
     }
     useEffect(() => {
-        if (fnd && !done) {
+        if (fd) {
             msgbox();
-            findname(fnd);
+            findname(fd);
         } 
     }, [fd]);
     
@@ -200,6 +205,7 @@ const Chat = () => {
     const [fndname, setfndName] = useState("");
     const findname = (name) => {
         // console.log(name);
+        // if (name==null)return;
         axios.get(`http://127.0.0.1:8000/profile/${name}`, {
             params: {
                 username: name,
@@ -221,7 +227,6 @@ const Chat = () => {
         setfd(name);
         findname(name);
         msgbox();
-
         console.log("msg box of : "+name);
     }; 
     useEffect(() => {
