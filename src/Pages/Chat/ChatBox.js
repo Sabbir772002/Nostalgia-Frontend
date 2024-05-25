@@ -102,7 +102,6 @@ const Chat = () => {
         }
         
     };
-   
     
     useEffect(() => {
         if (!socket) return;
@@ -227,8 +226,7 @@ const Chat = () => {
     }; 
     useEffect(() => {
         finduserlist();
-    }, [fndname,fd]);
-
+    }, [fndname,fd,userData.username,messages]);
 
     return (
         <div className='interface'>
@@ -279,7 +277,7 @@ const Chat = () => {
                                         </a>
                                         <div className='chat-about'>
                                         <Link to={`/profile/${fd}`} className="text-dark">
-                                            <h6 className='m-b-0'>{fnddata.first_name} {fnddata.last_name}</h6>
+                                            <h6 className='m-b-0'>{fndname}</h6>
                                             <small>Last seen: 2 hours ago</small>
                                             </Link>
                                         </div>
