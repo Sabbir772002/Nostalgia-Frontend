@@ -25,11 +25,13 @@ const useSocket = (url) => {
 const Chat = () => {
     const { fnd } = useParams();
     const [newfnd, setNewfnd] = useState("");
+    const [fd, setfd] = useState("");
     
     useEffect(() => {
         if (fnd) {
             const capitalizedFnd = fnd.charAt(0).toUpperCase() + fnd.slice(1);
             setNewfnd(capitalizedFnd);
+            setfd(fnd);
                     }
     }, [fnd]);
     
@@ -43,8 +45,6 @@ const Chat = () => {
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket('http://localhost:5000');
-   
-
     useEffect(() => {
         // Fetch unique users
         axios.get('http://localhost:5000/api/userbox/' + userData.username)
@@ -56,8 +56,15 @@ const Chat = () => {
                 setUsers(userList);
                 if (userList.length > 0 && newfnd == "") {
                     setNewfnd(userList[0].name);
+                
+                } if (userList.length > 0 && newfnd == "") {
+                    setNewfnd(userList[0].name);
+                    setfd(userList[0].name);
+
+                
                 }
                 if (fnd) {
+                    setfd(fd);
                     setNewfnd(fnd);
                 }
             })
@@ -119,7 +126,9 @@ const Chat = () => {
                 sender: userData.username,
                 receiver: newfnd,
                 content: newMessage,
-                time: new Date().toLocaleTimeString()
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString(),
+                img:0
             };
             socket.emit('set username', userData.username);
             socket.emit('chat message', message);
@@ -137,9 +146,31 @@ const Chat = () => {
         });
         }
     };
+    const msgbox = async () => {
+        axios.get('http://localhost:5000/api/messages/', {
+            params: {
+                id1: userData.username,
+                id2: fd
+            }
+        })
+        .then(response => {
+            console.log('Message Retrieve:', response.data);
+            setMessages(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching messages:', error);
+        });
+    }
+    useEffect(() => {
+        if (newfnd) {
+            msgbox();
+        } 
+    }, [newfnd]);
     const handleNameClick = (name) => {
         setNewfnd(name);
-        // console.log(userData);
+        setfd(name);
+        console.log("msg box of : "+name);
+        
     };
 
     return (
