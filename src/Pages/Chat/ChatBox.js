@@ -46,13 +46,6 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-<<<<<<< HEAD
-    const socket = io('http://localhost:4000');
-    const [newfnd,setnewfnd]=useState("");
-
-
-  
-=======
     const socket = useSocket('http://localhost:5000');
     const finduserlist = async () => {
         axios.get('http://localhost:5000/api/userbox/' + userData.username)
@@ -111,7 +104,6 @@ const Chat = () => {
         
     };
     
->>>>>>> b01f2697a179de575dfba117c89069e5bfd2a272
     useEffect(() => {
         if (!socket) return;
 
