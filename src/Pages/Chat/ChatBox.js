@@ -24,6 +24,7 @@ const useSocket = (url) => {
 
     return socket;
 };
+
 const Chat = () => {
     const { fnd } = useParams();
     const [fd, setfd] = useState("");
@@ -43,7 +44,6 @@ const Chat = () => {
             setfd(fnd);
             findname(fnd);
             msgbox();
-           
         }
 
     }, [fnd,done]);
@@ -112,11 +112,10 @@ const Chat = () => {
     }    
     useEffect(()=>{
         if (!socket) return;
-
         socket.on('users status', (usersStatus) => {
             // Handle received user status updates
-            console.log('Received user status:', usersStatus);
-            console.log("user data",userbox);
+            // console.log('Received user status:', usersStatus);
+            // console.log("user data",userbox);
             setUserbox(prevUserBox => {
                 return prevUserBox.map(user => {
                     const status = usersStatus.find(status => status.username.toLowerCase() === user.name.toLowerCase());
@@ -132,7 +131,7 @@ const Chat = () => {
                 });
 
             });
-            console.log("updated userbox ",userbox);
+          //  console.log("updated userbox ",userbox);
 
                                 
             // You can update your UI or perform any other actions based on the received user status
@@ -144,7 +143,7 @@ const Chat = () => {
 
     useEffect(() => {
         if (!socket) return;
-
+        
         socket.on('connect', () => {
             console.log('Socket connected');
         });
@@ -153,7 +152,20 @@ const Chat = () => {
         })
         
         socket.on('chat message', (message) => {
+            console.log('New message received from:', message.sender);
             console.log('New message received:', message);
+            const messageExists = messages.some(msg => msg.id == msg.id);
+            // console.log(fd);
+            // console.log(message.sender);
+            // console.log(message.receiver);
+            // console.log(userData.username);
+            if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
+                console.log("after rcv msg");
+                setMessages(prevMessages => [...prevMessages, message]);
+                const chatHistory = document.getElementById('chat-history');
+                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
+            }
+        });
             // if ( message.receiver.toLowerCase() == userData.username.toLowerCase()) {
             //     console.log("usere ",userData.username);
             //     console.log("receiver",message.receiver);
@@ -219,16 +231,6 @@ const Chat = () => {
             //     handleUserboxUpdate(message.receiver);
 
             // }
-
-            const messageExists = messages.some(msg => msg === message);
-
-            if (!messageExists && (message.sender == userData.username ||(message.sender==fd && message.receiver == userData.username))) {
-                setMessages(prevMessages => [...prevMessages, message]);
-                // const chatHistory = document.getElementById('chat-history');
-                // chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
-            }
-
-        });
         
         return () => {
             socket.off('connect');
@@ -236,10 +238,6 @@ const Chat = () => {
             socket.off('chat message');
         };
     }, [socket, messages]);
-
-
-
-
 
 
     useEffect(() => {
