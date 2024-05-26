@@ -141,7 +141,7 @@ const Eventlist = () => {
   const handleClose = () => setShowUserInfoModal(false);
 
   return (
-    <div className="vox mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
+    <div className="voxi mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
       <div className="box">
         <div className="mt-3 row">
           <div className="col-6">
