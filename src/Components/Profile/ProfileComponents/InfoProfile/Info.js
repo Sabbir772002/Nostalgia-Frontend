@@ -79,7 +79,6 @@ const navigate = useNavigate();
         // Handle errors if any
     }
 };
-
 const delete_fnd = async () => {
   try {
       
@@ -103,7 +102,7 @@ console.log(userData);
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src={`http://localhost:8000${userData.pp}`} alt='profile' />
+        <img src={`http://localhost:8000/${userData.pp}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
