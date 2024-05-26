@@ -157,9 +157,9 @@ const setLocalStorageItem = (key, value) => {
             <div className='dont'>
                 <p>Don't have an account? <Link to="/signup"><span>Sign up</span></Link></p>
             </div>
-            <div className='dont mb-2'>
+            {/* <div className='dont mb-2'>
                <Link to="/nhome"><span>View as none User</span></Link>
-            </div>
+            </div> */}
         </div>
     </div>
   )

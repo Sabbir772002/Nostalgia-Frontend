@@ -9,6 +9,10 @@
 .box{
     margin-top: 20px;
 }
+.custom-modal {
+  background-color: white;
+}
+
 .col{
     border-radius: 10px;
     box-shadow: rgb(241, 50, 50);

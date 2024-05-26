@@ -8,9 +8,15 @@ import { IoCameraOutline } from 'react-icons/io5';
 import { BiMessage, BiLogOut } from 'react-icons/bi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
+import { FaCheckCircle } from 'react-icons/fa';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
 import axios from 'axios';
+import { height } from '@mui/system';
+import { FaUserEdit } from 'react-icons/fa';
+
 const Info = ({
   userPostData,
   following,
@@ -73,7 +79,6 @@ const navigate = useNavigate();
         // Handle errors if any
     }
 };
-
 const delete_fnd = async () => {
   try {
       
@@ -92,20 +97,24 @@ const delete_fnd = async () => {
       // Handle errors if any
   }
 };
-  
+console.log(userData);
   return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src={`http://localhost:8000${userData.pp}`} alt='profile' />
+        <img src={`http://localhost:8000/${userData.pp}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
-        <div className='profileDiv'>
-          <IoCameraOutline className='profileSvg' onClick={() => importProfile.current.click()} />
-        </div>
+          {userData && userData.verify===1 ?(
+                    <div className='profileDiv bg-light' style={{width:24,height:24}}>
+                    <FaCheckCircle className='text-primary' style={{ width: 25, height: 25 }} />
+                    </div>
+              ) :(
+                <></>
+              )
+            }
       </div>
-
       <input type='file' ref={importProfile} onChange={handleFile1} style={{ display: 'none' }} />
       <input type='file' ref={importCover} onChange={handleFile2} style={{ display: 'none' }} />
       <div className='info-follow'>
@@ -137,7 +146,7 @@ const delete_fnd = async () => {
         { userData.username === user.username ? (
             <Link to={`/profile/edit/${user.username}`}>
               <button>
-                <BiLogOut />
+                <FaUserEdit />
                 Edit Profile
               </button>
             </Link>
@@ -167,38 +176,20 @@ const delete_fnd = async () => {
             )
           )
         }
-
-
         <div className='info-details'>
           <div className='info-col-1'>
-            <div className='info-details-list'>
+          <div className='info-details-list'>
               <LocationOnOutlinedIcon />
-              <span>{userData.email}</span>
+              <span>{userData.thana}</span>
+            </div>
+            <div className='info-details-list'>
+              <MailOutlineIcon />
+              <span>{userData.phone}</span>
             </div>
 
             <div className='info-details-list'>
               <WorkOutlineRoundedIcon />
-              <span>{userData.first_name}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <CalendarMonthRoundedIcon />
-              <span>Joined in 2023-08-12</span>
-            </div>
-          </div>
-
-          <div className='info-col-2'>
-            <div>
-              <h2>5,000</h2>
-              <span>Followers</span>
-            </div>
-            <div>
-              <h2>{userPostData.length}</h2>
-              <span>Posts</span>
-            </div>
-            <div>
-              <h2>{following}</h2>
-              <span>Following</span>
+              <span>{userData.gender}</span>
             </div>
           </div>
         </div>

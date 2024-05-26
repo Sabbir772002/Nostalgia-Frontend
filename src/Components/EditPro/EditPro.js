@@ -16,6 +16,7 @@ const EditProfile = () => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState(null);
   const { username } = useParams();
+  const [processing, setProcessing] = useState(false);
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -34,7 +35,8 @@ const EditProfile = () => {
     fetchUserData();
   }, []);
   const [img, setimg] = useState(null);
-
+  const [nid,setnid] = useState(null);
+const [nidimg,setnidimg] = useState(null);  
   const fetchUserData = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
@@ -46,7 +48,7 @@ const EditProfile = () => {
         setUser(userData);
         console.log("demon what the helll......");
         console.log(userData);
-        setimg(userData.p_image ? `http://localhost:8000/${userData.p_image}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
+        setimg(userData.pp ? `http://localhost:8000/${userData.pp}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
         console.log(response.data);
       }
     } catch (error) {
@@ -55,14 +57,14 @@ const EditProfile = () => {
   };
   
 
-  const handleimg = (e) => {
-    setimg(URL.createObjectURL(e.target.files[0]));
+  const handlenidchange = (e) => {
+    setnid(URL.createObjectURL(e.target.files[0]));
+    setnidimg(e.target.files[0]);
   };
 
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-
   const handleImageChange = (e) => {
     setimg(URL.createObjectURL(e.target.files[0]));
     //console.log(e.target.files[0]);
@@ -70,7 +72,6 @@ const EditProfile = () => {
     console.log(user.p_image);
    // console.log(user.p_image);
   };
-
    const handleSubmit = async (e) => {
     //e.preventDefault();
     try {
@@ -90,12 +91,13 @@ const EditProfile = () => {
         }
         formData.append(key, value);
       });
+      console.log("ye kya hai, update karte time");
+      console.log(formData);
      //setimg(`http://localhost:8000/${user.p_image}`);
       const response = await axios.put(`http://127.0.0.1:8000/owner/${username}`, formData);
       //console.log('User data updated:', response.data);
       setNotification('Profile updated');
       navigate(`/profile/${user.username}`);
-
     } catch (error) {
       console.error('Error updating user data:', error);
     }
@@ -104,21 +106,67 @@ const EditProfile = () => {
     fetchUserData();
   }
   , [username]);
+  const handlenid = async (e) => {
+    //e.preventDefault();
+    setProcessing(true); 
+    try {
+      //console.log(user);
+      const nidv = new FormData();
+      nidv.append('nid',nidimg);
+      nidv.append('username',username);
+      console.log(nidv.get('nid'));
+
+  const response = await axios.post(`http://127.0.0.1:8000/nidimg`, nidv);
+  if (response.status === 201) {
+    setProcessing(false); // Hide processing indicator
+    alert("NID verified");
+    // Call fetchUserData() or do whatever you want to do next
+    fetchUserData();
+      }else{
+        setProcessing(false);
+
+        alert("Try with Clear Image or Correct Information");
+      }
+    }catch (error) {
+      setProcessing(false); 
+
+      console.error('Error updating user data:', error);
+      alert("Try with Clear image or Correct Information")
+    }
+    finally {
+      setProcessing(false);
+    }
+  }
   return (
-   
             <div className="container-xl px-4 mt-4">
                 <hr className="mt-0 mb-4" />
                 <div className="row">
                     <div className="col-xl-4">
-                        <div className="card mb-4 mb-xl-0">
+                    <div className="card mb-4 mb-xl-0">
                             <div className="card-header">Profile Picture</div>
                             <div className="card-body text-center">
-                            <img className="img-account-profile rounded-circle mb-2" src={img} alt=""/>
+                            <img className="img-account-profile rounded-circle mb-2" style={{ width: "140px", height: "200px" }} src={img} alt="" />
                             <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
                             <input type="file" accept="image/*"  onChange={handleImageChange} />
 
                             </div>
-                        </div>
+                        </div>  
+                        <div className="card mb-4 mb-xl-0 mt-2">
+                         
+              {user && user.verify === 1 ? (
+                  <button className="btn btn-primary" type="button">Verified</button>
+              ) : (
+                  <div>
+                      <div className="card-header">Verify Account</div>
+                      <div className="card-body text-center">
+                          <img className="img-account-profile rounded-circle mb-2" style={{ width: "140px", height: "200px" }} src={nid} alt="" />
+                          <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                          <input type="file" accept="image/*" onChange={handlenidchange} />
+                          <button className="btn btn-primary mt-2" type="button" onClick={() => handlenid('Save changes')}>Verify</button>
+                      </div>
+                  </div>
+              )}
+                  </div>
                     </div>
                     <div className="col-xl-8">
                         <div className="card mb-4">
@@ -169,7 +217,17 @@ const EditProfile = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+                <div>
+                {processing && (
+        <div className="modal text-center bg-transparent fade-in" style={{ left: '48%', width: '200px' }}>
+          <div className="modal-content">
+            <div className="processing-circle"></div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+            
   );
 };
 

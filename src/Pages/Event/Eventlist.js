@@ -14,13 +14,13 @@ const Eventlist = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userlist, setUserlist] = useState([]);
   const userData = JSON.parse(localStorage.getItem('userData'));
-
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/walk', {
+      const response = await axios.get('http://localhost:8000/event', {
         params: { username: userData.username }
       });
-      setUserlist(response.data);
+      setUserlist(response.data.events);
+      console.log(userlist);
     } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -29,7 +29,6 @@ const Eventlist = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value; // By default, use the selected value
@@ -40,31 +39,35 @@ const Eventlist = () => {
       console.log("yo");
       console.log(newValue);
     }
-
     setFormData(prevFormData => ({
       ...prevFormData,
       [id]: newValue
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowInputBoxModal(false);
     delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/walk', formData);
-      console.log('Walk data sent successfully:', formData);
+      await axios.post('http://localhost:8000/event', formData);
+      console.log('Event data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
       setFormData({
-        walk_name: '',
-        w_creator: userData.username,
+        title: '',
+        e_creator: userData.username,
         address: '',
-        walk_date: new Date().toISOString().split('T')[0], // Set to current date
+        start_date: new Date().toISOString().split('T')[0], // Set to current date
+        create_date: new Date().toISOString().split('T')[0], // Set to current date
         end_date: new Date().toISOString().split('T')[0], // Set to current date
-        time: '',
-        privacy: 'Bondhu'
+        start_time: '',
+        end_time: '',
+        Description: '',
+        type: '',
+        privacy: 'Bondhu',
+        thana: "Dhaka"
+
       });
     } catch (error) {
       console.error('Error sending walk data:', error);
@@ -72,20 +75,25 @@ const Eventlist = () => {
   };
 
   const [formData, setFormData] = useState({
-    walk_name: '',
-    w_creator: userData.username,
+    title: '',
+    e_creator: userData.username,
     address: '',
-    walk_date: new Date().toISOString().split('T')[0], // Set to current date
+    start_date: new Date().toISOString().split('T')[0], // Set to current date
+    create_date: new Date().toISOString().split('T')[0], // Set to current date
     end_date: new Date().toISOString().split('T')[0], // Set to current date
-    time: '',
-    privacy: 'Bondhu'
+    start_time: '',
+    Description: '',
+    end_time: '',
+    type: '',
+    privacy: 'Bondhu',
+    thana: "Dhaka"
   });
   const [members, setMembers] = useState([]);
   const fetchmembers = async (user) => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/walkmembers', {
+    const response = await axios.get('http://localhost:8000/eventmembers', {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -95,12 +103,12 @@ const Eventlist = () => {
     };
     const submitrequest = async (walk) => {
       console.log("hatte jabo tomar sathe.... niba?");
-      if(walk.w_creator == userData.username){
+      if(walk.E_creator == userData.username){
         alert("You cannot request to join your own walk.");
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/walk_request', { 
+     const response= await axios.post('http://localhost:8000/event_request', { 
       id: walk.id,
       username: userData.username
       });
@@ -137,49 +145,72 @@ const Eventlist = () => {
       <div className="box">
         <div className="mt-3 row">
           <div className="col-6">
-            <h1 className="toto">Buddy List</h1>
+            <h1 className="toto">Event List</h1>
           </div>
           <div className="col-6">
-            <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Walking List</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="walk_name">
-                    <Form.Label>Walk Name</Form.Label>
-                    <Form.Control type="text" value={formData.walk_name} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="address">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" value={formData.address} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="walk_date">
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.walk_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="end_date">
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="time">
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control type="time" value={formData.time} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="privacy">
-                    <Form.Label>Privacy</Form.Label>
-                    <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
-                      <option value="Bondhu">Bondhu</option>
-                      <option value="Known">Known</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button className="mew mt-2" type="submit">Save</Button>
-                </Form>
-              </Modal.Body>
-            </Modal>
+          <div className={`modal ${showInputBoxModal ? 'd-block' : 'd-none'}`} tabIndex="-1" role="dialog">
+      <div className="modal-dialog" role="document">
+        <div className="modal-content bg-light">
+          <div className="modal-header">
+            <h5 className="modal-title">Event List</h5>
+            <button type="button" className="close" onClick={() => setShowInputBoxModal(false)}>
+              <span>&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="title">Event Title</label>
+                <input type="text" className="form-control" id="title" value={formData.title} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Description">Description</label>
+                <input type="text" className="form-control" id="Description" value={formData.Description} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Type</label>
+                <input type="text" className="form-control" id="type" value={formData.type} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="address">Address</label>
+                <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="start_date">Start Date</label>
+                <input type="date" className="form-control" id="start_date" value={formData.start_date} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="end_date">End Date</label>
+                <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="start_time">Start Time</label>
+                <input type="time" className="form-control" id="start_time" value={formData.start_time} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="end_time">End Time</label>
+                <input type="time" className="form-control" id="end_time" value={formData.end_time} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="thana">Thana</label>
+                <input type="text" className="form-control" id="thana" value={formData.thana} onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="privacy">Privacy</label>
+                <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
+                  <option value="Bondhu">Bondhu</option>
+                  <option value="Known">Known</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary mt-2">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
-              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
+              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Event</Button>
             </div>
           </div>
         </div>
@@ -187,29 +218,32 @@ const Eventlist = () => {
         <table className="table">
           <thead>
             <tr>
-              <th>Image</th>
-              <th>Name</th>
+              <th>Title</th>
+              <th>Creator</th>
               <th>Location</th>
-              <th>Date</th>
-              <th>End</th>
-              <th>Time</th>
-              <th>Request</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Status</th>
               <th>View Info</th>
             </tr>
           </thead>
           <tbody>
-            {userlist.map(user => (
+            {userlist && userlist.map(user => (
               <tr key={user.id}>
-                <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
-                <td>{user.w_creator}</td>
-                <td>{user.location}</td>
-                <td>{user.date}</td>
-                <td>{user.end}</td>
-                <td>{user.time}</td>
-                {user.w_creator == userData.username && (
+                {/* <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td> */}
+                <td>{user.Event_title}</td>
+                <td>{user.E_creator}</td>
+                <td>{user.Address}</td>
+                <td>{user.start_date}</td>
+                <td>{user.end_date}</td>
+                <td>{user.start_time}</td>
+                <td>{user.end_time}</td>
+                {user.E_creator == userData.username && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
               )}
-              {user.member == 1 && user.not_ac == 0  && !(user.w_creator == userData.username) &&(
+              {user.Member == 1  && !(user.E_creator == userData.username) &&(
                   <td><Button variant="success" onClick={() => submitrequest(user)} >Member</Button></td>
               )}
               {user.member == 1 && user.not_ac == 1 && (
@@ -218,8 +252,8 @@ const Eventlist = () => {
               {user.member == 1 && user.cancel == 1 && (
                 <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
             )}
-              {(user.w_creator != userData.username && user.member == 0 ) && (
-                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
+              {(user.E_creator != userData.username && user.Member == 0) && (
+                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Join</Button></td>
               )}
 
               <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
@@ -227,28 +261,30 @@ const Eventlist = () => {
             ))}
           </tbody>
         </table>
-
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={handleClose}>
+        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'white' }}>
+         <div className="bg-light">
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.username == selectedUser.w_creator && (
+ {userData && selectedUser && userData.username == selectedUser.E_creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
                 )}
-    
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
-          <p><strong>Name:</strong> {selectedUser.w_creator}</p>
-          <p><strong>Location:</strong> {selectedUser.location}</p>
-          <p><strong>Date:</strong> {selectedUser.date}</p>
-          <p><strong>End:</strong> {selectedUser.end}</p>
-          <p><strong>Time:</strong> {selectedUser.time}</p>
+          <p><strong>Name:</strong> {selectedUser.E_creator}</p>
+          <p><strong>Location:</strong> {selectedUser.Address}</p>
+          <p><strong>Description:</strong> {selectedUser.Description}</p>
+          <p><strong>Start Date:</strong> {selectedUser.start_date}</p>
+          <p><strong>End Date:</strong> {selectedUser.end_date}</p>
+          <p><strong>Start Time:</strong> {selectedUser.start_time}</p>
+          <p><strong>End Time:</strong> {selectedUser.end_time}</p>
+          <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
         </div>
       )}
     </Tab>
@@ -260,6 +296,7 @@ const Eventlist = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
+          </div>
         </Modal>
       </div>
     </div>

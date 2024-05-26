@@ -188,3 +188,6 @@
         display: none;
     }
 }
+.white-icon {
+    color: white; /* This will make the icon white */
+  }

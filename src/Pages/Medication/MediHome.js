@@ -4,7 +4,7 @@ import Left from "../../Components/LeftSide/Left"
 import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
-import moment from 'moment/moment';
+import moment, { now } from 'moment/moment';
 import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
 import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,12 +22,46 @@ const MediHome = () => {
     { name: 'Medication E', dosage: '25mg', times: ['Night'], image: 'http://localhost:8000/media/d.png' },
     { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
   ]);
-
+  const [image, setImage] = useState(null);
+  const [nowtime,setnowtime]=useState("");
+  const timefind = () => {
+    const currentTime = new Date().getHours();
+    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
+    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
+    return ['Night','Morning', 'Noon'];
+  };
+  const timebox=timefind();
   const today = new Date();
-  // Calculate end date: Today's date + 30 days
   const endDate = new Date(today);
   endDate.setDate(endDate.getDate() + 30);
-
+  const [morningTime, setMorningTime] = useState('08:00');
+  const [noonTime, setNoonTime] = useState('14:00');
+  const [nightTime, setNightTime] = useState('20:00');
+  const fetchtime = () =>{
+    const timetot=timebox[0].toLocaleLowerCase();
+    console.log("here it is...");
+    console.log(timetot);
+    axios.get('http://localhost:8000/medtime',
+    {
+      params: {
+        username: userData.username
+      }
+    })
+    .then((response) => {
+      setMorningTime(response.data.morning);
+      setNoonTime(response.data.noon);
+      setNightTime(response.data.night);
+      setgap(response.data.gap);
+      setnowtime(response.data[timetot]);
+     console.log("now time(fetch time):", nowtime);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(() => {
+    fetchtime();
+  },  []);
   const [newMedication, setNewMedication] = useState
   ({
     user:userData.username,
@@ -36,11 +70,19 @@ const MediHome = () => {
     morning: false,
     noon: false,
     night: false,
-    after: '',
+    after: 'After Meal',
     note: '',
     start_date: today.toISOString().split('T')[0],
-    end_date: endDate.toISOString().split('T')[0]
+    end_date: endDate.toISOString().split('T')[0],
+    img: null
   });
+  let intervalId;
+  const [done,setDone] =useState(false);
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+    setNewMedication({ ...newMedication, img: e.target.files[0] });
+    
+  };
   useEffect(() => {
     axios.get('http://localhost:8000/medication',
     {
@@ -67,7 +109,6 @@ const MediHome = () => {
       [time]: !prevState[time]
     }));
   };
-
   // Function to handle adding medication
   const handleAddMedication = () => {
     // Update medication schedule with new medicatiom
@@ -76,8 +117,25 @@ const MediHome = () => {
     // Add new medication to notes
     // setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
      console.log(newMedication);
-
-    axios.post('http://127.0.0.1:8000/medication', newMedication)
+    const nedmed = new FormData();
+    nedmed.append('user',userData.username);
+    nedmed.append('name',newMedication.name);
+    nedmed.append('dosage',newMedication.dosage);
+    nedmed.append('morning',newMedication.morning?1:0);
+    nedmed.append('noon',newMedication.noon?1:0);
+    nedmed.append('night',newMedication.night?1:0);
+    nedmed.append('after',newMedication.after);
+    nedmed.append('note',newMedication.note);
+    nedmed.append('start_date',newMedication.start_date);
+    nedmed.append('end_date',newMedication.end_date);
+    nedmed.append('img',image);
+    console.log(nedmed);
+    axios.post('http://127.0.0.1:8000/medication',nedmed,
+      {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    })
     .then(response => {
       // Handle successful response if needed
       console.log('Medication added successfully:', response.data);
@@ -112,52 +170,83 @@ const MediHome = () => {
       morning: false,
       noon: false,
       night: false,
-      after: '',
+      after: 'After Meal',
       note: '',
       start_date: today.toISOString().split('T')[0],
-      end_date: endDate.toISOString().split('T')[0]  });
+      end_date: endDate.toISOString().split('T')[0],
+      img: null
+  });
+  setImage(null);
   };
-
-  // Function to display system notification
-  const showNotification = (message) => {
-    if ('Notification' in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-          new Notification(message);
-        }
-      });
-    }
-  };
-
-  // Function to display alert at specific time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentTime = new Date().getHours();
-      if (currentTime === parseInt(alertTime)) {
-        showNotification('Time to take medication!');
-      }
-    }, 60000); // Check every minute
-    return () => clearInterval(interval);
-  }, [alertTime]);
-  
-  const timefind = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
-    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
-    return ['Night','Morning', 'Noon'];
-  };
-  const timebox=timefind();
-
-  // Function to sort medication by current time frame (Morning, Noon, Night)
   const sortMedicationByTime = () => {
     const currentTime = new Date().getHours();
     if (currentTime >= 6 && currentTime < 12) return 'Morning';
     if (currentTime >= 12 && currentTime < 18) return 'Noon';
     return 'Night';
   };
+const time=sortMedicationByTime();
+const donetime=()=>{
+  console.log(time);
+    console.log("akhono somoy hoini"); 
+     if(time=='Morning'){
+    setnowtime(morningTime);
+  }
+  else if(time=='Noon'){
+    setnowtime(noonTime);
+  }
+  else{
+    setnowtime(nightTime);
+    console.log("akhon rat");
+    console.log(nightTime);
+  }
+}
 
-  // Function to sort medication by next time frame
-  const sortMedicationByNextTimeFrame = () => {
+useEffect(() => {
+  donetime();
+}, [timebox]);
+  const fetchdone = () => { 
+    axios.get('http://127.0.0.1:8000/done',
+    {
+      params: {
+        username: userData.username,
+        date: moment().format('YYYY-MM-DD'),
+        time: time
+      }
+    }).then((response) => {
+      console.log(response.data);
+      if(response.data.done==0){
+        setDone(false);
+      }
+      else if(response.data.done==1){
+        setDone(true);  
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+    useEffect(() => {
+      fetchdone();
+    }, [nowtime]);
+
+  const handlenow = () => {
+    const formdata = new FormData();
+    formdata.append('type', done?'notdone':'done');
+    formdata.append('username', userData.username);
+    formdata.append('date', moment().format('YYYY-MM-DD'));
+    formdata.append('time',time);
+    axios.post('http://127.0.0.1:8000/done', formdata)
+    .then(response => {
+      fetchdone();
+      console.log('Medication done status updated successfully:', response.data);
+    })
+    .catch(error => {
+      // Handle error if needed
+      console.error('Error updating medication done status:', error);
+    });
+  };
+    const sortMedicationByNextTimeFrame = () => {
     const currentTimeFrame = sortMedicationByTime();
     console.log("akhon somoy");
     console.log(currentTimeFrame);
@@ -166,54 +255,27 @@ const MediHome = () => {
     return [...currentMedications, ...nextMedications];
   };
   const medicationbox=sortMedicationByNextTimeFrame();
-  // Function to handle setting alert time
-  const handleSetAlertTime = () => {
+  const [gap,setgap]=useState('30');
+  const handleSetAlertTime=()=>{
+    console.log("yo yo kaj hbe na");
+    const fromdata=new FormData();
+    fromdata.append('username',userData.username);
+    fromdata.append('morning',morningTime);
+    fromdata.append('noon',noonTime);
+    fromdata.append('night',nightTime);
+    fromdata.append('gap',gap);
+    axios.post('http://localhost:8000/medtime',fromdata)
+    .then(response => {
+      console.log('Alert time set successfully:', response.data);
+    fetchtime();
+    })
+    .catch(error => {
+      console.error('Error setting alert time:', error);
+    });
+    console.log("here is updated timr bro, look at this is there any disperencey..................................");
+    console.log(nowtime);
     setShowModal(false);
-    const [hours, minutes] = alertTime.split(':').map(time => parseInt(time));
-    const targetTime = new Date();
-    targetTime.setHours(targetTime.getHours() + hours);
-    targetTime.setMinutes(targetTime.getMinutes() + minutes);
-
-    // Show notification after 1 minute
-    setTimeout(() => {
-      showNotification('Time to take medication!');
-      // Play notification sound
-      const notificationSound = new Audio(notificationSoundFile);
-      notificationSound.play();
-      const interval = setInterval(() => {
-        notificationSound.play();
-      }, 1000); // Play every second
-    
-      // Stop playing sound after 1 minute
-      setTimeout(() => {
-        clearInterval(interval);
-        notificationSound.pause(); // Pause the sound
-      }, 60000); // Stop after 1 minute // Check every minute
-    }, 60000);
-
-    // Set up intervals for each hour/minute combination
-    const interval = setInterval(() => {
-      const currentTime = new Date();
-      if (currentTime.getHours() === targetTime.getHours() && currentTime.getMinutes() === targetTime.getMinutes()) {
-        showNotification('Time to take medication!');
-        // Play notification sound
-        const notificationSound = new Audio(notificationSoundFile);
-        notificationSound.play();
-        const interval = setInterval(() => {
-          notificationSound.play();
-        }, 1000); // Play every second
-      
-        // Stop playing sound after 1 minute
-        setTimeout(() => {
-          clearInterval(interval);
-          notificationSound.pause(); // Pause the sound
-        }, 60000); // Stop after 1 minute
-      }
-    }, 60000); // Check every minute
-
-    // Clear the interval after the specified time
-    setTimeout(() => clearInterval(interval), hours * 60 * 60 * 1000 + minutes * 60 * 1000);
-  };
+  }
       const [body,setBody] =useState("")
       const [importFile,setImportFile] =useState("")
    
@@ -221,8 +283,53 @@ const MediHome = () => {
   const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
+  const [images,setImages] =  useState(null);
+  useEffect(() => {
+    // Function to parse time string to hours and minutes
+    const parseTime = (timeString) => {
+      const [hours, minutes] = timeString.split(":");
+      return { hour: parseInt(hours), minute: parseInt(minutes) };
+    };
 
+    // Function to check and show notification
+    const checkNotification = () => {
+      const currentTime = new Date();
+      const currentHour = currentTime.getHours();
+      const currentMinute = currentTime.getMinutes();
+
+      const notificationTime = parseTime(nowtime);
+
+      // Check if it's time for notification and task is not done
+      if (
+        currentHour >= notificationTime.hour &&
+        currentMinute >= notificationTime.minute &&
+        done !== true
+      ) {
+        console.log("ar kotokhon bhai, matha mutha gelo...");
+        console.log(done);
+        showNotification();
+      }
+    };
+    // Check for notification every 10 seconds
+    const interval = setInterval(checkNotification, 10000);
+
+    // Cleanup function
+    return () => clearInterval(interval);
+  }, [nowtime, done]);
+
+  // Function to show notification
+  const showNotification = () => {
+    // Code to display notification
+    console.log('Notification: Task is not done!');
+    const audio = new Audio(notificationSoundFile);
+    audio.play();
+
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        audio.play();
+      }, 2000); 
+    }
+  };
   return (
     <div className='interface'>
         <Nav 
@@ -237,18 +344,35 @@ const MediHome = () => {
 
 
       <div className="rounded med scrollable medication-schedule">
-        <h4 className="headmed">Medication Schedule</h4>
+        <h4 className="headmed">Medication Schedule({moment().format('h:mm A')})</h4>
         {timebox.map((timeFrame, index) => (
          <div className="m-2 row d-flex" key={index}>
+        <div className="row">
+          <div className="col-md-6">
          <h5>{timeFrame}</h5>
+         </div>
+        <div className="col-md-6 text-right">
+         {(timeFrame==time) ? (
+         <input
+                type="checkbox"
+                className="form-check-input"
+                id={"done"}
+                checked={done}
+                onChange={() => handlenow()}
+              />
+        ):<></>
+         }
+         </div>
+          </div>
          {sortMedicationByNextTimeFrame().map((med, medIndex) => (
            med.times.includes(timeFrame) && (
              <div className="col-md-4" key={medIndex}>
                <Card className="mb-3">
-                 <Card.Img src={med.image} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
+                 <Card.Img src={`http://localhost:8000/${med.image}`} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
                  <Card.Body>
                    <Card.Title>{med.name}</Card.Title>
                    <Card.Text>Dosage: {med.dosage}</Card.Text>
+                   <Card.Text>Take: {med.after}</Card.Text>
                  </Card.Body>
                </Card>
              </div>
@@ -269,7 +393,6 @@ const MediHome = () => {
     )
   ))}
 </div>
-
 <div className="med addmed rounded scrollbox">
       <h4 className="m-1 headmed">Add Medication</h4>
       <div className="m-1 form-group">
@@ -334,50 +457,92 @@ const MediHome = () => {
           onChange={(e) => setNewMedication({ ...newMedication, end_date: e.target.value })}
         />
       </div>
-      <div className="m-1 form-group">
-        <label className="m-1">After</label>
-        <input
-          type="text"
-          className="m-1 form-control"
-          value={newMedication.after}
-          onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
-        />
+      <div className="m-2 form-group">
+      <label>Med Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        className="form-control-file"
+        onChange={handleImageChange}
+      />
+      {image && (
+        <div>
+          <img src={URL.createObjectURL(image)} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
+
+        </div>
+        
+      )}
       </div>
+      <div className="m-1 form-group">
+  <label className="m-1">Take At</label>
+  <select
+    className="m-1 form-control"
+    value={newMedication.after}
+    onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
+  >
+    <option value="After Meal">After Meal</option>
+    <option value="Before Meal">Before Meal</option>
+  </select>
+</div>
+
       
       <button className="m-1 btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
       </div>
           </div>
-        
-      
-     <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Set Alert Time</h5>
-                <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Select Time (24-hour format)</label>
-                  <input
-                    type="time"
-                    className="form-control"
-                    value={alertTime}
-                    onChange={(e) => setAlertTime(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
-              </div>
-            </div>
-          </div>
+          <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
+  <div className="modal-dialog">
+    <div className="modal-content bg-light">
+      <div className="modal-header">
+        <h5 className="modal-title">Set Alert Time</h5>
+        <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
+      </div>
+      <div className="modal-body">
+        <div className="form-group">
+          <label>Morning Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={morningTime}
+            onChange={(e) => setMorningTime(e.target.value)}
+          />
         </div>
+        <div className="form-group">
+          <label>Noon Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={noonTime}
+            onChange={(e) => setNoonTime(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Night Time (12-hour format)</label>
+          <input
+            type="time"
+            className="form-control"
+            value={nightTime}
+            onChange={(e) => setNightTime(e.target.value)}
+          />
+          </div>
+           <div className="form-group">
+          <label>Alert Between</label>
+          <input
+            type="text"
+            className="form-control"
+            value={gap}
+            onChange={(e) => setgap(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
+      </div>
+    </div>
+  </div>
+</div>
         <div className="fixed-bottom d-flex justify-content-end m-3">
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
         </div>
-
-      
     </div>
   )
 }

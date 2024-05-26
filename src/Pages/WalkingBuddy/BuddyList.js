@@ -138,43 +138,50 @@ const BuddyList = () => {
             <h1 className="toto">Buddy List</h1>
           </div>
           <div className="col-6">
-            <Modal show={showInputBoxModal} onHide={() => setShowInputBoxModal(false)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Walking List</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="walk_name">
-                    <Form.Label>Walk Name</Form.Label>
-                    <Form.Control type="text" value={formData.walk_name} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="address">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" value={formData.address} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="walk_date">
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control type="date" value={formData.walk_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="end_date">
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control type="date" value={formData.end_date} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="time">
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control type="time" value={formData.time} onChange={handleChange} />
-                  </Form.Group>
-                  <Form.Group controlId="privacy">
-                    <Form.Label>Privacy</Form.Label>
-                    <Form.Control as="select" value={formData.privacy} onChange={handleChange}>
-                      <option value="Bondhu">Bondhu</option>
-                      <option value="Known">Known</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button className="mew mt-2" type="submit">Save</Button>
-                </Form>
-              </Modal.Body>
-            </Modal>
+         < div className={`modal fade ${showInputBoxModal ? 'show d-block' : 'd-none'}`} tabIndex="-1" role="dialog">
+        <div className="modal-dialog " role="document">
+        <div className="modal-content bg-light">
+          <div className="modal-header">
+            <h5 className="modal-title">Walking List</h5>
+            <button type="button" className="close" onClick={() => setShowInputBoxModal(false)}>
+              <span>&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit}>
+              <div className="form-group" controlId="walk_name">
+                <label>Walk Name</label>
+                <input type="text" className="form-control" value={formData.walk_name} onChange={handleChange} />
+              </div>
+              <div className="form-group" controlId="address">
+                <label>Address</label>
+                <input type="text" className="form-control" value={formData.address} onChange={handleChange} />
+              </div>
+              <div className="form-group" controlId="walk_date">
+                <label>Start Date</label>
+                <input type="date" className="form-control" value={formData.walk_date} onChange={handleChange} />
+              </div>
+              <div className="form-group" controlId="end_date">
+                <label>End Date</label>
+                <input type="date" className="form-control" value={formData.end_date} onChange={handleChange} />
+              </div>
+              <div className="form-group" controlId="time">
+                <label>Time</label>
+                <input type="time" className="form-control" value={formData.time} onChange={handleChange} />
+              </div>
+              <div className="form-group" controlId="privacy">
+                <label>Privacy</label>
+                <select className="form-control" value={formData.privacy} onChange={handleChange}>
+                  <option value="Bondhu">Bondhu</option>
+                  <option value="Known">Known</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary mt-2">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
             {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
@@ -265,4 +272,3 @@ const BuddyList = () => {
 };
 
 export default BuddyList;
-

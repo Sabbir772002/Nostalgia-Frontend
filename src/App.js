@@ -28,6 +28,14 @@ import FindFriendlist from './Pages/FindFriend/FindFriendlist';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
 
+import HomeScreen from "./screens/home/HomeScreen";
+import ChatBody from "./Components/chatbody/ChatBody";
+import LoginScreen from "./screens/auth/login/LoginScreen";
+import SignupScreen from "./screens/auth/signup/SignupScreen";
+import AppPaths from "./chat_lib/appPaths";
+import Chat from './Pages/Chat/ChatBox';
+import Vid from './Pages/Chat/video';
+import BD from './Pages/Ex/BD';
 
 
 const App = () => {
@@ -59,15 +67,22 @@ const App = () => {
             <Route path='/OTPP' element={<OTPInput />} />
             <Route path='/walk' element={<Buddy />} />
             <Route path='/comparebox' element={<Compare />} />
-            <Route path='/caregiver' element={<Caregiver />} />
             <Route path='/compare/:username' element={<Compare />} />
             <Route path='/nhome' element={<NHome />} />
             <Route path='/findfrined' element={<FindFriendlist />} />
             <Route path='/groups' element={<GroupHome />} />
             <Route path='/group/:username' element={<GroupProfile />} />
             <Route path='/DD' element={<DD />} />
+            {/* <Route path='/BD' element={<BD />} /> */}
             <Route path='/event' element={<Event />} />
             <Route path='/trip' element={<Trip />} />
+            <Route path='/chat/:fnd' element={<Chat />} />
+            <Route path='/chat' element={<Chat />} />
+            <Route path='/video' element={<Vid />} />
+            {/* <Route path='/chat' element={Chat} /> */}
+            {/* <Route path='/c/:chatId' element={HomeScreen} />
+            <Route path='/chat_login' element={LoginScreen} />
+            <Route path='/chat_signup' element={SignupScreen} /> */}
           </Routes>
         </div>
       </UserProvider>

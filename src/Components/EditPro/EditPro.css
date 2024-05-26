@@ -57,4 +57,55 @@ body{margin-top:20px;
       margin-left: 1rem;
       margin-right: 1rem;
   }
+  /* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 48%;
+    width: 200px;
+    height: 100%;
+    text-align: center;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Initially hidden */
+    animation: fade-in-animation 0.3s ease forwards; /* Fade in animation */
+  }
+  
+  @keyframes fade-in-animation {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .modal-content {
+    background-color: #808080
+    ;;
+    padding: 20px;
+    border-radius: 5px;
+    align-items: center;
+    text-align: center;
+  }
+  .processing-circle {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
   

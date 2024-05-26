@@ -5,7 +5,9 @@
     text-align: right;
     padding-left: 20px;
   }
-  
+  .text_right{
+    right: -10px;
+  }
   .items-align-left {
     text-align: left;
   }

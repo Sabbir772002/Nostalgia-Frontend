@@ -84,7 +84,6 @@ const [members, setMembers] = useState([]);
         });
         console.log(response.data);
         setMembers(response.data);
-
       } catch (error) {
       console.error('Error fetching user list:', error);
     }
@@ -100,7 +99,6 @@ const [members, setMembers] = useState([]);
       const response = await axios.get('http://localhost:8000/requestmembers', {
         params: { username: group.username }
       });
-      fmembers();
       setRmembers(response.data);
     } catch (error) {
       console.error('Error fetching user list:', error);
@@ -146,7 +144,7 @@ const [members, setMembers] = useState([]);
   <Tabs defaultActiveKey="request">
  {1 && 1 && 1 == 1 && (
              <Tab eventKey="request" title="Request">
-                  <RequestList fmembers={fmembers} members={members} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
+                  <RequestList fmembers={fmembers} members={members} fetchData={fetchData} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
                   </Tab>
                 )}
     <Tab eventKey="members" title="Members">
@@ -170,44 +168,12 @@ const [members, setMembers] = useState([]);
 <button onClick={group.member === 1 ? handleMember : handleJoin}>
   <FontAwesomeIcon icon={faUserFriends} />
   {group.member === 1 ? (
-    "Member"
+    "Joined"
   ) : (
     "Join"
   )}
 </button>
         )}
-
-        <div className='info-details'>
-          <div className='info-col-1'>
-            <div className='info-details-list'>
-              <LocationOnOutlinedIcon />
-              <span>{group.Topic}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <WorkOutlineRoundedIcon />
-              <span>{group.G_name}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <CalendarMonthRoundedIcon />
-              <span>Joined in 2023-08-12</span>
-            </div>
-          </div>
-
-          <div className='info-col-2'>
-            <div>
-              <h2>5,000</h2>
-              <span>Followers</span>
-            </div>
-            <div>
-            </div>
-            <div>
-              <h2></h2>
-              <span>Following</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const RequestList = ({guser,fmembers,Rmembers,setRmembers,group}) => {
+const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [selectedId, setSelectedId] = useState(null); // State for selected member ID
   const navigate = useNavigate();
@@ -22,16 +22,14 @@ const RequestList = ({guser,fmembers,Rmembers,setRmembers,group}) => {
     console.log(id);
     actions(id, "delete");
   };
-
   const actions = async (id, action) => {
     try {
       const response = await axios.post('http://localhost:8000/grouprequest', {user_id:id,group:guser, type: action});
       console.log("in actions");  
       console.log(response.data);
-      // fetchData();
-      setRmembers(response.data);
+      fetchData();
+     // setRmembers(response.data);
        fmembers();
-
     } catch (error) {
       console.error('Error performing action:', error);
     }

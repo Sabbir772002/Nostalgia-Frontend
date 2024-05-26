@@ -70,9 +70,6 @@ const Friend = () => {
         fetchfnd(setfndlist);
       }, []);
   
-  
-
-      
 
    const [search,setSearch] =useState("")
 
@@ -94,6 +91,10 @@ const Friend = () => {
     <div className="home">
    
         <Left />
+        {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
         <Fndbox
         fndlist={fndlist}
         setfndlist={setfndlist}
@@ -105,6 +106,8 @@ const Friend = () => {
         following={following}
         setFollowing={setFollowing}
         />
+         </>
+      )}
     </div>
 
     </div>

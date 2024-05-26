@@ -42,11 +42,13 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
     return (
         <Card className="text-center card-box" style={{ width: '320px', height: '460px' }}>
             <Card.Body className="member-card pt-2 pb-2">
-                <div className="thumb-lg member-thumb mx-auto">
+                <div className="thumb-lg member-thumb">
                     <img
                         src={`http://localhost:8000/${fnd.pp}`}
-                        className="rounded-circle img-thumbnail"
+                        className="rounded-circle"
                         alt="profile-image"
+                        width="200"
+                        height="200"
                     />
                 </div>
                 <div>
@@ -69,8 +71,8 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                         {/* {(fnd.abedon == 1 && fnd.is_fnf == 0) && (
                             <Dropdown.Item eventKey="Accept">Accept</Dropdown.Item>
                         )} */}
-                        <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
-                        <Dropdown.Item eventKey="Bondhu">Bondhu</Dropdown.Item>
+                        <Dropdown.Item eventKey="Known">Aquaintance</Dropdown.Item>
+                        <Dropdown.Item eventKey="Bondhu">Friend</Dropdown.Item>
                     </DropdownButton>
                     </div>
                     <div className="col-6">

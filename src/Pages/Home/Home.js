@@ -27,7 +27,6 @@ const Home = () => {
 .catch(error => {
     console.error('Error fetching posts:', error);
 });
-
   };
   useEffect(() => {
     // Fetch posts when component mounts
@@ -35,29 +34,25 @@ const Home = () => {
   }, []);
 
 
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-   
-   const [search,setSearch] =useState("")
 
-    
   const [following,setFollowing] =useState("")
         
   const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
-
+  
   return (
     <div className='interface'>
         <Nav 
-        search={search}
-        setSearch={setSearch}
+        setPosts={setPosts}
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         />
-
     <div className="home">
    
-        <Left />
+    <Left />
+      {userData.username.includes("@") ? (
+        <h1 className="error mt-4">You are not allowed to view this page</h1>
+      ) : (
+        <>
 
         <Middle posts={posts}
         fetchPosts={fetchPosts}
@@ -65,11 +60,14 @@ const Home = () => {
         />
 
         <Right
+        
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         following={following}
         setFollowing={setFollowing}
         />
+         </>
+      )}
     </div>
 
     </div>

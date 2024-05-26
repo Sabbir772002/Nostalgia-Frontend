@@ -1,7 +1,7 @@
 .interface{
     width: 100%;
 }
-.bot{
+.hoi{
     width: 100vw;
     min-height: 100vh;
     display: grid;
@@ -37,6 +37,6 @@
         grid-template-columns: 1fr;
         padding: 0px 0px;
         overflow: hidden;
-        background-color: #f5f5f5
+        background-color: #fffefe
     }
 }

@@ -135,7 +135,6 @@ const MedicationBox = ({following,
         images={images}
         setImages={setImages}
         /> */}
-        
         <UserHome 
         modelDetails={modelDetails}
         profileImg={profileImg}
