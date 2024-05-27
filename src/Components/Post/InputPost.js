@@ -3,9 +3,9 @@ import "../Post/InputPost.css";
 import Profile from "../../assets/profile.jpg";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
-import { FaSmile } from "react-icons/fa";
+// import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
+// import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
+// import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
 
 const InputPost = ({fetchPosts}) => {
@@ -96,20 +96,20 @@ const InputPost = ({fetchPosts}) => {
               <span className='photo-dis'>Photo</span>
             </label>
 
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
               <span className='photo-dis'>Video</span>
-            </div>
+            </div> */}
 
             {/* <div className="pv-upload">
               <KeyboardVoiceRoundedIcon className="input-svg" style={{fontSize:"38px",color:"green"}}/>
               <span className='photo-dis'>Audio</span>
             </div> */}
 
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
               <span className='photo-dis'>Feelings/Activity</span>
-            </div>
+            </div> */}
           </div>
           <button type='submit'>Share</button>
 
