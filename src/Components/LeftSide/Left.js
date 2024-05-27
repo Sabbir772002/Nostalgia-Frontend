@@ -1,125 +1,104 @@
-import React, { useState } from 'react'
-import "../LeftSide/Left.css"
-import {AiOutlineHome} from "react-icons/ai";
-import {AiOutlineSearch} from "react-icons/ai";
-import {FiTrendingUp} from "react-icons/fi";
-import { Link } from 'react-router-dom';
-import {BsBookmark} from "react-icons/bs";
-import { BsPeople, BsPerson } from 'react-icons/bs';
-import { GiMedicines } from 'react-icons/gi';
-import {RiFileListLine} from "react-icons/ri";
-import {FiSettings} from "react-icons/fi";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Profile from "../../assets/profile.jpg";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHospitalUser } from '@fortawesome/free-solid-svg-icons';
-import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
-import { FaWalking } from 'react-icons/fa';
-import { FaHandHoldingHeart } from 'react-icons/fa';
-import { FaCalendarAlt } from 'react-icons/fa';
-import { FaSuitcaseRolling } from 'react-icons/fa';
-import { FaUserPlus } from 'react-icons/fa';
-import { FaUsers } from 'react-icons/fa';
-import { FaHome } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { BiLogOut } from 'react-icons/bi';
+import React, { useState, useEffect } from 'react';
+import "../LeftSide/Left.css";
+import { useLocation } from 'react-router-dom';
+import { AiOutlineHome } from "react-icons/ai";
+import { FaUsers, FaUserPlus, FaWalking, FaHandHoldingHeart, FaCalendarAlt, FaSuitcaseRolling } from 'react-icons/fa';
 import { MdGroup } from 'react-icons/md';
+import { GiMedicines } from 'react-icons/gi';
+import { BiLogOut } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+const Left = ({ profileImg, modelDetails }) => {
+  const [btnActive, setBtnActive] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
-const Left = ({profileImg,
-               modelDetails
-              }) => {
+  useEffect(() => {
+    // Extracting the feature name from the pathname
+    const feature = location.pathname.split('/')[1];
+    // Setting the active button based on the feature
+    setBtnActive(feature || "");
+  }, [location]);
 
-  const [btnActive,setBtnActive] =useState("#")
-  const [logOutExit,setLogOutExit] =useState(false)
-
- const navigate = useNavigate();
   const logoutUser = () => {
-    // Remove 'userData' from localStorage or perform logout actions
     localStorage.removeItem('userData');
-    // console.log("logout "+user.username);
     localStorage.clear();
-    navigate('/')
-    // Add other logout logic here
+    navigate('/');
   };
 
   return (
     <div className="L-features">
-      <Link to="/home" style={{textDecoration:"none",color:"black"}}>
-        <div onClick={()=>setBtnActive("#")} id='L-box' className={btnActive === "#" ? "active" : ""} >
-          <FaHome className='margin'/>
+      <Link to="/home" style={{ textDecoration: "none", color: "black" }}>
+        <div onClick={() => setBtnActive("home")} id='L-box' className={btnActive === "home" ? "active" : ""}>
+          <AiOutlineHome className='margin' />
           <span>Home</span>
         </div>
       </Link>
-      <Link to="/friend" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={() => setBtnActive("#Friends")} className={btnActive === "#Friends" ? "active" : ""}>
-        <FaUsers className='margin'/>
-        <span>Friends</span>
-      </div>
+      <Link to="/friend" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("friend")} className={btnActive === "friend" ? "active" : ""}>
+          <FaUsers className='margin' />
+          <span>Friends</span>
+        </div>
       </Link>
-
-      
-      <Link to="/findfrined" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={() => setBtnActive("#FFriends")} className={btnActive === "#FFriends" ? "active" : ""}>
-        <FaUserPlus className='margin'/>
-        <span>Find Friend</span>
-      </div>
-     </Link>
-
-     <Link to="/groups" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={() => setBtnActive("#Groups")} className={btnActive === "#Groups" ? "active" : ""}>
-      < MdGroup className='margin' />
-        <span>Groups</span>
-      </div>
+      {/* Other feature links */}
+      <Link to="/findfrined" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("findfriend")} className={btnActive === "findfrined" ? "active" : ""}>
+          <FaUserPlus className='margin' />
+          <span>Find Friend</span>
+        </div>
       </Link>
-
-      <Link to="/medication" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={() => setBtnActive("#Medication")} className={btnActive === "#Medication" ? "active" : ""}>
-        <GiMedicines className='margin'/>
-        <span>Medication</span>
-      </div> 
+      {/* Other feature links */}
+      <Link to="/groups" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("groups")} className={btnActive === "groups" ? "active" : ""}>
+          <MdGroup className='margin' />
+          <span>Groups</span>
+        </div>
       </Link>
-
-      <Link to="/walk" style={{textDecoration:"none",color:"black"}}>
-
-      <div id='L-box' onClick={() => setBtnActive("#walk")} className={btnActive === "#walk" ? "active" : ""}>
-      <FaWalking className='margin' />
-        <span>Walking Buddy</span>
-      </div> 
+      {/* Other feature links */}
+      <Link to="/medication" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("medication")} className={btnActive === "medication" ? "active" : ""}>
+          <GiMedicines className='margin' />
+          <span>Medication</span>
+        </div>
       </Link>
-      <Link to="/caregiver" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={() => setBtnActive("#CareGiver")} className={btnActive === "#CareGiver" ? "active" : ""}>
-       <FaHandHoldingHeart className='margin'/>
-        <span>CareGiver</span>
-      </div>
-      </Link>  
-      <Link to="/trip" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box' onClick={()=>setBtnActive("#Trip")} className={btnActive === "#Trip" ? "active" : ""}>
-        <FaSuitcaseRolling  className='margin' />
-         <span>Trip</span>
-      </div>
+      {/* Other feature links */}
+      <Link to="/walk" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("walk")} className={btnActive === "walk" ? "active" : ""}>
+          <FaWalking className='margin' />
+          <span>Walking Buddy</span>
+        </div>
       </Link>
-
-      <Link to="/event" style={{textDecoration:"none",color:"black"}}>
-      <div id='L-box'  onClick={()=>setBtnActive("#Event")} className={btnActive === "#Event" ? "active" : ""}>
-          <FaCalendarAlt  className='margin'/>
-        <span>Event</span>
-      </div>
+      {/* Other feature links */}
+      <Link to="/caregiver" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("caregiver")} className={btnActive === "caregiver" ? "active" : ""}>
+          <FaHandHoldingHeart className='margin' />
+          <span>CareGiver</span>
+        </div>
       </Link>
-
-      <Link to="/" style={{textDecoration:"none",color:"black"}} onClick={logoutUser}>
-
-      <div id='L-box' onClick={()=>setBtnActive("#settings")} className={btnActive === "#settings" ? "active" : ""}>
-        <BiLogOut
-        className='margin'/>
-        <span>Log Out</span>
-      </div>
+      {/* Other feature links */}
+      <Link to="/trip" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("trip")} className={btnActive === "trip" ? "active" : ""}>
+          <FaSuitcaseRolling className='margin' />
+          <span>Trip</span>
+        </div>
       </Link>
-
-
+      {/* Other feature links */}
+      <Link to="/event" style={{ textDecoration: "none", color: "black" }}>
+        <div id='L-box' onClick={() => setBtnActive("event")} className={btnActive === "event" ? "active" : ""}>
+          <FaCalendarAlt className='margin' />
+          <span>Event</span>
+        </div>
+      </Link>
+      {/* Logout */}
+      <Link to="/" style={{ textDecoration: "none", color: "black" }} onClick={logoutUser}>
+        <div id='L-box' onClick={() => setBtnActive("logout")} className={btnActive === "logout" ? "active" : ""}>
+          <BiLogOut className='margin' />
+          <span>Log Out</span>
+        </div>
+      </Link>
     </div>
-  )
-}
+  );
+};
 
 export default Left;
-
