@@ -284,8 +284,8 @@ const Triplist = () => {
             ))}
           </tbody>
         </table>
-        <div className="bg-light">
-        <Modal show={showUserInfoModal} onHide={handleClose}>
+        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'transparent' }}>
+         <div className="bg-light">
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
@@ -316,10 +316,11 @@ const Triplist = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
+          </div>
         </Modal>
         </div>
       </div>
-    </div>
+    // </div>
   );
 };
 
