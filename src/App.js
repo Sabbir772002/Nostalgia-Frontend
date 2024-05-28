@@ -34,6 +34,7 @@ import LoginScreen from "./screens/auth/login/LoginScreen";
 import SignupScreen from "./screens/auth/signup/SignupScreen";
 import AppPaths from "./chat_lib/appPaths";
 import Chat from './Pages/Chat/ChatBox';
+import Vid from './Pages/Chat/video';
 import BD from './Pages/Ex/BD';
 
 
@@ -77,6 +78,7 @@ const App = () => {
             <Route path='/trip' element={<Trip />} />
             <Route path='/chat/:fnd' element={<Chat />} />
             <Route path='/chat' element={<Chat />} />
+            <Route path='/video' element={<Vid />} />
             {/* <Route path='/chat' element={Chat} /> */}
             {/* <Route path='/c/:chatId' element={HomeScreen} />
             <Route path='/chat_login' element={LoginScreen} />

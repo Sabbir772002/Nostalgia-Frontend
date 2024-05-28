@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import io from 'socket.io-client';
 import Nav from '../../Components/Navigation/Nav';
 import { useLocation, useParams } from 'react-router-dom';
@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { FaReact } from 'react-icons/fa';
+
 
 const useSocket = (url) => {
     const [socket, setSocket] = useState(null);
@@ -22,24 +24,13 @@ const useSocket = (url) => {
 
     return socket;
 };
+
 const Chat = () => {
     const { fnd } = useParams();
     const [fd, setfd] = useState("");
     const location = useLocation();
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [done, setdone] = useState(false);
-
-    useEffect(() => {
-        if (fnd && !done) {
-            console.log("fnd alreadt set   "+fnd);
-            setfd(fnd);
-            findname(fnd);
-            msgbox();
-           
-        }
-
-    }, [fnd]);
-    // console.log(fnd);
     const [users, setUsers] = useState([]);
     const [userbox, setUserbox] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -47,93 +38,212 @@ const Chat = () => {
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket('http://localhost:5000');
-    const finduserlist = async () => {
-        axios.get('http://localhost:5000/api/userbox/' + userData.username)
-            .then(response => {
-                const userList = response.data.map((username, index) => ({
-                    id: index + 1,
-                    name: username, // Convert the name to lowercase
-                }));
-                
-                // Remove duplicates by converting the array to a Set and back to an array
-                const uniqueUserList = Array.from(new Set(userList.map(user => user.name))).map(name => {
-                    // Find the first occurrence of the name in the original list and get its ID
-                    const id = userList.find(user => user.name === name).id;
-                    return { id, name };
-                });
-                
-                setUsers(uniqueUserList);
-                if (uniqueUserList.length > 0 && (fnd == "" || fnd == null || fnd == undefined) && !done){
-                    console.log(fnd);
-                    console.log("set of userlists")
-                    setfd(uniqueUserList[0].name);
-                    msgbox();
-                    findname(uniqueUserList[0].name);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching users:', error);
-            });
-        const fetchUserImages = async () => {
-            const userImages = await Promise.all(users.map(async (user) => {
-                try {
-                    const response = await axios.get(`http://127.0.0.1:8000/profile/${user.name}`, {
-                        params: {
-                            username: user.name,
-                            user: userData.username
-                        }
-                    });
-                    return response.data.pp;
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                    return null;
-                }
-            }));
-    
-            const updatedUserBox = users.map((user, index) => ({
-                id: user.id,
-                name: user.name,
-                img: userImages[index]
-            }));
-            setUserbox(updatedUserBox);
-        };
-    
-        if (users.length > 0) {
-            fetchUserImages();
+    useEffect(() => {
+        if (fnd && !done) {
+            console.log("fnd alreadt set   "+fnd);
+            setfd(fnd);
+            findname(fnd);
+            msgbox();
         }
-        
+
+    }, [fnd,done]);
+    // console.log(fnd);
+ 
+    const finduserlist = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/userbox/' + userData.username);
+            const userList = response.data.map((user, index) => ({
+                id: index + 1,
+                name: user.username,
+                online: user.online,
+                lastSeen: user.lastSeen
+            }));
+    
+            setUsers(userList);
+    
+            if (userList.length > 0 && (fnd == "" || fnd == null || fnd == undefined) && !done) {
+                console.log(fnd);
+                console.log("set of userlists")
+                setfd(userList[0].name);
+                msgbox();
+                findname(userList[0].name);
+            }
+    
+            // Fetch user images after fetching user list
+            fetchUserImages(userList);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
     };
     
+    const fetchUserImages = async (userList) => {
+        const userImages = await Promise.all(userList.map(async (user) => {
+            try {
+                return await fetchUserImage(user.name, userData.username);
+            } catch (error) {
+                console.error('Error fetching user image:', error);
+                return null;
+            }
+        }));
+    
+        const updatedUserBox = userList.map((user, index) => ({
+            id: user.id,
+            name: user.name,
+            online: user.online,
+            lastSeen: user.lastSeen,
+            img: userImages[index]
+        }));
+        setUserbox(updatedUserBox);
+    };
+    
+    async function fetchUserImage(username, currentUser) {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`, {
+                params: {
+                    username: username,
+                    user: currentUser
+                }
+            });
+            return response.data.pp;
+        } catch (error) {
+            console.error('Error fetching user image:', error);
+            return null;
+        }
+    }    
+    useEffect(()=>{
+        if (!socket) return;
+        socket.on('users status', (usersStatus) => {
+            // Handle received user status updates
+            // console.log('Received user status:', usersStatus);
+            // console.log("user data",userbox);
+            setUserbox(prevUserBox => {
+                return prevUserBox.map(user => {
+                    const status = usersStatus.find(status => status.username.toLowerCase() === user.name.toLowerCase());
+                    if (status) {
+                        // Update user's status and last seen time
+                        return {
+                            ...user,
+                            online: status.online,
+                            lastSeen: status.online ? '' : status.lastSeen
+                        };
+                    }
+                    return user;
+                });
+
+            });
+          //  console.log("updated userbox ",userbox);
+
+                                
+            // You can update your UI or perform any other actions based on the received user status
+        });
+    
+    }, [socket, messages]);
+
+
+
     useEffect(() => {
         if (!socket) return;
-
+        
         socket.on('connect', () => {
             console.log('Socket connected');
         });
         socket.on('disconnect', () => {
             console.log('Socket disconnected');
-        });
+        })
+        
         socket.on('chat message', (message) => {
+            console.log('New message received from:', message.sender);
             console.log('New message received:', message);
-
-            const messageExists = messages.some(msg => msg === message);
-
-            if (!messageExists && (message.sender == userData.username ||(message.sender==fd && message.receiver == userData.username))) {
+            const messageExists = messages.some(msg => msg.id == msg.id);
+            // console.log(fd);
+            // console.log(message.sender);
+            // console.log(message.receiver);
+            // console.log(userData.username);
+            if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
+                console.log("after rcv msg");
                 setMessages(prevMessages => [...prevMessages, message]);
                 const chatHistory = document.getElementById('chat-history');
                 chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
             }
         });
+            // if ( message.receiver.toLowerCase() == userData.username.toLowerCase()) {
+            //     console.log("usere ",userData.username);
+            //     console.log("receiver",message.receiver);
+            //     console.log("sender",message.sender);
+            //     console.log("userebox in 0 "+userbox[0].name);
+            //     const handleUserboxUpdate = async (username) => { 
+            //              console.log("delete krobo",username);
+            //              let updated=[];
+            //              for(let i=0;i<userbox.length;i++){
+            //                     if(userbox[i].name!=username){
+            //                         console.log(userbox[i])
+            //                         updated.push(userbox[i]);
+            //                     }
+            //                 }
+            //                 setUserbox(updated, () => {
+            //                     console.log("updated", updated);
+            //                     console.log("userbox", userbox);
+            //                 });
+            //                 console.log("updated", updated);
+            //                 console.log("userbox", userbox);
+                                               
+            //         const userImage = await fetchUserImage(username, userData.username);
+    
+            //         const newUser = {
+            //             id: userbox.length + 1,
+            //             name: username,
+            //             img: userImage
+            //         };
+            //         setUserbox(prevUserbox => [newUser, ...prevUserbox]);
+            //     };
+            //     handleUserboxUpdate(message.sender);
+
+            // }
+            // if ( message.sender.toLowerCase() == userData.username.toLowerCase()) {
+            //     console.log("usere ",userData.username);
+            //     console.log("receiver",message.receiver);
+            //     console.log("sender",message.sender);
+            //     console.log("userebox in 0 "+userbox[0].name);
+            //     const handleUserboxUpdate = async (username) => { 
+            //              console.log("delete krobo",username);
+            //              let updated=[];
+            //              for(let i=0;i<userbox.length;i++){
+            //                     if(userbox[i].name!=username){
+            //                         console.log(userbox[i])
+            //                         updated.push(userbox[i]);
+            //                     }
+            //                 }
+            //                 setUserbox(updated, () => {
+            //                     console.log("updated", updated);
+            //                     console.log("userbox", userbox);
+            //                 });
+            //                 console.log("updated", updated);
+            //                 console.log("userbox", userbox);
+                                               
+            //         const userImage = await fetchUserImage(username, userData.username);
+            //         const newUser = {
+            //             id: userbox.length + 1,
+            //             name: username,
+            //             img: userImage
+            //         };
+            //         setUserbox(prevUserbox => [newUser, ...prevUserbox]);
+            //     };
+            //     handleUserboxUpdate(message.receiver);
+
+            // }
+        
         return () => {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('chat message');
         };
     }, [socket, messages]);
+
+
     useEffect(() => {
         const handleBeforeUnload = () => {
             console.log('Leaving page, disconnecting socket');
-            socket.disconnect();
+           socket.disconnect();
         };
 
         const handlePageFocus = () => {
@@ -143,15 +253,46 @@ const Chat = () => {
 
         window.addEventListener('beforeunload', handleBeforeUnload);
         window.addEventListener('focus', handlePageFocus);
-
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
             window.removeEventListener('focus', handlePageFocus);
         };
     }, [socket]);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageSelect = (event) => {
+        const file = event.target.files[0];
+        setSelectedImage(file);
+        //sendMessage();
+    };
+
 
     const sendMessage = () => {
-        if (newMessage.trim() !== '') {
+        if (selectedImage) {
+            // Create a FormData object to send the image file
+            const formData = new FormData();
+            formData.append('image', selectedImage);
+
+            // Send the FormData object along with other message data
+            const message = {
+                id: messages.length + 1,
+                sender: userData.username,
+                receiver: fd,
+                content: '', // You can include a message if needed
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString(),
+                img:1,
+                image: formData, // Attach the FormData object containing the image
+            };
+            console.log(message.image);
+
+            // Emit the message event to the server
+            socket.emit('chat message', message);
+            setNewMessage('');
+
+            // Clear the selected image after sending
+            setSelectedImage(null);
+        }else if (newMessage.trim() !== '') {
             
             const message = {
                 id: messages.length + 1,
@@ -160,7 +301,8 @@ const Chat = () => {
                 content: newMessage,
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
-                img:0
+                img:0,
+                image: null
             };
             socket.emit('set username', userData.username);
             socket.emit('chat message', message);    
@@ -221,7 +363,6 @@ const Chat = () => {
             console.error('Error fetching user data:', error);
         });
     };
-
   const handleNameClick = (name) => {
         setdone(true);
         setfd(name);
@@ -231,7 +372,44 @@ const Chat = () => {
     }; 
     useEffect(() => {
         finduserlist();
-    }, [fndname,fd,userData.username,messages]);
+    // }, [fndname,fd,userData.username,messages,socket]);
+  }, [socket,fd]);
+  const chatHistoryRef = useRef(null);
+  const scrollToBottom = () => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+      console.log("scorlling");
+    }
+  };
+function getLastSeenTime(lastSeen) {
+    const currentTime = new Date();
+    const lastSeenTime = new Date(lastSeen);
+    const timeDifference = currentTime.getTime() - lastSeenTime.getTime();
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(months / 12);
+
+    if (years > 0) {
+        return `left ${years} year${years > 1 ? 's' : ''} ago`;
+    } else if (months > 0) {
+        return `left ${months} month${months > 1 ? 's' : ''} ago`;
+    } else if (days > 0) {
+        return `left ${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+        return `left ${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+        return `left ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+        return `left a few seconds ago`;
+    }
+}
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
     return (
         <div className='interface'>
@@ -265,7 +443,7 @@ const Chat = () => {
                                                 {user.name}
                                             </div>
                                             <div className="status">
-                                                <i className="fa fa-circle offline"></i> left 7 mins ago
+                                                <i className={`fa fa-circle ${user.online ? 'online' : 'offline'}`}></i> {user.online ? 'Online' : getLastSeenTime(user.lastSeen)}
                                             </div>
                                         </div>
                                     </li>
@@ -303,8 +481,8 @@ const Chat = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='chat-history' id='chat-history'>
-                                <ul className='m-b-0' style={{ maxHeight: '370px', overflowY: 'auto' }}>
+                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '470px', overflowY: 'scroll' }}>
+                                <ul className='m-b-0' >
                                  {messages.map((message, index) => (
                                         <li key={index} className='clearfix'>
                                             {message.sender == userData.username ? (
@@ -312,15 +490,19 @@ const Chat = () => {
                                                     <div className="message-data box-right">
                                                         <span className="message-data-time">{message.time}</span>
                                                     <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} />
-                                                    </div>
-                                                    <div className="message other-message float-right">{message.content}</div>
-                                                </>
+                                                  <br/>
+                                                    <div className="message my-message msg-right bg-primary text-light">{message.content}</div> 
+                                                     </div>
+                                                                                                </>
                                             ) : (
                                                 <>
                                                     <div className="message-data">
                                                         <span className="message-data-time">{message.time}</span>
+                                                  
+                                                 <br/>
+                                                    <div className="message my-message bg-dark text-light">{message.content}</div>
                                                     </div>
-                                                    <div className="message my-message">{message.content}</div>
+                                                
                                                 </>
                                             )}
                                         </li>
@@ -334,10 +516,20 @@ const Chat = () => {
                                             <i className='fas fa-paper-plane' style={{ fontSize: '16px' }}></i>
                                         </span>
                                     </div> */}
+                                          <div className="input-group-prepend" style={{ width: '40px', height: '48px', position: 'relative' }}>
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={handleImageSelect}
+                                                                style={{ opacity: 0, position: 'absolute', width: '100%', height: '100%', zIndex: 1, cursor: 'pointer' }}
+                                                            />
+                                                            <FaReact style={{ width: '100%', height: '100%', color: '#61dafb', pointerEvents: 'none' }} />
+                                                            </div>
+
                                     <input
                                         type='text'
                                         className='form-control'
-                                        style={{ height: '38px' }}
+                                        style={{ height: '48px' }}
                                         placeholder='Enter text here...'
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
@@ -348,7 +540,7 @@ const Chat = () => {
                                         }}
                                     />
                                     <div className='input-group-append'>
-                                        <button className='btn btn-primary' type='button' onClick={sendMessage}>
+                                        <button className='btn btn-primary' style={{ height: '48px' }}  type='button' onClick={sendMessage}>
                                             Send
                                         </button>
                                     </div>
