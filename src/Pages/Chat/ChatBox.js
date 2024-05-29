@@ -37,7 +37,7 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-    const socket = useSocket('http://localhost:5000');
+    const socket = useSocket('http://192.168.1.105:5000');
     useEffect(() => {
         if (fnd && !done) {
             console.log("fnd alreadt set   "+fnd);
@@ -51,7 +51,7 @@ const Chat = () => {
  
     const finduserlist = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/userbox/' + userData.username);
+            const response = await axios.get('http://192.168.1.105:5000/api/userbox/' + userData.username);
             const userList = response.data.map((user, index) => ({
                 id: index + 1,
                 name: user.username,
@@ -98,7 +98,7 @@ const Chat = () => {
     
     async function fetchUserImage(username, currentUser) {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`, {
+            const response = await axios.get(`http://192.168.1.105:8000/profile/${username}`, {
                 params: {
                     username: username,
                     user: currentUser

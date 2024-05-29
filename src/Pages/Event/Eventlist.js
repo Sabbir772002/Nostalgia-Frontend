@@ -269,11 +269,11 @@ const Eventlist = () => {
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.username == selectedUser.E_creator && (
+ {/* {userData && selectedUser && userData.username == selectedUser.E_creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
-                )}
+                )} */}
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>

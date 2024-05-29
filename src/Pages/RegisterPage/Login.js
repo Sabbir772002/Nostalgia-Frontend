@@ -70,7 +70,7 @@ const setLocalStorageItem = (key, value) => {
         //why u dindt work
 
         try {
-            const response = await axios.post('http://localhost:8000/login', data);
+            const response = await axios.post('http://192.168.1.105:8000/login', data);
             if (response.status === 200) {
                 console.log('login successful!');
                // console.log(response.data.user);      

@@ -116,9 +116,9 @@ const Post = ({ post, posts }) => {
         <div className='delete'>
         <h4 className='ml-2' style={{fontSize: '10px'}}>Posted on: {postbox.post_date}</h4>
          {showDelete && (<div className="options">
-            <button><PiSmileySad />Not Interested in this post</button>
+            {/* <button><PiSmileySad />Not Interested in this post</button>
             <button><IoVolumeMuteOutline />Mute this user</button>
-            <button><MdBlockFlipped />Block this user</button>
+            <button><MdBlockFlipped />Block this user</button> */}
             <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
             <button><MdReportGmailerrorred />Report post</button>
          </div>
@@ -143,7 +143,7 @@ const Post = ({ post, posts }) => {
 
             <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
 
-            <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' />
+            {/* <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' /> */}
 
             {socialIcons && (
               <div className="social-buttons">

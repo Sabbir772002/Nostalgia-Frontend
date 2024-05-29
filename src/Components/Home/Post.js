@@ -131,9 +131,9 @@ const handleCommentSubmit = async (e) => {
 
         <div className='delete'>
          {showDelete && (<div className="options">
-            <button><PiSmileySad />Not Interested in this post</button>
-            <button><IoVolumeMuteOutline />Mute this user</button>
-            <button><MdBlockFlipped />Block this user</button>
+            {/* <button><PiSmileySad />Not Interested in this post</button> */}
+            {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
+            {/* <button><MdBlockFlipped />Block this user</button> */}
             <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
             <button><MdReportGmailerrorred />Report post</button>
          </div>
@@ -158,7 +158,7 @@ const handleCommentSubmit = async (e) => {
 
             <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
 
-            <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' />
+            {/* <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' /> */}
 
             {socialIcons && (
               <div className="social-buttons">

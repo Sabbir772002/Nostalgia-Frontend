@@ -30,7 +30,7 @@ const Profile = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`,
+        const response = await axios.get(`http://192.168.1.105:8000/profile/${username}`,
         {
           params: {
             username: username,
