@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../../util/api";
 
 export default function Reset() {
     const navigate = useNavigate();
@@ -22,10 +23,10 @@ export default function Reset() {
       // Determine endpoint based on the input value
       if (inputValue.includes("@")) {
         // If input value contains "@" symbol, assume it's an email
-        endpoint = "http://localhost:8000/otp";
+        endpoint = `${api.url}:8000/otp`;
       } else {
         // Otherwise, assume it's a username
-        endpoint = "http://localhost:8000/otp";
+        endpoint = `${api.url}:8000/otp`;
       }
       console.log(inputValue);
       const response = await axios.post(endpoint,{"input":inputValue});

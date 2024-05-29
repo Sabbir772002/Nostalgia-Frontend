@@ -13,6 +13,7 @@ import img3 from "../../assets/User-post/img3.jpg"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import api from '../../util/api'
 const Profile = () => {
   const { username } = useParams();
   console.log(username);
@@ -30,7 +31,11 @@ const Profile = () => {
 
     const fetchUserData = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get(`http://192.168.1.105:8000/profile/${username}`,
+=======
+        const response = await axios.get(`${api.url}:8000/profile/${username}`,
+>>>>>>> fdff0ac9f45f63fb840a46ed1fac7c155f119e8c
         {
           params: {
             username: username,

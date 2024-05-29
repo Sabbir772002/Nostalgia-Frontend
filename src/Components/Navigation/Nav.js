@@ -11,6 +11,7 @@ import {useState } from 'react';
 import { useNavigate } from 'react-router';
 import Profile from "../../assets/profile.jpg"
 import axios from 'axios';
+import api from '../../util/api';
 
 const Nav = ({setPosts,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
@@ -21,7 +22,7 @@ const handlemsg = (e) =>{
   if(setPosts === undefined)navigate("/home");
   if(setPosts === undefined)return;
   if(search === "")setSearch(" ");
-  const box=axios.get('http://localhost:8000/search', { 
+  const box=axios.get(`${api.url}:8000/search`, { 
     params: {
         search: search,
         username: userData.username

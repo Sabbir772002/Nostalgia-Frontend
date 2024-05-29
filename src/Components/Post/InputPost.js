@@ -7,7 +7,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 // import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 // import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
-
+import api from '../../util/api';
 const InputPost = ({fetchPosts}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
@@ -54,7 +54,7 @@ const InputPost = ({fetchPosts}) => {
         formData.append(key, value);  
       });
       console.log(formData);
-      const response = await axios.post('http://localhost:8000/addblog', formData);
+      const response = await axios.post(`${api.url}:8000/addblog`, formData);
       console.log(response.data); 
       alert('Blog created successfully');
       // Reset form data

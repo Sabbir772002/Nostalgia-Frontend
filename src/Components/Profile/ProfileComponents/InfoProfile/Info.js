@@ -16,6 +16,7 @@ import './Info.css';
 import axios from 'axios';
 import { height } from '@mui/system';
 import { FaUserEdit } from 'react-icons/fa';
+import api from '../../../../util/api';
 
 const Info = ({
   userPostData,
@@ -62,7 +63,7 @@ const navigate = useNavigate();
   const add_fnf = async () => {
     try {
       console.log("add_fnf");
-        const response = await axios.post('http://localhost:8000/add_fnf', {
+        const response = await axios.post(`${api.url}:8000/add_fnf `, {
             user_id: user.id,
             friend_id: userData.id,
             type: "Sent"
@@ -82,7 +83,7 @@ const navigate = useNavigate();
 const delete_fnd = async () => {
   try {
       
-      const response = await axios.post('http://localhost:8000/delete_fnd', {
+      const response = await axios.post(`${api.url}:8000/delete_fnd`, {
           user_id: user.id,
           friend_id: userData.id,
           type: "Sent"
@@ -102,7 +103,7 @@ console.log(userData);
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src={`http://localhost:8000/${userData.pp}`} alt='profile' />
+        <img src={`${api.url}:8000/${userData.pp}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>

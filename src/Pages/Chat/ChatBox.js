@@ -132,7 +132,6 @@ const Chat = () => {
 
             });
           //  console.log("updated userbox ",userbox);
-
                                 
             // You can update your UI or perform any other actions based on the received user status
         });
@@ -152,15 +151,15 @@ const Chat = () => {
         })
         
         socket.on('chat message', (message) => {
-            console.log('New message received from:', message.sender);
-            console.log('New message received:', message);
+            // console.log('New message received from:', message.sender);
+            // console.log('New message received:', message);
             const messageExists = messages.some(msg => msg.id == msg.id);
             // console.log(fd);
             // console.log(message.sender);
             // console.log(message.receiver);
             // console.log(userData.username);
             if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
-                console.log("after rcv msg");
+                // console.log("after rcv msg");
                 setMessages(prevMessages => [...prevMessages, message]);
                 const chatHistory = document.getElementById('chat-history');
                 chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    

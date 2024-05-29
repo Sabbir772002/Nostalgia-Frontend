@@ -6,7 +6,7 @@ import { FiMail } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
-
+import api from '../../util/api';
 const SignUp = () => {
 
     const navigate = useNavigate();
@@ -39,7 +39,7 @@ const SignUp = () => {
         setSubmit(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/sign', data);
+            const response = await axios.post(`${api.url}:8000/sign`, data);
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");

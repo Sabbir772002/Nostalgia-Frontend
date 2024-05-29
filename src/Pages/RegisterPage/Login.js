@@ -5,7 +5,7 @@ import "../RegisterPage/RegisterPage.css"
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
-
+import api from '../../util/api'
 
 const Login = () => {
     // Set the item in localStorage
@@ -70,8 +70,13 @@ const setLocalStorageItem = (key, value) => {
         //why u dindt work
 
         try {
+<<<<<<< HEAD
             const response = await axios.post('http://192.168.1.105:8000/login', data);
             if (response.status === 200) {
+=======
+          const response = await axios.post(`${api.url}:8000/login`, data);
+          if (response.status === 200) {
+>>>>>>> fdff0ac9f45f63fb840a46ed1fac7c155f119e8c
                 console.log('login successful!');
                // console.log(response.data.user);      
                 setUserData(response.data.user);
