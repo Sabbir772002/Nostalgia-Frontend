@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './EventMember';
+import api from '../../util/api'
 
 const Eventlist = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -16,7 +17,7 @@ const Eventlist = () => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/event', {
+      const response = await axios.get(`${api.url}:8000/event`, {
         params: { username: userData.username }
       });
       setUserlist(response.data.events);
@@ -50,7 +51,7 @@ const Eventlist = () => {
     delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/event', formData);
+      await axios.post(`${api.url}:8000/event`, formData);
       console.log('Event data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
@@ -93,7 +94,7 @@ const Eventlist = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/eventmembers', {
+    const response = await axios.get(`${api.url}:8000/eventmembers`, {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -108,7 +109,7 @@ const Eventlist = () => {
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/event_request', { 
+     const response= await axios.post(`${api.url}:8000/event_request`, { 
       id: walk.id,
       username: userData.username
       });
