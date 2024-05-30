@@ -480,7 +480,7 @@ function getLastSeenTime(lastSeen) {
                                     </div>
                                 </div>
                             </div>
-                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '470px', overflowY: 'scroll' }}>
+                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '420px', overflowY: 'scroll' }}>
                                 <ul className='m-b-0' >
                                  {messages.map((message, index) => (
                                         <li key={index} className='clearfix'>
@@ -488,7 +488,7 @@ function getLastSeenTime(lastSeen) {
                                                 <>
                                                     <div className="message-data box-right">
                                                         <span className="message-data-time">{message.time}</span>
-                                                    <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} />
+                                                    {/* <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} /> */}
                                                   <br/>
                                                     <div className="message my-message msg-right bg-primary text-light">{message.content}</div> 
                                                      </div>
