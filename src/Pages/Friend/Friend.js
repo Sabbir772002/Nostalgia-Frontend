@@ -88,7 +88,7 @@ const Friend = () => {
         setShowMenu={setShowMenu}
         />
 
-    <div className="home">
+    <div className="btw">
    
         <Left />
         {userData.username.includes("@") ? (
@@ -100,12 +100,12 @@ const Friend = () => {
         setfndlist={setfndlist}
         fetchfnd={fetchfnd}
         />   
-        <Right
+        {/* <Right
         showMenu={showMenu}
         setShowMenu={setShowMenu}
         following={following}
         setFollowing={setFollowing}
-        />
+        /> */}
          </>
       )}
     </div>
