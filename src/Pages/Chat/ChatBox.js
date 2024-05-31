@@ -37,7 +37,7 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-    const socket = useSocket('http://localhost:5000');
+    const socket = useSocket('http://192.168.1.105:5000');
     useEffect(() => {
         if (fnd && !done) {
             console.log("fnd alreadt set   "+fnd);
@@ -51,7 +51,7 @@ const Chat = () => {
  
     const finduserlist = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/userbox/' + userData.username);
+            const response = await axios.get('http://192.168.1.105:5000/api/userbox/' + userData.username);
             const userList = response.data.map((user, index) => ({
                 id: index + 1,
                 name: user.username,
@@ -98,7 +98,7 @@ const Chat = () => {
     
     async function fetchUserImage(username, currentUser) {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`, {
+            const response = await axios.get(`http://192.168.1.105:8000/profile/${username}`, {
                 params: {
                     username: username,
                     user: currentUser
@@ -480,7 +480,7 @@ function getLastSeenTime(lastSeen) {
                                     </div>
                                 </div>
                             </div>
-                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '470px', overflowY: 'scroll' }}>
+                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '420px', overflowY: 'scroll' }}>
                                 <ul className='m-b-0' >
                                  {messages.map((message, index) => (
                                         <li key={index} className='clearfix'>
@@ -488,7 +488,7 @@ function getLastSeenTime(lastSeen) {
                                                 <>
                                                     <div className="message-data box-right">
                                                         <span className="message-data-time">{message.time}</span>
-                                                    <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} />
+                                                    {/* <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} /> */}
                                                   <br/>
                                                     <div className="message my-message msg-right bg-primary text-light">{message.content}</div> 
                                                      </div>

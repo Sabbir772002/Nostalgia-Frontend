@@ -120,7 +120,7 @@ const Sugg = () => {
           </div>
           <div className="s-right">
             <Link to={`/profile/${fnd.username}`}><button>View</button></Link>
-             <Link to={`/compare/${fnd.username}`}><button>Comapre</button> </Link>
+             <Link to={`/compare/${fnd.username}`}><button>Compare</button> </Link>
           </div>
         </div>
       ))}

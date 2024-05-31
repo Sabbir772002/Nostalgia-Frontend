@@ -8,6 +8,8 @@ import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
+import api from '../../util/api'
+
 const Caregiver = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -15,7 +17,7 @@ const Caregiver = () => {
  // console.log(userData);
      const [caregiverlist, setCaregiverlist] = useState([]);
       useEffect(() => {
-          axios.get('http://localhost:8000/caregiver')
+        axios.get(`${api.url}:8000/caregiver`)
               .then(response => {
                  // console.log("mere fnd");
                  console.log(response.data);

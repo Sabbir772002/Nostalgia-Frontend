@@ -129,8 +129,8 @@ console.log("yellow blue green");
          <div className='delete'>
          {showDelete && (
          <div className="options">
-         <button><PiSmileySad />Not Interested in this post</button>
-         <button><IoVolumeMuteOutline />Mute this user</button>
+         {/* <button><PiSmileySad />Not Interested in this post</button> */}
+         {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
          {/* <button><MdBlockFlipped />Block this user</button> */}
          <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
          <button><MdReportGmailerrorred />Report post</button>
@@ -164,10 +164,10 @@ console.log("yellow blue green");
             className='msg'  
           />
 
-          <ShareOutlinedIcon 
+          {/* <ShareOutlinedIcon 
             onClick={()=>setSocialIcons(!socialIcons)}
             className='share'  
-          />
+          /> */}
 
         {socialIcons && (
           
