@@ -8,7 +8,7 @@ import { GiMedicines } from 'react-icons/gi';
 import { BiLogOut } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import LogoutButton from './logout';
 const Left = ({ profileImg, modelDetails }) => {
   const [btnActive, setBtnActive] = useState("");
   const location = useLocation();
@@ -91,12 +91,14 @@ const Left = ({ profileImg, modelDetails }) => {
         </div>
       </Link>
       {/* Logout */}
-      <Link to="/" style={{ textDecoration: "none", color: "black" }} onClick={logoutUser}>
+      {/* <Link to="/" style={{ textDecoration: "none", color: "black" }} onClick={logoutUser}>
         <div id='L-box' onClick={() => setBtnActive("logout")} className={btnActive === "logout" ? "active" : ""}>
           <BiLogOut className='margin' />
           <span>Log Out</span>
         </div>
-      </Link>
+        
+      </Link> */}
+      <LogoutButton logoutUser={logoutUser} />
     </div>
   );
 };

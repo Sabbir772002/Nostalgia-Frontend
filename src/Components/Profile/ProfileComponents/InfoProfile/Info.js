@@ -17,6 +17,7 @@ import axios from 'axios';
 import { height } from '@mui/system';
 import { FaUserEdit } from 'react-icons/fa';
 import api from '../../../../util/api';
+import Logout from '../InfoProfile/outlog';
 
 const Info = ({
   userPostData,
@@ -123,10 +124,7 @@ console.log(userData);
         <p>{userData.last_name}</p>
 
          {userData.username === user.username ? (
-            <Link to='/' className='logout' onClick={logoutUser}>
-              <BiLogOut />
-              Logout
-            </Link>
+            <Logout logoutUser={logoutUser} />
           ) : (
             userData && userData.if_fnf === 1 ? (
               <Link to='' className='logout'>

@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router';
 import Profile from "../../assets/profile.jpg"
 import axios from 'axios';
 import api from '../../util/api';
-
 const Nav = ({setPosts,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
 const [search,setSearch] =useState('');
