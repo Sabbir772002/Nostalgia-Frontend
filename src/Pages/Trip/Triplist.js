@@ -284,7 +284,8 @@ const Triplist = () => {
             ))}
           </tbody>
         </table>
-        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'transparent' }}>
+        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'transparent' }}         dialogClassName="custom-modal"
+>
          <div className="bg-light">
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>

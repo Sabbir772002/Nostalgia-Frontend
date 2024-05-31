@@ -39,8 +39,6 @@ const ShowGroup = () => {
   }, []);
 
 
-
-  
   const fetchOverseerList = () => {
     axios.get(`http://127.0.0.1:8000/my_groups`, {
       params: {
@@ -75,6 +73,28 @@ const ShowGroup = () => {
     setShowViewModal(false);
   };
 
+  // Define the dlt function to send a POST request
+  const dlt = async (groupUsername, username) => {
+    try {
+      const formData = {
+        guser: groupUsername,
+        username: username
+      };
+      const response = await axios.post('http://localhost:8000/deletegroup', formData);
+      if (response.status === 201) {
+        console.log('Successfully left the group');
+        alert("Successfully left the group");
+        fetchOverseerList();
+      } else {
+        console.error('Failed to leave the group');
+      }
+    } catch (error) {
+      console.error('Error leaving the group:', error);
+    }
+  };
+  
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -86,7 +106,6 @@ const ShowGroup = () => {
         alert("Group With this Username already exists")
         return;
       }
-       
       console.log('Data submitted:', response.data);
       setFormData({
         username: '',
@@ -122,7 +141,7 @@ const ShowGroup = () => {
 
           <div className="s-right">
             <Link to={`/group/${group.username}`}><button>View</button></Link>
-              <button>Leave</button>
+          <button onClick={() => dlt(group.username, user.username)}>Leave</button>
           </div>
         </div>
       ))}

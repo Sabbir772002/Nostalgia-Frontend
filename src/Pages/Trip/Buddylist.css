@@ -6,6 +6,9 @@
   margin-top: 20px;
   border-radius: 20px;
 }
+.custom-modal .modal-content {
+  background-color: white;
+}
 .box{
   margin-top: 20px;
 }

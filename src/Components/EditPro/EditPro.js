@@ -11,7 +11,6 @@ const Notification = ({ message }) => {
     </div>
   );
 };
-
 const EditProfile = () => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState(null);
@@ -55,13 +54,10 @@ const [nidimg,setnidimg] = useState(null);
       console.error('Error fetching user data:', error);
     }
   };
-  
-
   const handlenidchange = (e) => {
     setnid(URL.createObjectURL(e.target.files[0]));
     setnidimg(e.target.files[0]);
   };
-
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -128,8 +124,7 @@ const [nidimg,setnidimg] = useState(null);
         alert("Try with Clear Image or Correct Information");
       }
     }catch (error) {
-      setProcessing(false); 
-
+      setProcessing(false);
       console.error('Error updating user data:', error);
       alert("Try with Clear image or Correct Information")
     }

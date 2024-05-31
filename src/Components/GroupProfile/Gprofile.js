@@ -21,7 +21,6 @@ const GProfile = ({following,
   const [importFile,setImportFile] =useState("")
   const handleSubmit =(e)=>{
     e.preventDefault()
-
   }
   const [searchResults,setSearchResults] =useState("")
    const userData= JSON.parse(localStorage.getItem('userData'));

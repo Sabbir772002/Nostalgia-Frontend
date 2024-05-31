@@ -30,9 +30,8 @@ const navigate = useNavigate();
       const coverImg = imgObj.image;
       setCoverImg(coverImg);
     }
-  }; 
-  
-  const handleFile1 = (e) => {
+  }
+    const handleFile1 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
       const imgObj = { image: URL.createObjectURL(img) };

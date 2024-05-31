@@ -25,7 +25,7 @@ const GroupProfile = () => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     gprofile();
-  } 
+  }
   , [username]);
   
     const gprofile = async () => {
