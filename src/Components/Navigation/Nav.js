@@ -33,7 +33,7 @@ const handlemsg = (e) =>{
 }
 
   return (
-    <nav>
+    <nav className='m-0'>
         <div className="n-logo">
             <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
               <h1>Nos<span>talgia</span></h1>

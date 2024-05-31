@@ -4,11 +4,13 @@ import './FindFriend.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import axios from 'axios';
+import { useEffect } from 'react';
 const FindFlist = ({fndlist,setfndlist,fetchData}) => {
   const [searchText, setSearchText] = useState('');
   const [searchWithImages, setSearchWithImages] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const userData= JSON.parse(localStorage.getItem('userData'));
+  const [fdlist,setfdlist] = useState([]);
 const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -32,6 +34,7 @@ const handleSearch = async (e) => {
       });
               //fetchData();
         setfndlist(response.data.users);
+        setfdlist(response.data.users);
       // Handle response data
       console.log('Response:', response.data);
     } catch (error) {
@@ -42,10 +45,36 @@ const handleSearch = async (e) => {
     console.log('Search with Images:', searchWithImages);
     console.log('Selected Image:', selectedImage);
   };
+  useEffect(() => {
+    handleSelectChanged();
+  }, [fndlist]);
 
   const handleImageChange = (e) => {
     setSelectedImage(e.target.files[0]);
   };
+
+
+  const [selectedOption, setSelectedOption] = useState('');
+const handleSelectChanged = () => {
+    if(selectedOption=="requested"){
+    setfdlist(fndlist.filter((fnd)=>fnd && fnd.good==userData.username));
+    }else if(selectedOption=="request"){
+      setfdlist(fndlist.filter((fnd)=>fnd.abedon==0 && fnd.status==1));
+  }else{
+    setfdlist(fndlist);
+  }
+};
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+    if(event.target.value=="requested"){
+    setfdlist(fndlist.filter((fnd)=>fnd && fnd.good==userData.username));
+    }else if(event.target.value=="request"){
+      setfdlist(fndlist.filter((fnd)=>fnd.abedon==0 && fnd.status==1));
+  }else{
+    setfdlist(fndlist);
+  }
+};
 
   return (
 <div className='fndlist'>
@@ -65,12 +94,20 @@ const handleSearch = async (e) => {
       </div>
       </div> */}
     </form>
+    <div className="d-flex mt-2">
+      <h5 className='m-2'> Sort By:</h5>
+      <select className='m-2' onChange={handleSelectChange} value={selectedOption}>
+      <option value="all">ALL</option>
+        <option value="requested">Requested</option>
+        <option value="request">Friend Request</option>
+      </select>
+    </div>
 
-    {fndlist.length === 0 && <h1 className="mt-2 text-dark">No People Found</h1>}
-    {fndlist.length>0 &&
+    {fdlist.length === 0 && <h1 className="mt-2 text-dark">No People Found</h1>}
+    {fdlist.length>0 &&
     <div>
     <h1 className="mt-2 text-dark" rounded> People Matches You....</h1>
-        {fndlist.length>0 && fndlist.map((fnd)=>(
+        {fdlist.length>0 && fdlist.map((fnd)=>(
              <div className="d-inline-flex p-4">
 
             <FindF 

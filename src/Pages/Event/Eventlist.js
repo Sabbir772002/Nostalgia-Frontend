@@ -263,8 +263,8 @@ const Eventlist = () => {
           </tbody>
         </table>
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'transparent' }}>
-         <div className="bg-light">
+        <Modal show={showUserInfoModal} onHide={handleClose} dialogClassName="custom-modal" >
+         {/* <div className="bg-light"> */}
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
@@ -297,7 +297,7 @@ const Eventlist = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
-          </div>
+          {/* </div> */}
         </Modal>
       </div>
     </div>

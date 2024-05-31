@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
 import Modal from 'react-modal';
+import ModelProfile from '../ModelProfile/ModelProfile';
 
 // Custom styling for the modal (optional)
 const customStyles = {

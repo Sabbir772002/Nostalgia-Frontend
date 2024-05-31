@@ -1,4 +1,4 @@
-.voxi{
+.vox{
     width: 100%;
     background-color:rgb(240, 242, 245);
     position: relative;
@@ -31,4 +31,6 @@
         border-color: #ff8500; /* Adjust hover color as needed */
       } 
 
-      
+      .custom-modal .modal-content {
+        background-color: white;
+      }      

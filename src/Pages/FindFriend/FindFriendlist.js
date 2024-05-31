@@ -78,11 +78,6 @@ useEffect(() => {
   fetchData(); // Call the fetchData function
 }, []);
 
-
-  
-
-      
-
    const [search,setSearch] =useState("")
 
     

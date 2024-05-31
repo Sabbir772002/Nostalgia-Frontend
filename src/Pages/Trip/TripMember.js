@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Table,Button } from 'react-bootstrap';
 
 import axios from 'axios';
-const MemberList = ({ members, fetchmembers }) => {
+const MemberList = ({ members, fetchmembers , user }) => {
     console.log("yo yo bro, hete chole jabo bohudur...");
   const handleDelete = (id) => {
     console.log(id);
     actions(id, "delete");
   };
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
 
   const actions = async (id, action) => {
     try {
@@ -28,7 +30,8 @@ const MemberList = ({ members, fetchmembers }) => {
             <th>Name</th>
             <th>Age</th>
             <th>Gender</th>
-            <th>Actions</th>
+            {userData.username==user && <th>Actions</th>}
+
           </tr>
         </thead>
         <tbody>
@@ -37,7 +40,7 @@ const MemberList = ({ members, fetchmembers }) => {
               <td>{member.first_name}</td>
               <td>{member.dob}</td>
               <td>{member.gender}</td>
-              <td><Button variant="primary" eventKey="delete" onClick={() => handleDelete(member)}>Delete</Button></td>
+              {userData.username==user && <td><Button variant="primary" eventKey="delete" onClick={() => handleDelete(member)}>Delete</Button></td>}
               {/* <td><Button variant="primary" onClick={() => viewprofile(member.id)}>View Profile</Button></td> */}
             </tr>
           ))}
