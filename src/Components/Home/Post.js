@@ -115,9 +115,32 @@ const handleCommentSubmit = async (e) => {
   const handleFriendsId = (id) => {
     // Implement this function as per your requirements
   };
-  
+
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editedContent, setEditedContent] = useState(postbox.content);
+
+  // Other state variables and functions remain unchanged
+
+  const handleEdit = () => {
+    setEditedContent(postbox.content);
+    setEditModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const updatedPost = { ...postbox, content: editedContent };
+      const response = await axios.put(`http://localhost:8000/posts/${post.id}`, updatedPost);
+      setPostbox(response.data); // Update post data after successful update
+      setEditModalOpen(false); // Close the edit modal
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  };
+
+
   return (
     <div className='post'>
+      
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
@@ -134,13 +157,39 @@ const handleCommentSubmit = async (e) => {
             {/* <button><PiSmileySad />Not Interested in this post</button> */}
             {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
             {/* <button><MdBlockFlipped />Block this user</button> */}
+            {postbox.author === userdata.username && (
+              <>
             <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
+            <button onClick={()=>handleEdit(post.id)}><AiOutlineDelete />Edit Post</button>
+            </>
+            )}
             <button><MdReportGmailerrorred />Report post</button>
          </div>
          )}
           <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
          </div>
        </div>
+
+      {/* Edit Modal */}
+      {editModalOpen && (
+     
+      <div className="edit-modal">
+  <textarea
+    className="edit-textarea"
+    value={editedContent}
+    onChange={(e) => setEditedContent(e.target.value)}
+    rows={4}
+    cols={50}
+    placeholder="Edit your post..."
+  />
+  <div className="edit-buttons">
+    <button className="update-button" onClick={handleUpdate}>Update</button>
+    <button className="cancel-button" onClick={() => setEditModalOpen(false)}>Cancel</button>
+  </div>
+</div>
+      
+      )}
+   
 
       <p className='body'>{
         (postbox.content).length <= 300 ?

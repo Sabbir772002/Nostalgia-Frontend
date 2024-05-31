@@ -20,11 +20,11 @@ import {BiLogoLinkedin} from "react-icons/bi"
 import {AiFillYoutube} from "react-icons/ai"
 import {RxTwitterLogo} from "react-icons/rx"
 import {FiGithub} from "react-icons/fi"
-
+import axios from 'axios';
 import img1 from "../../assets/Following/img-2.jpg"
 import img2 from  "../../assets/Following/img-3.jpg"
 import img3 from  "../../assets/Following/img-4.jpg"
-
+import EditModal from './modal';
 
 import { useState } from 'react';
 import Comments from '../Comments/Comments';
@@ -62,8 +62,6 @@ const PostUser = ({posts,post,setPosts,userData}) => {
     }
 ])
 
-
-
   const [like,setLike] =useState(post.like)
   const [unlike,setUnlike] =useState(false)
 
@@ -90,7 +88,6 @@ const handleDelete=(id)=>{
   }
  
   const [commentInput,setCommentInput] =useState("")
-
   const handleCommentInput=(e)=>{
      e.preventDefault()
 
@@ -113,11 +110,39 @@ const handleDelete=(id)=>{
     setCommentInput("")
   }
 
-  const [socialIcons,setSocialIcons] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editedContent, setEditedContent] = useState(post.content);
+
+  // Other state variables and functions remain unchanged
+
+  const handleEdit = () => {
+    setShowDelete(!showDelete)
+    setEditedContent(post.content);
+    setEditModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+
+    try {
+      const updatedPost = { ...post, content: editedContent };
+      const response = await axios.put(`http://localhost:8000/posts/${post.id}`, updatedPost);
+      // setPost(response.data); // Update post data after successful update
+      setEditModalOpen(false); // Close the edit modal
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  };
+
+
+  const [socialIcons,setSocialIcons] = useState(false);
+  const userdata = JSON.parse(localStorage.getItem('userData'));
+  
 
 console.log("yellow blue green");
-
   return (
+  
+   
+
     <div className='post'>
       <div className='post-header'>
         <div className='post-user' style={{cursor:"pointer"}}>
@@ -125,6 +150,10 @@ console.log("yellow blue green");
             <h2>{userData.username}</h2>
             <p className='datePara'>{post.post_date}</p>
         </div>
+
+      {/* Edit Modal */}
+
+
          
          <div className='delete'>
          {showDelete && (
@@ -132,8 +161,12 @@ console.log("yellow blue green");
          {/* <button><PiSmileySad />Not Interested in this post</button> */}
          {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
          {/* <button><MdBlockFlipped />Block this user</button> */}
-         <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
-         <button><MdReportGmailerrorred />Report post</button>
+         {post.author === userdata.username && (
+              <>
+            <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
+            <button onClick={()=>handleEdit(post.id)}><AiOutlineDelete />Edit Post</button>
+            </>
+            )}         <button><MdReportGmailerrorred />Report post</button>
          </div>
          )}
           <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
@@ -141,7 +174,7 @@ console.log("yellow blue green");
        </div>
        {
     
-    }
+       }
         <p className='body'>{
         (post.content).length <=300 ?
         post.content : `${(post.content).slice(0,300)}...`
@@ -253,7 +286,10 @@ console.log("yellow blue green");
 
       </div>     
     </div>
+   
   </div>
+
+  
   )
 }
 
