@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import img3 from "../../assets/User-post/img3.jpg";
 import axios from 'axios';
-
+import api from '../../util/api';
 const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const [selectedOption, setSelectedOption] = useState(fnd.type);
@@ -18,7 +18,7 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
             if( option == "" ){ 
                 return;
             }
-            const response = await axios.post('http://localhost:8000/update_fnf', {
+            const response = await axios.post(`${api.url}:8000/update_fnf`, {
                 user_id: userData.id,
                 friend_id: fnd.id,
                 type: option
@@ -44,7 +44,7 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
             <Card.Body className="member-card pt-2 pb-2">
                 <div className="thumb-lg member-thumb">
                     <img
-                        src={`http://localhost:8000/${fnd.pp}`}
+                        src={`${api.url}:8000/${fnd.pp}`}
                         className="rounded-circle"
                         alt="profile-image"
                         width="200"

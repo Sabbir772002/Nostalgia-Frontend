@@ -7,12 +7,9 @@ import './Chat.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaReact } from 'react-icons/fa';
-
-
+import api from '../../util/api';
 const useSocket = (url) => {
     const [socket, setSocket] = useState(null);
-
-
     useEffect(() => {
         const socketInstance = io(url);
         setSocket(socketInstance);
@@ -37,7 +34,7 @@ const Chat = () => {
     const [newMessage, setNewMessage] = useState('');
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
-    const socket = useSocket('http://192.168.1.105:5000');
+    const socket = useSocket(`${api.url}:5000`);
     useEffect(() => {
         if (fnd && !done) {
             console.log("fnd alreadt set   "+fnd);
@@ -47,11 +44,10 @@ const Chat = () => {
         }
 
     }, [fnd,done]);
-    // console.log(fnd);
- 
+    // console.log(fnd)
     const finduserlist = async () => {
         try {
-            const response = await axios.get('http://192.168.1.105:5000/api/userbox/' + userData.username);
+            const response = await axios.get(`${api.url}:5000/api/userbox/` + userData.username);
             const userList = response.data.map((user, index) => ({
                 id: index + 1,
                 name: user.username,
@@ -98,7 +94,7 @@ const Chat = () => {
     
     async function fetchUserImage(username, currentUser) {
         try {
-            const response = await axios.get(`http://192.168.1.105:8000/profile/${username}`, {
+            const response = await axios.get(`${api.url}:8000/profile/${username}`, {
                 params: {
                     username: username,
                     user: currentUser
@@ -137,8 +133,6 @@ const Chat = () => {
         });
     
     }, [socket, messages]);
-
-
 
     useEffect(() => {
         if (!socket) return;
@@ -249,7 +243,6 @@ const Chat = () => {
             console.log('Returning to page, reconnecting socket');
             socket.connect();
         };
-
         window.addEventListener('beforeunload', handleBeforeUnload);
         window.addEventListener('focus', handlePageFocus);
         return () => {
@@ -307,7 +300,7 @@ const Chat = () => {
             socket.emit('chat message', message);    
             setNewMessage('');
                   // Save message to MongoDB using Axios
-        axios.post('http://localhost:5000/api/messages', message)
+        axios.post(`${api.url}:5000/api/messages`, message)
         .then(response => {
             console.log('Message saved:', response.data);
         })
@@ -317,7 +310,7 @@ const Chat = () => {
         }
     };
     const msgbox = async () => {
-        axios.get('http://localhost:5000/api/messages/', {
+        axios.get(`${api.url}:5000/api/messages/`, {
             params: {
                 id1: userData.username,
                 id2: fd
@@ -347,7 +340,7 @@ const Chat = () => {
     const findname = (name) => {
         // console.log(name);
         // if (name==null)return;
-        axios.get(`http://127.0.0.1:8000/profile/${name}`, {
+        axios.get(`${api.url}:8000/profile/${name}`, {
             params: {
                 username: name,
                 user: userData.username
@@ -405,7 +398,6 @@ function getLastSeenTime(lastSeen) {
         return `left a few seconds ago`;
     }
 }
-
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -436,7 +428,7 @@ function getLastSeenTime(lastSeen) {
                                 <ul className='list-unstyled chat-list mt-2 mb-0' style={{ maxHeight: '500px', overflowY: 'auto', marginBottom: '20px' }}>
                                 {userbox.map((user) => (
                                     <li key={user.id} className='clearfix'  onClick={() => handleNameClick(user.name)}>
-                                        <img src={`http://localhost:8000/${user.img}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
+                                        <img src={`${api.url}:8000/${user.img}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
                                         <div className='about'>
                                             <div className='name'>
                                                 {user.name}
@@ -455,7 +447,7 @@ function getLastSeenTime(lastSeen) {
                                 <div className='row'>
                                     <div className='col-lg-6'>
                                         <a href='javascript:void(0);' data-toggle='modal' data-target='#view_info'>
-                                        <img src={`http://localhost:8000/${fnddata.pp}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
+                                        <img src={`${api.url}:8000/${fnddata.pp}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
                                         </a>
                                         <div className='chat-about'>
                                         <Link to={`/profile/${fd}`} className="text-dark">

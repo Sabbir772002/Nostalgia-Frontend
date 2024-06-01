@@ -5,12 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import api from '../../util/api';
 const FindFlist = ({fndlist,setfndlist,fetchData}) => {
   const [searchText, setSearchText] = useState('');
   const [searchWithImages, setSearchWithImages] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const userData= JSON.parse(localStorage.getItem('userData'));
   const [fdlist,setfdlist] = useState([]);
+
 const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -24,7 +26,7 @@ const handleSearch = async (e) => {
       }
       console.log('Form Data:', userData.username);  
       // API endpoint
-      const url = 'http://127.0.0.1:8000/searchfnd'
+      const url = `${api.url}:8000/searchfnd`
       const response = await axios.get(url, {
         params: {
           search: searchText,
@@ -64,7 +66,6 @@ const handleSelectChanged = () => {
     setfdlist(fndlist);
   }
 };
-
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
     if(event.target.value=="requested"){

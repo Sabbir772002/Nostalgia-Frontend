@@ -25,49 +25,18 @@ import img1 from "../../assets/Following/img-2.jpg"
 import img2 from  "../../assets/Following/img-3.jpg"
 import img3 from  "../../assets/Following/img-4.jpg"
 import EditModal from './modal';
-
 import { useState } from 'react';
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 
-
-
-
 const PostUser = ({posts,post,setPosts,userData}) => {
 
-  const [comments,setComments] =useState([
-    {
-        id:1,
-        profilePic:userData.pp,
-        likes:23,
-        username:"Violet",
-        time:"3 Hours Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi laboriosam vitae voluptatem animi maiores voluptatibus."
-    },
-    {
-        id:2,
-        profilePic:userData.pp,
-        likes:5,
-        username:"Brandon",
-        time:"1 Hour Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    {
-        id:3,
-        profilePic:userData.pp,
-        likes:50,
-        username:"Lilly",
-        time:"30 Mins Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi"
-    }
-])
-
+  const [comments,setComments] =useState([]);
   const [like,setLike] =useState(post.like)
   const [unlike,setUnlike] =useState(false)
 
   const [filledLike,setFilledLike] =useState(<FavoriteBorderOutlinedIcon />)
   const [unFilledLike,setUnFilledLike] =useState(false)
-
   const handlelikes=()=>{
     setLike(unlike ? like -1 :like +1)
     setUnlike(!unlike)

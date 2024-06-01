@@ -7,13 +7,13 @@ import './FindF.css';
 // Import the image
 import img3 from "../../assets/User-post/img3.jpg";
 import { Link } from 'react-router-dom';
-
+import api from '../../util/api';
 const FindF = ({fndlist,setfndlist,fnd,fetchData}) => { // Destructure props to directly access userData
     const userData= JSON.parse(localStorage.getItem('userData'));
     const [selectedOption, setSelectedOption] = React.useState("Accept");
     const add_fnf = async () => {
       try {
-          const response = await axios.post('http://localhost:8000/add_fnf', {
+          const response = await axios.post(`${api.url}:8000/add_fnf`, {
               user_id: userData.id,
               friend_id: fnd.id,
               type: "Sent"
@@ -32,7 +32,7 @@ const FindF = ({fndlist,setfndlist,fnd,fetchData}) => { // Destructure props to 
    const delete_fnd = async () => {
     try {
         
-        const response = await axios.post('http://localhost:8000/delete_fnd', {
+        const response = await axios.post(`${api.url}:8000/delete_fnd`, {
             user_id: userData.id,
             friend_id: fnd.id,
             type: "Sent"
@@ -52,7 +52,7 @@ const updatefnf = async (option) => {
       if( option == "" ){ 
           return;
       }
-      const response = await axios.post('http://localhost:8000/update_fnf', {
+      const response = await axios.post(`${api.url}:8000/update_fnf`, {
           user_id: userData.id,
           friend_id: fnd.id,
           type: option
@@ -77,7 +77,7 @@ const handleSelect = (option) => {
         <Card.Body className="member-card pt-2 pb-2">
             <div className="thumb-lg member-thumb mx-auto">
               <img
-                src={`http://localhost:8000/${fnd.pp}`}
+                src={`${api.url}:8000/${fnd.pp}`}
                 className="rounded-circle img-thumbnail"
                 alt="profile-image"
                 style={{ width: '200px', height: '200px' }}
@@ -167,5 +167,4 @@ const handleSelect = (option) => {
         </Card>
       );
 };
-
 export default FindF;

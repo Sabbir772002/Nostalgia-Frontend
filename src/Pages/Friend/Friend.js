@@ -39,14 +39,14 @@ import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
-
+import api from '../../util/api';
 const Friend = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
 
  // console.log(userData);
-  
+
       const [body,setBody] =useState("");
       const [importFile,setImportFile] =useState("");
       
@@ -55,7 +55,7 @@ const Friend = () => {
 
      const fetchfnd = async (setfndlist) => {
       try {
-          const response = await axios.get('http://localhost:8000/friends',
+          const response = await axios.get(`${api.url}:8000/friends`,
           {
             params: {
               user_id: userData.id
