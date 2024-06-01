@@ -7,6 +7,8 @@ import Nav from '../../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 import Right from '../../../Components/GroupRight/Right'
+import api from '../../../util/api'
+
 const GroupHome = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -14,7 +16,7 @@ const GroupHome = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/gt_post', {
+    axios.get(`${api.url}:8000/gt_post`, {
     params: {
         username: userData.username
     }

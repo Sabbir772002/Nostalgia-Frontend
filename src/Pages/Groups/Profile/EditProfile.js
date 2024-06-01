@@ -15,6 +15,7 @@ import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
 import SearchIcon from '@mui/icons-material/Search';
+import api from '../../util/api';
 
 const EditProfile = () => {
   const { username } = useParams();
@@ -52,14 +53,14 @@ const EditProfile = () => {
             ModelUserName: response.data.username,
             ModelCountryName: response.data.thana,
             ModelJobName: "Web Developer in Google",
-            image: `http://localhost:8000/${response.data.p_image}`
+            image: `${api.url}:8000/${response.data.p_image}`
           });
           const initialUserPostData = [
             {
               id: 1,
               username: "Vijay",
               profilepicture: ProfileImg,
-              img: `http://localhost:8000/${response.data.p_image}`,
+              img: `${api.url}:8000/${response.data.p_image}`,
               datetime: moment("20230401", "YYYYMMDD").fromNow(),
               body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
               like: 22,
@@ -69,7 +70,7 @@ const EditProfile = () => {
         id:2,
         username:"Vijay",
         profilepicture:ProfileImg,
-        img:`http://localhost:8000/${response.data.p_image}`,
+        img:`${api.url}:8000/${response.data.p_image}`,
         datetime:moment("20230525", "YYYYMMDD").fromNow(),
         body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
         like: 84,
@@ -79,7 +80,7 @@ const EditProfile = () => {
             id:3,
             username:"Vijay",
             profilepicture:ProfileImg,
-            img:`http://localhost:8000/${response.data.p_image}`,
+            img:`${api.url}:8000/${response.data.p_image}`,
             datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
             body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
             like: 340,

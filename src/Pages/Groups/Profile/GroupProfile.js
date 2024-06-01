@@ -7,6 +7,8 @@ import "../Profile/Profile.css"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import api from '../../../util/api';
+
 const GroupProfile = () => {
   const { username } = useParams();
   console.log(username);
@@ -50,7 +52,7 @@ const GroupProfile = () => {
     };
 
     const fetchPosts = () => {
-      axios.get(`http://localhost:8000/gp_post`,
+      axios.get(`${api.url}:8000/gp_post`,
       {
         params: {
           username:username

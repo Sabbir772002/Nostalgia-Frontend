@@ -342,5 +342,7 @@
     .coverDiv svg{
         font-size: 19px;
     }
-    
+    .custom-modal .modal-content {
+        background-color: white;
+      }      
 }

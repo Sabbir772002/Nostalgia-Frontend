@@ -135,7 +135,7 @@ const [members, setMembers] = useState([]);
         <FontAwesomeIcon icon={faUserFriends}/>
          Members
           </Button>)}
-          <Modal show={showModal} onHide={handlemodalbox}>
+          <Modal show={showModal} onHide={handlemodalbox} dialogClassName="custom-modal" >
           <Modal.Header closeButton>
             <Modal.Title>MemberList</Modal.Title>
           </Modal.Header>
