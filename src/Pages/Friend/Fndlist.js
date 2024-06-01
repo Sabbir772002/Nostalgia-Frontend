@@ -13,7 +13,7 @@ const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`${api.url}:8000/searchfnd`, {
+      const response = await axios.get(`${api.url}:8000/searchfndbox`, {
         params: {
           search: searchText,
           username: userData.username
@@ -25,25 +25,35 @@ const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => {
     } catch (error) {
       console.error('Error:', error);
     }
-    console.log('Search Text:', searchText);
-    console.log('Selected Image:', selectedImage);
   };
   useEffect(() => {
     handleSelectChanged();
   }, [fndlist]);
 
   const handleSelectChanged = () => {
-    if (selectedOption === "Known") {
-      setFdlist(fndlist.filter(fnd => fnd && fnd.good === userData.username));
-    } else if (selectedOption === "Bondhu") {
-      setFdlist(fndlist.filter(fnd => fnd.abedon === 0 && fnd.status === 1));
+    console.log('Selected Option:', selectedOption);
+    if (selectedOption == "Known") {
+      setFdlist(fndlist.filter(fnd =>fnd.type == "Known"));
+    } else if (selectedOption == "Bondhu") {
+      setFdlist(fndlist.filter(fnd => fnd.type == "Bondhu"));
     } else {
       setFdlist(fndlist);
     }
   };
+  const handleSelectChangedd = (option) => {
+    console.log('Selected Option:', option);
+    if (option == "Known") {
+      setFdlist(fndlist.filter(fnd =>fnd.type == option));
+    } else if (option == "Bondhu") {
+      setFdlist(fndlist.filter(fnd => fnd.type == option));
+    } else {
+      setFdlist(fndlist);
+    }
+    console.log(fdlist);
+  };
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
-    handleSelectChanged();
+    handleSelectChangedd(event.target.value);
   };
 
   const handleImageChange = (e) => {
@@ -84,6 +94,10 @@ const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => {
             setfndlist={setfndlist}
             fnd={fnd}
             fetchfnd={fetchfnd}
+            handleSelectChangedd={handleSelectChangedd}
+            setFdlist={setFdlist}
+            fdlist={fdlist}
+            selectedOption={selectedOption}
           />
         ))}
       </div>

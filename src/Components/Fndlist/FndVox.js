@@ -8,9 +8,9 @@ import { Link } from 'react-router-dom';
 import img3 from "../../assets/User-post/img3.jpg";
 import axios from 'axios';
 import api from '../../util/api';
-const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
+const FndVox = ({ fndlist, setfndlist, fnd,fdlist, fetchfnd, handleSelectChangedd,setFdlist,selectedOption}) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    const [selectedOption, setSelectedOption] = useState(fnd.type);
+    // const [selectedOption, setSelectedOption] = useState(fnd.type);
     console.log(fnd);
 
     const updatefnf = async (option) => {
@@ -23,19 +23,23 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                 friend_id: fnd.id,
                 type: option
             });
-            alert("Friend Update successfully")
-            fetchfnd(setfndlist);
+            setfndlist(fndlist.filter(fd =>(fd ==fnd)?fd.type=option:fd ));
+            setFdlist(fndlist.filter(fnd => fnd.type == selectedOption));
+            // alert("Friend Update successfully")
+            // fetchfnd(setfndlist);
+            
+            // handleSelectChangedd(option);
             console.log(response.data.message); // Log the response message
             // You may update UI state or perform other actions after successful request
         } catch (error) {
-            alert(error.response.data.message)
+            // alert(error.response.data.message)
             console.error('Error:', error);
             // Handle errors if any
         }
     };
 
     const handleSelect = (option) => {
-        setSelectedOption(option);
+        // setSelectedOption(option);
         updatefnf(option); // Call updatefnf automatically when an option is selected
     };
 
@@ -52,7 +56,10 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                     />
                 </div>
                 <div>
+               <Link to={`/profile/${fnd.username}`}>
+
                     <h4>{fnd.first_name} {fnd.last_name}</h4>
+                    </Link>
                     <p className="text-muted">
                         @{fnd.username}
                     </p>
@@ -63,7 +70,7 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                 <div className="row">
                     <div className="col-6">
                     <DropdownButton
-                        title={selectedOption}
+                        title={fnd.type}
                         variant="secondary"
                         className="mt-3 btn-rounded waves-effect w-md waves-light m-1"
                         onSelect={handleSelect}
@@ -71,17 +78,16 @@ const FndVox = ({ fndlist, setfndlist, fnd, fetchfnd }) => {
                         {/* {(fnd.abedon == 1 && fnd.is_fnf == 0) && (
                             <Dropdown.Item eventKey="Accept">Accept</Dropdown.Item>
                         )} */}
-                        <Dropdown.Item eventKey="Known">Aquaintance</Dropdown.Item>
+                        <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
                         <Dropdown.Item eventKey="Bondhu">Friend</Dropdown.Item>
                     </DropdownButton>
                     </div>
                     <div className="col-6">
-                    <Link to={`/profile/${fnd.username}`}>
+                    <Link to={`/chat/${fnd.username}`}>
                         <Button
                             variant="secondary"
-                            className="mt-3 btn-rounded waves-effect w-md waves-light m-1"
-                        >
-                            View Profile
+                            className="mt-3 btn-rounded waves-effect w-md waves-light m-1">
+                            Message
                         </Button>
                     </Link>
                     </div>

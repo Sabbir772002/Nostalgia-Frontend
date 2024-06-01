@@ -44,12 +44,6 @@ const PostUser = ({ posts, post, setPosts, userData }) => {
   const [showDelete, setShowDelete] = useState(false);
   const [showComment, setShowComment] = useState(false);
 
-  const handleDelete = (id) => {
-    const deleteFilter = posts.filter(val => val.id !== id);
-    setPosts(deleteFilter);
-    setShowDelete(false);
-  };
-
   const [commentInput, setCommentInput] = useState("");
   const handleCommentInput = (e) => {
     e.preventDefault();
@@ -71,10 +65,26 @@ const PostUser = ({ posts, post, setPosts, userData }) => {
     setComments(insert);
     setCommentInput("");
   };
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState(post.content);
-
+  const handleDelete= async (id) => {
+    setShowDelete(false);
+    try {
+      const postdel = posts.find(p => p.id == id);
+      const box={id:id};
+      console.log(box);
+      const response = await axios.post(`${api.url}:8000/posts`,{
+        id:id
+      });
+      const updatedPosts = posts.filter(p => p.id !== id);
+      setPosts(updatedPosts); 
+      // const deleteFilter = posts.filter(val => val.id !== id);
+      // setPosts(deleteFilter);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+  
   const handleEdit = () => {
     setShowDelete(!showDelete);
     setEditedContent(post.content);
