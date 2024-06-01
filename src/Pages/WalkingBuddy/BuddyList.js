@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './Walkmembers';
+import api from '../../util/api';
 
 const BuddyList = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -17,7 +18,7 @@ const BuddyList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/walk', {
+      const response = await axios.get(`${api.url}8000/walk`, {
         params: { username: userData.username }
       });
       setUserlist(response.data);
@@ -51,7 +52,7 @@ const BuddyList = () => {
     e.preventDefault();
     setShowInputBoxModal(false);
     try {
-      await axios.post('http://localhost:8000/walk', formData);
+      await axios.post(`${api.url}:8000/walk`, formData);
       console.log('Walk data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
@@ -83,7 +84,7 @@ const BuddyList = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/walkmembers', {
+    const response = await axios.get(`${api.url}:8000/walkmembers`, {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -98,7 +99,7 @@ const BuddyList = () => {
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/walk_request', { 
+     const response= await axios.post(`${api.url}:8000/walk_request`, { 
       id: walk.id,
       username: userData.username
       });
@@ -205,7 +206,7 @@ const BuddyList = () => {
           <tbody>
             {userlist.map(user => (
               <tr key={user.id}>
-                <td><img src={`http://localhost:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
+                <td><img src={`${api.url}:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
                 <td>{user.w_creator}</td>
                 <td>{user.location}</td>
                 <td>{user.date}</td>

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './TripMember';
+import api from '../../util/api';
 
 const Triplist = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -17,7 +18,7 @@ const Triplist = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/trip', {
+      const response = await axios.get(`${api.url}:8000/trip`, {
         params: { username: userData.username }
       });
       setUserlist(response.data.trips);
@@ -53,7 +54,7 @@ const Triplist = () => {
     // delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/trip', formData);
+      await axios.post(`${api.url}:8000/trip`, formData);
       console.log('Walk data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
@@ -93,7 +94,7 @@ const Triplist = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/tripmembers', {
+    const response = await axios.get(`${api.url}:8000/tripmembers`, {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -109,7 +110,7 @@ const Triplist = () => {
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/trip_request', { 
+     const response= await axios.post(`${api.url}:8000/trip_request`, { 
       id: walk.id,
       username: userData.username
       });
@@ -310,7 +311,7 @@ const Triplist = () => {
       )}
     </Tab>
     <Tab eventKey="members" title="Members">
-      {selectedUser && <MemberList members={members} fetchmembers={fetchmembers} />}
+      {selectedUser && <MemberList members={members} user={selectedUser.creator} fetchmembers={fetchmembers} />}
     </Tab>
   </Tabs>
 </Modal.Body>

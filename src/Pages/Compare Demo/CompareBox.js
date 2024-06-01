@@ -32,7 +32,7 @@ const CompareBox = () => {
     formData.append('image2', image2);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/compare', formData, {
+      const response = await axios.post(`${api.url}:8000/compare`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       console.log('Upload success:', response.data);

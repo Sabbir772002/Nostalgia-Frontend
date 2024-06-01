@@ -9,6 +9,7 @@ import ProfileImg from "../../assets/profile.jpg"
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useEffect,useState} from 'react'
+import api from '../../util/api'
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const Notification = () => {
   
   
   const fetchData = () => {
-    axios.get('http://localhost:8000/notification', {
+    axios.get(`${api.url}:8000/notification`, {
       params: {
         username: user.username
       }
@@ -86,7 +87,7 @@ const Notification = () => {
       <div className="notification-section">
       {  notification.map((noti, index) => (
         <div key={index} className="notification-msg">
-          <img src={`http://localhost:8000/${noti.img}`} alt="" /> 
+          <img src={`${api.url}:8000/${noti.img}`} alt="" /> 
           <p>
             {/* {noti.noti_sender} {noti.action} <span className='noti-like'>your profile picture</span> */}
             {noti.sender} <span className='noti-like'>{noti.msg}</span>

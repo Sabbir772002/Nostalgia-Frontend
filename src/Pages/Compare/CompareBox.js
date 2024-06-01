@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import api from '../../util/api';
 
 const CompareBox = ({userData}) => {
   const [image1, setImage1] = useState(null);
@@ -8,7 +9,7 @@ const CompareBox = ({userData}) => {
   // const [image2, setImage2] = useState(null);
   const [compareResult, setCompareResult] = useState('');
   const [leftImage, setLeftImage] = useState(null);
-  const [rightImage, setRightImage] = useState(`http://localhost:8000${userData.pp}`);
+  const [rightImage, setRightImage] = useState(`${api.url}:8000${userData.pp}`);
   const [process, setProcess] = useState(false);
   const handleImage1Upload = (e) => {
     setImage1(e.target.files[0]);

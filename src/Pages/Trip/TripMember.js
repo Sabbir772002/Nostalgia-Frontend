@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Table,Button } from 'react-bootstrap';
 
 import axios from 'axios';
+import api from '../../util/api';
 const MemberList = ({ members, fetchmembers , user }) => {
     console.log("yo yo bro, hete chole jabo bohudur...");
   const handleDelete = (id) => {
@@ -15,7 +16,7 @@ const MemberList = ({ members, fetchmembers , user }) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      const response = await axios.post('http://localhost:8000/handletripmember', { id:id.id,tid:id.trip, type: action});
+      const response = await axios.post(`${api.url}:8000/handletripmember`, { id:id.id,tid:id.trip, type: action});
       console.log(response.data);
       fetchmembers();
       //set members from buddylist
