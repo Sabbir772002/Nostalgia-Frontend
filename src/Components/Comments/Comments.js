@@ -5,6 +5,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import SentimentSatisfiedRoundedIcon from '@mui/icons-material/SentimentSatisfiedRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import api from '../../util/api';
 
 const Comments = ({ cmt, post }) => {
     const [booleonLike, setBooleonLike] = useState(false);
@@ -37,7 +38,7 @@ const Comments = ({ cmt, post }) => {
         if (commentInput.content.trim() === '') return;
 
         // Make an API call to submit the comment
-        axios.post('http://localhost:8000/api/comments', commentInput)
+        axios.post(`${api.url}:8000/api/comments`, commentInput)
             .then(response => {
                 // Handle the successful response here
                 setCommentInput({ ...commentInput, content: '' });
@@ -54,7 +55,7 @@ const Comments = ({ cmt, post }) => {
             <div className="commentList">
                 <div className='commentList1'>
                     <div className="commentHead">
-                        <div><img src={`http://localhost:8000/${cmt.author_img}`} alt="Profile" /></div>
+                        <div><img src={`${api.url}:8000/${cmt.author_img}`} alt="Profile" /></div>
                         <p><span>{cmt.author}</span>{cmt.content}</p>
                     </div>
 

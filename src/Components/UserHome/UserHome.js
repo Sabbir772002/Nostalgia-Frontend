@@ -5,6 +5,7 @@ import { useLocation,useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import api from '../../util/api';
 
 
 const UserHome = ({setUserPostData,userPostData,profileImg,userData,images}) => {
@@ -35,7 +36,7 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userData,images}) => 
   //  }
 
   const fetchPosts = () => {
-    axios.get(`http://localhost:8000/singleblog`,
+    axios.get(`${api.url}:8000/singleblog`,
     {
       params: {
         username: username

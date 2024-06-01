@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Overseer.css";
 import { Modal, Button, Form} from 'react-bootstrap';
+import api from '../../../util/api';
 
 const Overseer = () => {
   const [formData, setFormData] = useState({
@@ -83,7 +84,7 @@ const Overseer = () => {
       formData.thana="Dhaka";
       formData.nid="5288";
       formData.gender="Male";
-      const response = await axios.post('http://localhost:8000/add_overseer', formData);
+      const response = await axios.post(`${api.url}:8000/add_overseer`, formData);
        
       console.log('Data submitted:', response.data);
       setFormData({
@@ -105,7 +106,7 @@ const Overseer = () => {
   const handleDelete = async (username) => {
     console.log(username);
     try{
-    const response = await axios.post('http://localhost:8000/doverseer',
+    const response = await axios.post(`${api.url}:8000/doverseer`,
       { username: username, user: user.username });
       alert(response.data.message);
     fetchOverseerList();
@@ -144,7 +145,7 @@ const Overseer = () => {
 
     // Handle submission of additional info, e.g., send it to the server
     console.log('Additional Info Submitted:', additionalInfo);
-    const response = axios.post('http://localhost:8000/addhandle', additionalInfo);
+    const response = axios.post(`${api.url}:8000/addhandle`, additionalInfo);
     console.log('Additional Info Response:', response.data);
     // Clear the form fields
     setAdditionalInfo({
@@ -165,7 +166,7 @@ const Overseer = () => {
       {fndlist.map((person, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${person.pp}`} alt="" />
+            <img  src= {`${api.url}:8000/${person.pp}`} alt="" />
             <h3>{person.first_name}</h3>
             <h3>{person.last_name}</h3>
           </div>

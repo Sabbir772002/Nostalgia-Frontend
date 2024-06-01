@@ -15,6 +15,7 @@ import axios from 'axios';
 import { Button } from "react-bootstrap";
 import RequestList from './Request';
 import MemberList from './Members';
+import api from '../../../../util/api';
 const Info = ({ group,gprofile}) => {
   const [coverImg, setCoverImg] = useState(Info3);
   const importProfile = useRef();
@@ -42,7 +43,7 @@ const navigate = useNavigate();
   console.log("in info page");
   // console.log(group);
   const handleJoin =async () => {
-    const response = await axios.post(`http://localhost:8000/join_group`, {
+    const response = await axios.post(`${api.url}:8000/join_group`, {
       user_id: user.id,
       group : group.username,
       type: "join"
@@ -77,7 +78,7 @@ const navigate = useNavigate();
 const [members, setMembers] = useState([]);
   const fmembers= async () => {
     try {
-      const response = await axios.get('http://localhost:8000/groupmembers',
+      const response = await axios.get(`${api.url}:8000/groupmembers`,
         {
           params: { username: group.username }
         });
@@ -95,7 +96,7 @@ const [members, setMembers] = useState([]);
   const [Rmembers, setRmembers] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/requestmembers', {
+      const response = await axios.get(`${api.url}:8000/requestmembers`, {
         params: { username: group.username }
       });
       setRmembers(response.data);
@@ -109,7 +110,7 @@ const [members, setMembers] = useState([]);
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img  src={`http://localhost:8000/${group.img}`} alt='profile' />
+        <img  src={`${api.url}:8000/${group.img}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>

@@ -26,6 +26,8 @@ import Profile from "../../assets/profile.jpg";
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+// import api from '../../../util/api';
+import api from '../../util/api';
 
 const Post = ({ post, posts }) => {
     const [postbox,setPostbox] = useState(post);
@@ -46,7 +48,7 @@ const handleCommentSubmit = async (e) => {
     console.log(commentInput.content);
     e.preventDefault();
     try {
-        const response = await axios.post('http://localhost:8000/comment', commentInput);
+        const response = await axios.post(`${api.url}:8000/comment`, commentInput);
         console.log(response.data);
         alert('Comment created successfully');
         setCommentInput(  { 
@@ -69,7 +71,7 @@ const handleCommentSubmit = async (e) => {
       console.log(post.author);
       console.log(post.id);
       
-      const response = await axios.get(`http://localhost:8000/comments`,{
+      const response = await axios.get(`${api.url}:8000/comments`,{
           params: {
           username:post.author,
           blog: post.id
@@ -89,7 +91,7 @@ const handleCommentSubmit = async (e) => {
         id: postbox.id,
         time: moment().fromNow(),
       };
-      const response = await axios.post(`http://localhost:8000/upvote`, { ...upvotedata });
+      const response = await axios.post(`${api.url}:8000/upvote`, { ...upvotedata });
       setLike(response.data.is_upvoted);
       setFilledLike(response.data.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
       //console.log(response.data);
@@ -129,7 +131,7 @@ const handleCommentSubmit = async (e) => {
   const handleUpdate = async () => {
     try {
       const updatedPost = { ...postbox, content: editedContent };
-      const response = await axios.put(`http://localhost:8000/posts/${post.id}`, updatedPost);
+      const response = await axios.put(`${api.url}:8000/posts/${post.id}`, updatedPost);
       setPostbox(response.data); // Update post data after successful update
       setEditModalOpen(false); // Close the edit modal
     } catch (error) {
@@ -144,7 +146,7 @@ const handleCommentSubmit = async (e) => {
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
-            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
             <div className='post-user-info'>
               <h2>{postbox.author}</h2>
               <p className='datePara'>{postbox.post_date}</p>
@@ -196,7 +198,7 @@ const handleCommentSubmit = async (e) => {
         postbox.content : `${(postbox.content).slice(0, 300)}...`
       }</p>
 
-      {postbox.blog_img && (<img src={`http://localhost:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
+      {postbox.blog_img && (<img src={`${api.url}:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">

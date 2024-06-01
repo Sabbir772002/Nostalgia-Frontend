@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../../util/api';
 
 const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
@@ -24,7 +25,7 @@ const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
   };
   const actions = async (id, action) => {
     try {
-      const response = await axios.post('http://localhost:8000/grouprequest', {user_id:id,group:guser, type: action});
+      const response = await axios.post(`${api.url}:8000/grouprequest`, {user_id:id,group:guser, type: action});
       console.log("in actions");  
       console.log(response.data);
       fetchData();

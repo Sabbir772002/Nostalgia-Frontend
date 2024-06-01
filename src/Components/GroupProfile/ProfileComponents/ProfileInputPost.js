@@ -8,6 +8,7 @@ import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import api from '../../../util/api';
 
 const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
@@ -56,7 +57,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
         formData.append(key, value);  
       });
       //console.log(formData);
-      const response = await axios.post('http://localhost:8000/addgroupost', formData);
+      const response = await axios.post(`${api.url}:8000/addgroupost`, formData);
       console.log(response.data); 
       console.log(group.username);
       alert('Group Post created successfully');
