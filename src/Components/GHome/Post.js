@@ -26,6 +26,7 @@ import Profile from "../../assets/profile.jpg";
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import api from '../../util/api';
 
 const Post = ({ post, posts }) => {
   const [comments, setComments] = useState([]);
@@ -56,7 +57,7 @@ const Post = ({ post, posts }) => {
         id: postbox.id,
         time: moment().fromNow(),
       };
-      const response = await axios.post(`http://localhost:8000/upvote`, { ...upvotedata });
+      const response = await axios.post(`${api.url}:8000/upvote`, { ...upvotedata });
       setLike(response.data.is_upvoted);
       setFilledLike(response.data.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
       //console.log(response.data);
@@ -102,7 +103,7 @@ const Post = ({ post, posts }) => {
 
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
 
-            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
                 <Link to={`/group/${post.group_username}`}>
                 <h2 className='' style={{ marginBottom: '5px' }}>{post.group_name}</h2>
@@ -132,7 +133,7 @@ const Post = ({ post, posts }) => {
         postbox.content : `${(postbox.content).slice(0, 300)}...`
       }</p>
 
-      {postbox.post_img && (<img src={`http://localhost:8000/${postbox.post_img}`} alt="" className="post-img" />)}
+      {postbox.post_img && (<img src={`${api.url}:8000/${postbox.post_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">

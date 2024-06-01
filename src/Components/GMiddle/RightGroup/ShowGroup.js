@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Overseer.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import api from '../../../util/api';
 
 const ShowGroup = () => {
   const [formData, setFormData] = useState({
@@ -80,7 +81,7 @@ const ShowGroup = () => {
         guser: groupUsername,
         username: username
       };
-      const response = await axios.post('http://localhost:8000/deletegroup', formData);
+      const response = await axios.post(`${api.url}:8000/deletegroup`, formData);
       if (response.status === 201) {
         console.log('Successfully left the group');
         alert("Successfully left the group");
@@ -101,7 +102,7 @@ const ShowGroup = () => {
       console.log('Data submitted:', formData);   
       formData.id=user.id;  
       formData.username=formData.username; 
-      const response = await axios.post('http://localhost:8000/add_group', formData);
+      const response = await axios.post(`${api.url}:8000/add_group`, formData);
       if(response.data.msg === "Group already exists"){
         alert("Group With this Username already exists")
         return;
@@ -135,7 +136,7 @@ const ShowGroup = () => {
       {fndlist.map((group, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${group.gp}`} alt="" />
+            <img  src= {`${api.url}:8000/${group.gp}`} alt="" />
             <h3>{group.name}</h3>
           </div>
 

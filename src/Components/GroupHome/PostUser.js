@@ -26,6 +26,7 @@ import { useState } from 'react';
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import api from '../../util/api';
 
 
 const PostUser = ({posts,post,setPosts,userD}) => {
@@ -98,7 +99,7 @@ const handleDelete=(id)=>{
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
-            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
                 <h2 className='' style={{ marginBottom: '5px' }}>{postbox.group_name}</h2>
                 <h4 className='ml-2 item-align-center text-align-center' style={{ color: 'gray', fontSize: '14px', marginLeft: '5px', marginTop: '0' }}>{postbox.author}</h4>
@@ -129,7 +130,7 @@ const handleDelete=(id)=>{
 
       </p>
 
-      {postbox.post_img && (<img src={`http://localhost:8000/${postbox.post_img}`} alt="" className="post-img" />)}
+      {postbox.post_img && (<img src={`${api.url}:8000/${postbox.post_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">
