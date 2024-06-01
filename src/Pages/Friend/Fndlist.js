@@ -90,5 +90,4 @@ const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => {
     </div>
   );
 }
-
 export default Fndbox;
