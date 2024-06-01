@@ -8,7 +8,6 @@ import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import api from '../../util/api';
 import { useLocation } from 'react-router-dom';
-
 const Home = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));

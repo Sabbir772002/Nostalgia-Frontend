@@ -49,7 +49,8 @@ const Sugg = () => {
     })
       .then(response => {
         setfndlist(response.data.users);
-      })
+        console.log('Data has been received:', response.data.users);
+      }) 
       .catch(error => {
         console.error('Error fetching data:', error);
       });
@@ -115,7 +116,7 @@ const Sugg = () => {
       {fndlist && fndlist.slice(0,7).map((fnd, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${fnd.p_image}`} alt="" />
+            <img  src= {`http://localhost:8000/${fnd.pp}`} alt="" />
             <h3>{fnd.first_name} {fnd.last_name}</h3>
           </div>
           <div className="s-right">
