@@ -32,7 +32,7 @@ const GroupProfile = () => {
   
     const gprofile = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`,
+        const response = await axios.get(`${api.url}:8000/g_profile/${username}`,
         {
           params: {
             user_id: user.id

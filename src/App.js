@@ -38,11 +38,9 @@ import Vid from './Pages/Chat/video';
 import BD from './Pages/Ex/BD';
 import Vide from './Pages/Vide';
 
-
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
-
   return (
       <UserProvider>
         <div className='App'>
