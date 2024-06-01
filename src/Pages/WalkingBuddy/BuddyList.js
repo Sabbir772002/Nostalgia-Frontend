@@ -234,7 +234,7 @@ const BuddyList = () => {
         </table>
 
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'transparent' }}>
+        <Modal show={showUserInfoModal} onHide={handleClose} dialogClassName="custom-modal">
          <div className="bg-light">
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>

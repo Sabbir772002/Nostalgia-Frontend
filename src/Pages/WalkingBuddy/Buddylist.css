@@ -31,4 +31,8 @@
         border-color: #ff8500; /* Adjust hover color as needed */
       } 
 
+      .custom-modal .modal-content {
+        background-color: white;
+      }      
+
       

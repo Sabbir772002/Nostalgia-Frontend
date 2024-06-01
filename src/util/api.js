@@ -1,8 +1,8 @@
 const api = {
    // url:"http://localhost"
    // url:"http://192.168.0.102"
-   // url:"http://192.168.1.105"
-   url:"http://10.10.202.207"
+   url:"http://192.168.1.105"
+   // url:"http://10.10.202.207"
   };
   export default api;
   
