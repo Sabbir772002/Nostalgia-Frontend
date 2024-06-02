@@ -77,13 +77,11 @@ useEffect(() => {
   fetchData(); // Call the fetchData function
 }, []);
 
-   const [search,setSearch] =useState("")
-
-    
-  const [following,setFollowing] =useState("")
+   const [search,setSearch] =useState("");
+  const [following,setFollowing] =useState("");
         
-  const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
+  const [showMenu,setShowMenu] =useState(false);
+  const [images,setImages] =  useState(null);
 
   return (
     <div className='interface'>

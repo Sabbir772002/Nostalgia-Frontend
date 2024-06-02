@@ -8,10 +8,46 @@ import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
 import api from '../../util/api';
 const SignUp = () => {
-
     const navigate = useNavigate();
     const [error, setError] = useState({});
     const [submit, setSubmit] = useState(false);
+    const [divisions, setDivisions] = useState([
+        "Dhaka",
+        "Rajshahi",
+        "Khulna",
+        "Barishal",
+        "Chattogram",
+        "Sylhet",
+        "Mymensingh"
+    ]);
+
+    const [upazilas, setUpazilas] = useState();
+    const [districts, setDistricts] = useState([]);
+    const findThana = (district) => {
+        const res=axios.get(`${api.url}:8000/findthana`, {
+            params: {
+                district: district
+            }
+            
+        });
+        setUpazilas(res.data);
+    }
+    const findDistrict = (division) => {
+        const res=axios.get(`${api.url}:8000/finddistrict`,{
+            params: {
+                division: division
+            }
+        }) .then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setDistricts(response.data);
+        })
+        .catch(error => {
+            // Handling errors
+            console.error('Error:', error);
+        });
+
+    }        
     const [data, setData] = useState({
         username: '',
         password: '',
@@ -25,13 +61,22 @@ const SignUp = () => {
         address: '',
         nid: '',
         thana: '',
-        // p_image: '',
+        division: '',
+        district: '',
     });
 
     const handleChange = (e) => {
         const newObj = { ...data, [e.target.name]: e.target.value };
-        setData(newObj);
-    };
+        const { name, value } = e.target;
+        setData((prevData) => ({ ...prevData, [name]: value }));
+        if (name === "division") {
+            findDistrict(value);
+        } else if (name === "district") {
+            findThana(value).then((thanas) => {
+                setUpazilas((prev) => ({ ...prev, [value]: thanas }));
+            });
+        }
+        };
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -48,28 +93,21 @@ const SignUp = () => {
             console.error('Failed to register:', error.message);
         }
     };
+
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
-  const handleEmailVerification = async () => {
-    try {
-      const response = await axios.post('http://your-backend-api-url/send-verification-email', {
-        email: email,
-      });
-      setMessage(response.data.message);
-    } catch (error) {
-      setMessage('Error sending verification email');
-      console.error(error);
-    }
-  };
-
-   
-    // <div>
-    //    <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} /> */}
-    //   <button onClick={handleEmailVerification}>Send Verification Email</button>
-    //   <p>{message}</p>
-    // </div>
-  
+    const handleEmailVerification = async () => {
+        try {
+            const response = await axios.post('http://your-backend-api-url/send-verification-email', {
+                email: email,
+            });
+            setMessage(response.data.message);
+        } catch (error) {
+            setMessage('Error sending verification email');
+            console.error(error);
+        }
+    };
     return (
         <div className="container">
             <div className="container-form">
@@ -78,103 +116,134 @@ const SignUp = () => {
                     <p>Please fill in the inputs below:</p>
 
                     <div className="inputBox">
-                        <AiOutlineUser className='username'/>
-                        <input type='text' 
-                            name="username" 
-                            id="username" 
+                        <AiOutlineUser className='username' />
+                        <input className='form-control'  type='text'
+                            name="username"
+                            id="username"
                             onChange={handleChange}
                             placeholder='Username'
-                        /> 
+                        />
                     </div>
-                    {error.username && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.username}</span>}
+                    {error.username && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.username}</span>}
 
                     <div className="inputBox">
-                        <AiOutlineUser className='first_name'/>
-                        <input type='text' 
-                            name="first_name" 
-                            id="first_name" 
+                        <AiOutlineUser className='first_name' />
+                        <input  className='form-control' type='text'
+                            name="first_name"
+                            id="first_name"
                             onChange={handleChange}
                             placeholder='First Name'
-                        /> 
+                        />
                     </div>
-                    {error.first_name && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.first_name}</span>}
-
+                    {error.first_name && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.first_name}</span>}
                     <div className="inputBox">
-                        <AiOutlineUser className='last_name'/>
-                        <input type='text' 
-                            name="last_name" 
-                            id="last_name" 
+                        <AiOutlineUser className='last_name' />
+                        <input  className='form-control' type='text'
+                            name="last_name"
+                            id="last_name"
                             onChange={handleChange}
                             placeholder='Last Name'
-                        /> 
+                        />
                     </div>
-                    {error.last_name && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.last_name}</span>}
+                    {error.last_name && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.last_name}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='mail'/>
-                        <input type="email"
-                            name="email" 
-                            id="email" 
+                        <FiMail className='mail' />
+                        <input  className='form-control' type="email"
+                            name="email"
+                            id="email"
                             onChange={handleChange}
                             placeholder='Email'
-                        /> 
+                        />
                     </div>
-                    {error.email && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.email}</span>}
+                    {error.email && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.email}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='address'/>
-                        <input type="text"
-                            name="address" 
-                            id="address" 
+                        <FiMail className='address' />
+                        <input  className='form-control' type="text"
+                            name="address"
+                            id="address"
                             onChange={handleChange}
                             placeholder='Address'
-                        /> 
+                        />
                     </div>
-                    {error.address && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.address}</span>}
+                    {error.address && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.address}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='nid'/>
-                        <input type="text"
-                            name="nid" 
-                            id="nid" 
+                        <FiMail className='nid' />
+                        <input  className='form-control' type="text"
+                            name="nid"
+                            id="nid"
                             onChange={handleChange}
                             placeholder='NID'
-                        /> 
+                        />
                     </div>
-                    {error.nid && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.nid}</span>}
+                    {error.nid && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.nid}</span>}
 
-                    <div className="inputBox">
-                        <FiMail className='phone'/>
-                        <input type="text"
-                            name="phone" 
-                            id="phone" 
+                    <div className="inputBox" >
+                        <FiMail className='phone' />
+                        <input className='form-control' type="text"
+                            name="phone"
+                            id="phone"
                             onChange={handleChange}
                             placeholder='Phone'
-                        /> 
+                        />
                     </div>
-                    {error.phone && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.phone}</span>} <div className="inputBox">
-                        <FiMail className='thana'/>
-                        <input type="text"
-                            name="thana" 
-                            id="thana" 
-                            onChange={handleChange}
-                            placeholder='thana'
-                        /> 
+                    {error.phone && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.phone}</span>}
+
+                    <div className="inputBox " style={{ width: "100%" }}>
+                        <select className='form-control' name="division" id="division" onChange={handleChange}>
+                            <option value="">Select Division</option>
+                            {divisions.map((division) => (
+                                <option key={division} value={division}>
+                                    {division}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                    {error.thana && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.thana}</span>} <div className="inputBox">
-                        <FiMail className='gender'/>
-                        <input type="text"
-                            name="gender" 
-                            id="gender" 
-                            onChange={handleChange}
-                            placeholder='gender'
-                        /> 
-                    </div>
-                    {error.gender && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.gender}</span>}
+                    {error.division && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.division}</span>}
+                    { districts && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select  className='form-control'  name="district" id="district" onChange={handleChange}>
+                                <option value="">Select District</option>
+                                {districts.map((district) => (
+                                    <option key={district} value={district}>
+                                        {district}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+                    {error.district && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.district}</span>}
+
+                    {upazilas && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select className='form-control'  name="thana" id="thana" onChange={handleChange}>
+                                <option value="">Select Thana/Upazila</option>
+                                {upazilas.map((upazila) => (
+                                    <option key={upazila} value={upazila}>
+                                        {upazila}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+                    {error.thana && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.thana}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='dob'/>
-                        <input 
+                        <FiMail className='gender' />
+                        <input  className='form-control' type="text"
+                            name="gender"
+                            id="gender"
+                            onChange={handleChange}
+                            placeholder='Gender'
+                        />
+                    </div>
+                    {error.gender && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.gender}</span>}
+
+                    <div className="inputBox">
+                        <FiMail className='dob' />
+                        <input  className='form-control'
                             type="date"
                             name="dob"
                             id="dob"
@@ -182,29 +251,29 @@ const SignUp = () => {
                             placeholder="Date of Birth"
                         />
                     </div>
-                    {error.dob && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.dob}</span>}
-            
+                    {error.dob && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.dob}</span>}
+
                     <div className="inputBox">
-                        <RiLockPasswordLine className='password'/>
-                        <input type="password" 
-                            name="password" 
-                            id="password" 
+                        <RiLockPasswordLine className='password' />
+                        <input  className='form-control' type="password"
+                            name="password"
+                            id="password"
                             onChange={handleChange}
                             placeholder='Password'
                         />
                     </div>
-                    {error.password && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.password}</span>}
+                    {error.password && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.password}</span>}
 
                     <div className="inputBox">
-                        <RiLockPasswordLine className='password'/>
-                        <input type="password" 
-                            name="password" 
-                            id="password" 
+                        <RiLockPasswordLine className='password' />
+                        <input  className='form-control' type="password"
+                            name="confirm_password"
+                            id="confirm_password"
                             onChange={handleChange}
                             placeholder='Confirm Password'
                         />
                     </div>
-                    {error.password && <span style={{color:"red",display:"block",marginTop:"5px"}}>{error.password}</span>}
+                    {error.confirm_password && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.confirm_password}</span>}
 
                     <div className='divBtn'>
                         <small className='FG'><Link to="/forget">Forgot Password?</Link></small>
@@ -219,5 +288,4 @@ const SignUp = () => {
         </div>
     );
 };
-
 export default SignUp;

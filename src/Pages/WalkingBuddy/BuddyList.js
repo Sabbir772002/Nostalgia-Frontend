@@ -28,7 +28,7 @@ const BuddyList = () => {
   const fetchData = async () => {
     console.log("fetching data...");
     try {
-      const response = await axios.get('http://localhost:8000/walk', {
+      const response = await axios.get(`${api.url}:8000/walk`, {
         params: { username: userData.username }
       });
       setUserlist(response.data);
@@ -56,7 +56,7 @@ const BuddyList = () => {
     e.preventDefault();
     setShowInputBoxModal(false);
     try {
-      await axios.post('http://localhost:8000/walk', formData);
+      await axios.post(`${api.url}:8000/walk`, formData);
       console.log('Walk data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
@@ -79,7 +79,7 @@ const BuddyList = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-      const response = await axios.get('http://localhost:8000/walkmembers', {
+      const response = await axios.get(`${api.url}:8000/walkmembers`, {
         params: { id: user.id }
       });
       setMembers(response.data);
@@ -95,7 +95,7 @@ const BuddyList = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8000/walk_request', {
+      const response = await axios.post(`${api.url}:8000/walk_request`, {
         id: walk.id,
         username: userData.username
       });

@@ -41,7 +41,7 @@ const Sugg = () => {
 
 
   const fetchgrouplist = () => {
-    axios.get(`http://127.0.0.1:8000/!my_groups`, {
+    axios.get(`${api.url}:8000/!my_groups`, {
       params: {
         user_id: user.id
       }
@@ -53,10 +53,6 @@ const Sugg = () => {
         console.error('Error fetching data:', error);
       });
   };
-
-
-
-
   const handleAddOverseer = () => {
     setShowModal(true);
   };
@@ -147,7 +143,7 @@ const Sugg = () => {
       {fndlist.map((group, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`${api.url}:8000/${group.gp}`} alt="" />
+            <img  src= {`${api.url}:8000/${group.img}`} alt="" />
             <h3>{group.name}</h3>
           </div>
 
