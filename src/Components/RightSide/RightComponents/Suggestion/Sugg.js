@@ -5,7 +5,6 @@ import "./Sugg.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../../../../util/api';
-
 const Sugg = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -38,8 +37,6 @@ const Sugg = () => {
   useEffect(() => {
     fetchOverseerList();
   }, []);
-
-
 
 
   const fetchOverseerList = () => {
@@ -263,5 +260,4 @@ const Sugg = () => {
     </div>
   )
 }
-
 export default Sugg;

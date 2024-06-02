@@ -35,6 +35,7 @@ const Chat = () => {
     const [search, setSearch] = useState('');
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket(`${api.url}:5000`);
+    const [lastseen, setLastseen] = useState("");
     useEffect(() => {
         if (fnd && !done) {
             console.log("fnd alreadt set   "+fnd);
@@ -59,6 +60,7 @@ const Chat = () => {
     
             if (userList.length > 0 && (fnd == "" || fnd == null || fnd == undefined) && !done) {
                 console.log(fnd);
+                setLastseen(userList[0].lastSeen);
                 console.log("set of userlists")
                 setfd(userList[0].name);
                 msgbox();
@@ -131,7 +133,7 @@ const Chat = () => {
                                 
             // You can update your UI or perform any other actions based on the received user status
         });
-    
+
     }, [socket, messages]);
 
     useEffect(() => {
@@ -281,7 +283,6 @@ const Chat = () => {
             // Emit the message event to the server
             socket.emit('chat message', message);
             setNewMessage('');
-
             // Clear the selected image after sending
             setSelectedImage(null);
         }else if (newMessage.trim() !== '') {
@@ -319,7 +320,9 @@ const Chat = () => {
         .then(response => {
             console.log('Message Retrieve:', response.data);
             setMessages(response.data);
-
+            const user = userbox.find(user => user.name === fd);
+            setLastseen(user ? user.lastSeen : lastseen);
+            
         })
         .catch(error => {
             console.error('Error fetching messages:', error);
@@ -328,6 +331,7 @@ const Chat = () => {
         chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
 
     }
+    
     useEffect(() => {
         if (fd) {
             msgbox();
@@ -349,6 +353,11 @@ const Chat = () => {
             console.log('Box of User Data:', response.data);
             setfndData(response.data);
             setfndName(response.data.first_name + " " + response.data.last_name);
+            const user = userbox.find(user => user.name === name);
+            setLastseen(user ? user.lastSeen : lastseen);
+                        console.log(name);
+            console.log(userbox);
+            console.log("last seen time update in findname",lastseen);
             console.log(response.data.first_name + " " + response.data.last_name);
         })
         .catch(error => {
@@ -452,7 +461,7 @@ function getLastSeenTime(lastSeen) {
                                         <div className='chat-about'>
                                         <Link to={`/profile/${fd}`} className="text-dark">
                                             <h6 className='m-b-0'>{fndname}</h6>
-                                            <small>Last seen: 2 hours ago</small>
+                                            <small>Last seen:{getLastSeenTime(lastseen)} </small>
                                             </Link>
                                         </div>
                                     </div>
@@ -479,7 +488,7 @@ function getLastSeenTime(lastSeen) {
                                             {message.sender == userData.username ? (
                                                 <>
                                                     <div className="message-data box-right">
-                                                        <span className="message-data-time">{message.time}</span>
+                                                        <span className="message-data-time m-2">{message.time}</span>
                                                     {/* <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} /> */}
                                                   <br/>
                                                     <div className="message my-message msg-right bg-primary text-light">{message.content}</div> 

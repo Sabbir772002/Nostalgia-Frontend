@@ -167,9 +167,10 @@ const [members, setMembers] = useState([]);
         ) : (
 <button onClick={group.member === 1 ? handleMember : handleJoin}>
   <FontAwesomeIcon icon={faUserFriends} />
-  {group.member === 1 ? (
+  {group.member == 1 ? (
     "Joined"
-  ) : (
+  ) : ( group.accept ==1 ? "Request Sent" :
+
     "Join"
   )}
 </button>
