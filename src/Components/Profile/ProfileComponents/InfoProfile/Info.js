@@ -45,7 +45,6 @@ const Info = ({
       setProfileImg(profileImg);
     }
   };
-
   const handleFile2 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
@@ -137,7 +136,6 @@ return (
               ) :(
                 <></>
               )
-            
             }
       </div>
       <input type='file' ref={importProfile} onChange={handleFile1} style={{ display: 'none' }} />

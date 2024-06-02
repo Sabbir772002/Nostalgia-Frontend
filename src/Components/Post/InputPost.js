@@ -77,7 +77,7 @@ const InputPost = ({fetchPosts}) => {
     <div className="i-form">
       <form onSubmit={onSubmit}>
         <div className="i-input-box">
-          <img src={Profile} className='i-img'/>
+        <img src={`${api.url}:8000/${userData.p_image}`} className='i-img'/>
           <input 
             type="text" 
             id="i-input" 

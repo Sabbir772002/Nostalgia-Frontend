@@ -5,7 +5,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 // import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
 // import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 // import {FaSmile} from "react-icons/fa"
-
+import api from '../../../util/api';
 
 const ProfileInputPost = ({handleSubmit,
                             setBody,
@@ -15,11 +15,12 @@ const ProfileInputPost = ({handleSubmit,
                             profileImg,
                             userD
                         }) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
   return (
     <div className="i-form">
         <form onSubmit={handleSubmit}>
             <div className="i-input-box">
-                <img src={profileImg} className='i-img'/>
+                <img src={`${api.url}:8000/${userData.p_image}`}className='i-img'/>
                 
                 <input 
                 type="text" 
@@ -42,7 +43,6 @@ const ProfileInputPost = ({handleSubmit,
             <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
             <span className='photo-dis'>Video</span>
           </div> */}
-
           {/* <div className="pv-upload">
             <KeyboardVoiceRoundedIcon className="input-svg" style={{fontSize:"38px",color:"green"}}/>
             <span className='photo-dis'>Audio</span>

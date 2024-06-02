@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import api from '../../util/api'
-
+import './login.css'
 const Login = () => {
     // Set the item in localStorage
 const setLocalStorageItem = (key, value) => {
@@ -45,8 +45,6 @@ const setLocalStorageItem = (key, value) => {
       console.error('Error:', error);
     }
   }
-  
-  
     const navigate =useNavigate()
     const [error,setError] =useState({})
     const [submit,setSubmit] =useState(false)
@@ -122,7 +120,7 @@ const setLocalStorageItem = (key, value) => {
     <div className="container_log">
         <div className="container-form">
             <form onSubmit={handleSignUp}>
-                <h1>Login</h1>
+            <h1>Login to <span class="highlight">Nos</span>talgia</h1>
                 <p>Please sign in to continue.</p>
                 <div className="inputBox">
                     <FiMail className='mail'/>

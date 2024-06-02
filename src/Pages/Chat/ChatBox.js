@@ -410,7 +410,6 @@ function getLastSeenTime(lastSeen) {
     scrollToBottom();
   }, [messages]);
  
-
     return (
         <div className='interface'>
             <Nav

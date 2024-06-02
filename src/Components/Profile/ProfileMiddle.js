@@ -69,9 +69,8 @@ const ProfileMiddle = ({following,
        ))
        setSearchResults(searchData)
        
-    },[userPostData,search])
+    },[userPostData,search]);
 
-  
     const { username } = useParams();
 const user= JSON.parse(localStorage.getItem('userData'));
 if(user.username.includes("@")){
