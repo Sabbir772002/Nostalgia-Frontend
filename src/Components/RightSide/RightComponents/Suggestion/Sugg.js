@@ -112,7 +112,7 @@ const Sugg = () => {
       {fndlist && fndlist.slice(0,7).map((fnd, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`${api.url}:8000/${fnd.p_image}`} alt="" />
+            <img  src= {`${api.url}:8000/${fnd.pp}`} alt="" />
             <h3>{fnd.first_name} {fnd.last_name}</h3>
           </div>
           <div className="s-right">
@@ -124,8 +124,6 @@ const Sugg = () => {
       <div className="text-center">
       <Link to='/findfrined'><button className="SM-btn">Find Friends</button></Link>
       </div>
-
-
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Create Group</Modal.Title>

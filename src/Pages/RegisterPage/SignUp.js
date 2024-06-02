@@ -20,7 +20,6 @@ const SignUp = () => {
         "Sylhet",
         "Mymensingh"
     ]);
-
     const [upazilas, setUpazilas] = useState();
     const [districts, setDistricts] = useState([]);
     const findThana = (district) => {
