@@ -15,7 +15,6 @@ const Sugg = () => {
     email: '',
   });
   const user= JSON.parse(localStorage.getItem('userData'));
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value;
@@ -38,11 +37,10 @@ const Sugg = () => {
     fetchOverseerList();
   }, []);
 
-
   const fetchOverseerList = () => {
     axios.get(`${api.url}:8000/friendsugg`, {
       params: {
-        user_id: user.username
+        user_id: user.id
       }
     })
       .then(response => {
@@ -126,8 +124,6 @@ const Sugg = () => {
       <div className="text-center">
       <Link to='/findfrined'><button className="SM-btn">Find Friends</button></Link>
       </div>
-
-
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Create Group</Modal.Title>

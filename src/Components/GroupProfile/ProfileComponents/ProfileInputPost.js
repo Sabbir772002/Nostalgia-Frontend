@@ -101,8 +101,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
               <PhotoLibraryIcon className="input-svg" style={{fontSize:"38px",color:"orangered"}}/>
               <span className='photo-dis'>Photo</span>
             </label>
-
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
               <span className='photo-dis'>Video</span>
             </div>
@@ -115,7 +114,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
             <div className="pv-upload">
               <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
               <span className='photo-dis'>Feelings/Activity</span>
-            </div>
+            </div> */}
           </div>
           <button type='submit'>Share</button>
 

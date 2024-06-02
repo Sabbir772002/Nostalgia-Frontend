@@ -29,7 +29,6 @@ const GroupProfile = () => {
     gprofile();
   }
   , [username]);
-  
     const gprofile = async () => {
       try {
         const response = await axios.get(`${api.url}:8000/g_profile/${username}`,

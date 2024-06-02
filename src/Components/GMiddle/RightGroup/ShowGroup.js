@@ -94,8 +94,6 @@ const ShowGroup = () => {
     }
   };
   
-  
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -136,7 +134,7 @@ const ShowGroup = () => {
       {fndlist.map((group, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`${api.url}:8000/${group.gp}`} alt="" />
+            <img  src= {`${api.url}:8000/${group.img}`} alt="" />
             <h3>{group.name}</h3>
           </div>
 
@@ -246,7 +244,7 @@ const ShowGroup = () => {
                     <Form.Control type="password" value={selectedUser.password} readOnly />
                   </Form.Group>
                 </div>
-              </div> */}
+          </div> */}
                <div className="card mb-2">
                 <div className="card-body">
                   <Form.Group controlId="formGender">
@@ -262,7 +260,7 @@ const ShowGroup = () => {
                     <Form.Control type="text" value={selectedUser.relation} readOnly />
                   </Form.Group>
                 </div>
-              </div> 
+              </div>
               <div className="card mb-2">
                 <div className="card-body">
                   <Form.Group controlId="formAddress">

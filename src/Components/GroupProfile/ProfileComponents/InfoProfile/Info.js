@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
@@ -16,13 +16,24 @@ import { Button } from "react-bootstrap";
 import RequestList from './Request';
 import MemberList from './Members';
 import api from '../../../../util/api';
-const Info = ({ group,gprofile}) => {
+import { set } from 'react-hook-form';
+
+const Info = ({ group, gprofile }) => {
   const [coverImg, setCoverImg] = useState(Info3);
   const importProfile = useRef();
   const importCover = useRef();
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editGroupData, setEditGroupData] = useState({
+    name: group.name,
+    username: group.username,
+    img: group.img,
+    topic: group.topic,
+    privacy: group.privacy
+  });
+  const [newProfileImage, setNewProfileImage] = useState(group.img);
   const user = JSON.parse(localStorage.getItem('userData'));
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleFile2 = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -31,8 +42,9 @@ const navigate = useNavigate();
       const coverImg = imgObj.image;
       setCoverImg(coverImg);
     }
-  }
-    const handleFile1 = (e) => {
+  };
+
+  const handleFile1 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
       const imgObj = { image: URL.createObjectURL(img) };
@@ -40,60 +52,106 @@ const navigate = useNavigate();
       setCoverImg(coverImg);
     }
   };
-  console.log("in info page");
-  // console.log(group);
-  const handleJoin =async () => {
+
+  const handleJoin = async () => {
     const response = await axios.post(`${api.url}:8000/join_group`, {
       user_id: user.id,
-      group : group.username,
+      group: group.username,
       type: "join"
     });
-    if(response.ok==0){
+    if (response.ok === 0) {
       alert("You are already a member of this group");
       return;
     }
     console.log("in join");
     console.log(group);
-    //setgroup({...group,member:1});
   };
+
   const handleMember = async () => {
-  }
-  // const handleMember = () => {
-  //   console.log("in member");
-  //   console.log(group);
-  //   const response = axios.post(`http://localhost:8000/join_group`, {
-  //     user_id: user.id,
-  //     group : group.username,
-  //   type: "Delete"
-  //   });
-  //   fmembers();
-  //   //setgroup({...group,member:0});
-  // }; 
-  const handlemodal = () => { 
+    // handle member logic
+  };
+
+  const handleModal = () => {
     setShowModal(true);
-  }
-  const handlemodalbox = () => {
+  };
+
+  const handleModalBox = () => {
     setShowModal(false);
-  }
-const [members, setMembers] = useState([]);
-  const fmembers= async () => {
+  };
+
+  const handleEditModal = () => {
+    setShowEditModal(true);
+  };
+
+  const handleEditModalBox = () => {
+    setShowEditModal(false);
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setEditGroupData({
+      ...editGroupData,
+      [name]: value
+    });
+  };
+
+  const handleEditFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewProfileImage(e.target.files[0]);
+    }
+  };
+  const handleEditFormSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', editGroupData.name);
+    formData.append('username', editGroupData.username);
+    formData.append('topic', editGroupData.topic);
+    formData.append('privacy', editGroupData.privacy);
+    if (newProfileImage) {
+      formData.append('img', newProfileImage);
+    }
+    console.log(editGroupData);
+    console.log(formData);
+    // setEditGroupData({
+    //   name: editGroupData.name,
+    //   username: editGroupData.username,
+    //   img: newProfileImage,
+    //   topic: editGroupData.topic,
+    //   privacy: editGroupData.privacy
+    // });
+
     try {
-      const response = await axios.get(`${api.url}:8000/groupmembers`,
-        {
-          params: { username: group.username }
-        });
-        console.log(response.data);
-        setMembers(response.data);
-      } catch (error) {
-      console.error('Error fetching user list:', error);
+      const response = await axios.post(`${api.url}:8000/updategroup`, formData);
+      if (response.status==201) {
+        alert('Group profile updated successfully');
+        setShowEditModal(false);
+      }
+    } catch (error) {
+      console.error('Error updating group profile:', error);
     }
   };
 
+  const [members, setMembers] = useState([]);
+
+  const fmembers = async () => {
+    try {
+      const response = await axios.get(`${api.url}:8000/groupmembers`, {
+        params: { username: group.username }
+      });
+      console.log(response.data);
+      setMembers(response.data);
+    } catch (error) {
+      console.error('Error fetching user list:', error);
+    }
+  };
   useEffect(() => {
     fmembers();
     fetchData();
   }, [group]);
+
   const [Rmembers, setRmembers] = useState([]);
+
   const fetchData = async () => {
     try {
       const response = await axios.get(`${api.url}:8000/requestmembers`, {
@@ -103,14 +161,27 @@ const [members, setMembers] = useState([]);
     } catch (error) {
       console.error('Error fetching user list:', error);
     }
-    
   };
+  useEffect(() => {
+    console.log(group);
+    setEditGroupData({
+      name: group.name,
+      username: group.username,
+      img: group.img,
+      topic: group.topic,
+      privacy: group.privacy
+    });
+    console.log("Edit Group Data");
+console.log(editGroupData);
+  }
+
+  , [group]);
 
   return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img  src={`${api.url}:8000/${group.img}`} alt='profile' />
+        <img src={`${api.url}:8000/${group.img}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
@@ -127,55 +198,119 @@ const [members, setMembers] = useState([]);
         <p>{group.username}</p>
 
         {group.username === user.username ? (
-        <Link to="/" className="logout" onClick="">
-          <BiLogOut />
-          Logout
-        </Link>
-      ) : (
-        <Button className="logout" onClick={handlemodal} style={{ width: "150px" }}>
-        <FontAwesomeIcon icon={faUserFriends}/>
-         Members
-          </Button>)}
-          <Modal show={showModal} onHide={handlemodalbox} dialogClassName="custom-modal" >
+          <Link to="/" className="logout" onClick="">
+            <BiLogOut />
+            Logout
+          </Link>
+        ) : (
+          <Button className="logout" onClick={handleModal} style={{ width: "150px" }}>
+            <FontAwesomeIcon icon={faUserFriends} />
+            Members
+          </Button>
+        )}
+        <Modal show={showModal} onHide={handleModalBox} dialogClassName="custom-modal" >
           <Modal.Header closeButton>
             <Modal.Title>MemberList</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-  <Tabs defaultActiveKey="request">
- {1 && 1 && 1 == 1 && (
-             <Tab eventKey="request" title="Request">
+            <Tabs defaultActiveKey="request">
+              {1 && 1 && 1 === 1 && (
+                <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fmembers} members={members} fetchData={fetchData} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
-                  </Tab>
-                )}
-    <Tab eventKey="members" title="Members">
-     <MemberList members={members} group={group} />
-    </Tab>
-  </Tabs>
-</Modal.Body>
+                </Tab>
+              )}
+              <Tab eventKey="members" title="Members">
+                <MemberList members={members} group={group} />
+              </Tab>
+            </Tabs>
+          </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handlemodalbox}>Close</Button>
+            <Button variant="secondary" onClick={handleModalBox}>Close</Button>
           </Modal.Footer>
         </Modal>
 
-        {group.username === user.username ? (
-          <Link to={`/profile/edit/${group.username}`}>
-            <button>
-              <BiLogOut />
-              Edit ProFILE
-            </button>
-          </Link>
+        {group.admin === user.username ? (
+          <button onClick={handleEditModal}>
+            <BiLogOut />
+            Edit Group
+          </button>
         ) : (
-<button onClick={group.member === 1 ? handleMember : handleJoin}>
-  <FontAwesomeIcon icon={faUserFriends} />
-  {group.member == 1 ? (
-    "Joined"
-  ) : ( group.accept ==1 ? "Request Sent" :
-
-    "Join"
-  )}
-</button>
+          <button onClick={group.member === 1 ? handleMember : handleJoin}>
+            <FontAwesomeIcon icon={faUserFriends} />
+            {group.admin === user.username ? ("Edit Group") : group.member === 1 ? (
+              "Joined"
+            ) : (group.accept === 1 ? "Request Sent" :
+              "Join"
+            )}
+          </button>
         )}
       </div>
+      <Modal show={showEditModal} onHide={handleEditModalBox} dialogClassName="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Group</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleEditFormSubmit}>
+          <div className="form-group">
+              <label htmlFor="groupName">Group Name</label>
+              <input
+                type="text"
+                className="form-control"
+                id="groupName"
+                name="name"
+                value={editGroupData.name}
+                onChange={handleEditInputChange}
+                required
+              />
+            </div> <div className="form-group">
+              <label htmlFor="groupName">Group Username</label>
+              <input
+                type="text"
+                className="form-control"
+                id="groupUsername"
+                name="username"
+                value={editGroupData.username}
+                onChange={handleEditInputChange}
+                readOnly
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="groupUsername">Group Topic</label>
+              <input
+                type="text"
+                className="form-control"
+                id="gtopic"
+                name="topic"
+                value={editGroupData.topic}
+                onChange={handleEditInputChange}
+                required
+              />
+            </div>        
+                     <div className="form-group">
+              <label htmlFor="groupUsername">Group Privacy</label>
+              <select as="select" className='form-control' id="privacy" value={editGroupData.privacy} onChange={handleEditInputChange}>
+                      <option value="Bondhu">Bondhu</option>
+                      <option value="Known">Known</option>
+                      <option value="Public">Public</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="groupImg">Profile Image</label>
+              <input
+                type="file"
+                className="form-control"
+                id="groupImg"
+                onChange={handleEditFileChange}
+              />
+            </div>
+            <Button type="submit" variant="primary">Update</Button>
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleEditModalBox}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

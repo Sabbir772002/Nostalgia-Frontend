@@ -42,7 +42,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
+        const response = await axios.get(`${api.url}:8000/profile/${username}`);
         if (response.status === 200) {
           setUserData(response.data);
           console.log(response.data.p_image);
