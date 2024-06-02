@@ -200,7 +200,6 @@ const donetime=()=>{
     console.log(nightTime);
   }
 }
-
 useEffect(() => {
   donetime();
 }, [timebox]);
@@ -284,6 +283,7 @@ useEffect(() => {
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null);
+
   useEffect(() => {
     // Function to parse time string to hours and minutes
     const parseTime = (timeString) => {
@@ -298,12 +298,16 @@ useEffect(() => {
       const currentMinute = currentTime.getMinutes();
 
       const notificationTime = parseTime(nowtime);
-
+      const currentTimeFrame = sortMedicationByTime();
+      console.log("akhon somoy");
+      console.log(currentTimeFrame);
+      const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
+        console.log("med for now");
       // Check if it's time for notification and task is not done
       if (
         currentHour >= notificationTime.hour &&
         currentMinute >= notificationTime.minute &&
-        done !== true
+        done != true && currentMedications.length>0
       ) {
         console.log("ar kotokhon bhai, matha mutha gelo...");
         console.log(done);
@@ -316,7 +320,6 @@ useEffect(() => {
     // Cleanup function
     return () => clearInterval(interval);
   }, [nowtime, done]);
-
   // Function to show notification
   const showNotification = () => {
     // Code to display notification
