@@ -74,6 +74,11 @@ const ProfileMiddle = ({following,
   
     const { username } = useParams();
 const user= JSON.parse(localStorage.getItem('userData'));
+if(user.username.includes("@")){
+  return (
+    <h2>You are not allowed to view this page!</h2>
+  )
+}else{
   return (
     <div className='profileMiddle'>
         <Info 
@@ -110,6 +115,7 @@ const user= JSON.parse(localStorage.getItem('userData'));
         />
     </div>
   )
+}
 }
 
 export default ProfileMiddle

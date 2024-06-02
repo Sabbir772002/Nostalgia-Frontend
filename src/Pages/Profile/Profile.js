@@ -27,8 +27,6 @@ const Profile = () => {
   const [userName, setUserName] = useState("");
   const [profileImg, setProfileImg] = useState(ProfileImg);
   const [userPostData, setUserPostData] = useState([]);
- 
-
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`${api.url}:8000/profile/${username}`,
@@ -53,11 +51,6 @@ const Profile = () => {
     fetchUserData();
   }, [username]);
 
-if(user.username.includes("@")){
-  return (
-    <h2>You are not allowed to view this Page!</h2>
-  )
-}else{
 
 
   return (
@@ -75,6 +68,7 @@ if(user.username.includes("@")){
         setFollowing={setFollowing}
         profileImg={profileImg}        
         />
+        
 
         <ProfileMiddle 
         following={following}
@@ -102,7 +96,6 @@ if(user.username.includes("@")){
       </div>
     </div>
   )
-}
 }
 
 export default Profile
