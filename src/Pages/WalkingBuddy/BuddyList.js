@@ -18,7 +18,7 @@ const BuddyList = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${api.url}8000/walk`, {
+      const response = await axios.get(`${api.url}:8000/walk`, {
         params: { username: userData.username }
       });
       setUserlist(response.data);

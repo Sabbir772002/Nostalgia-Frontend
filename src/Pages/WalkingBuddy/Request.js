@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import api from '../../util/api';
+
 
 const RequestList = ({user, fmembers}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
@@ -13,7 +13,7 @@ const RequestList = ({user, fmembers}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${api.url}:8000/walk!members`, {
+      const response = await axios.get('localhost:8000/walk!members', {
         params: { id: user.id }
       });
      // fmembers();
@@ -44,7 +44,7 @@ const RequestList = ({user, fmembers}) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      const response = await axios.post(`${api.url}:8000/handlemember`, { id:id,walk_id:user.id, type: action});
+      const response = await axios.post('localhost:8000/handlemember', { id:id,walk_id:user.id, type: action});
       console.log(response.data);
       fetchData();
       fmembers();

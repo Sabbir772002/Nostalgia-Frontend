@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Sugg.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import api from '../../../util/api';
+import api from '../../../../util/api';
 
 const Sugg = () => {
   const [formData, setFormData] = useState({
