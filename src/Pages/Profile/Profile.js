@@ -53,6 +53,12 @@ const Profile = () => {
     fetchUserData();
   }, [username]);
 
+if(user.username.includes("@")){
+  return (
+    <h2>You are not allowed to view this Page!</h2>
+  )
+}else{
+
 
   return (
     <div className='interface'>
@@ -96,6 +102,7 @@ const Profile = () => {
       </div>
     </div>
   )
+}
 }
 
 export default Profile

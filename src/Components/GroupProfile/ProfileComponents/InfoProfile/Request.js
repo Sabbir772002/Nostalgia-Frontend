@@ -41,7 +41,7 @@ const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
         <tr>
           <th>Name</th>
           <th>Age</th>
-          <th>Gender</th>
+          {/* <th>Gender</th> */}
           <th>View</th>
           {user.username==group.admin && (
 
@@ -53,10 +53,11 @@ const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
           <tr key={member.id}>
             <td>{member.first_name}</td>
             <td>{member.dob}</td>
-            <td>{member.gender}</td>
+            {/* <td>{member.gender}</td> */}
             <td>
               <Button variant="primary" onClick={() => viewProfile(member.username)}>View Profile</Button>
-            </td>
+            </td>          {user.username==group.admin && (
+
             <td>
               <DropdownButton
                 title="Actions"
@@ -72,7 +73,8 @@ const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
                 <Dropdown.Item eventKey="confirm" onClick={() => handleConfirm(member.id)}>Confirm</Dropdown.Item>
                 <Dropdown.Item eventKey="delete" onClick={() => handleDelete(member.id)}>Delete</Dropdown.Item>
               </DropdownButton>
-            </td>
+            </td>)}
+
           </tr>
         ))}
       </tbody>

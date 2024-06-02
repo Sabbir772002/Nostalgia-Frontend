@@ -21,7 +21,6 @@ const useSocket = (url) => {
 
     return socket;
 };
-
 const Chat = () => {
     const { fnd } = useParams();
     const [fd, setfd] = useState("");
@@ -410,6 +409,11 @@ function getLastSeenTime(lastSeen) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  if(userData.username.includes("@")){
+    return (
+        <h1 className='error mt-4'>You are not allowed to view this page</h1>
+    );
+}else{
 
     return (
         <div className='interface'>
@@ -552,6 +556,8 @@ function getLastSeenTime(lastSeen) {
             </div>
         </div>
     );
+}
 };
+
 
 export default Chat;

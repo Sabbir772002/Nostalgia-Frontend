@@ -111,7 +111,6 @@ const BuddyList = () => {
       console.error('Error sending request:', error);
     }
   };
-
   const handleUserInfoClick = (user) => {
     console.log("ogo, hete chole jaite mon chaitese na...");
     setSelectedUser(user);
@@ -188,7 +187,7 @@ const BuddyList = () => {
           <thead>
             <tr>
               <th>Image</th>
-              <th>Name</th>
+              <th>Owner</th>
               <th>Location</th>
               <th>Date</th>
               <th>End</th>
@@ -245,7 +244,9 @@ const BuddyList = () => {
                 <Tab eventKey="details" title="Details">
                   {selectedUser && (
                     <div>
-                      <p><strong>Name:</strong> {selectedUser.w_creator}</p>
+                    <p><strong>Walk Name:</strong> {selectedUser.walk_name}</p>
+                    <p><strong>Creator:</strong> {selectedUser.w_creator}</p>
+                    <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
                       <p><strong>Location:</strong> {selectedUser.location}</p>
                       <p><strong>Date:</strong> {selectedUser.date}</p>
                       <p><strong>End:</strong> {selectedUser.end}</p>

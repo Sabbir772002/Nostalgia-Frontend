@@ -79,7 +79,7 @@ const FndVox = ({ fndlist, setfndlist, fnd,fdlist, fetchfnd, handleSelectChanged
                             <Dropdown.Item eventKey="Accept">Accept</Dropdown.Item>
                         )} */}
                         <Dropdown.Item eventKey="Known">Known</Dropdown.Item>
-                        <Dropdown.Item eventKey="Bondhu">Friend</Dropdown.Item>
+                        <Dropdown.Item eventKey="Bondhu">Bondhu</Dropdown.Item>
                     </DropdownButton>
                     </div>
                     <div className="col-6">

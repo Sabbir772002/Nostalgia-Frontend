@@ -33,7 +33,12 @@ const Eventlist = () => {
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value; // By default, use the selected value
-
+    if(id === 'division') {
+      findDistrict(value);
+    }
+    if(id === 'district') {
+      findThana(value);
+    }
     // If the id is "privacy", you can map the value to "Bondhu" or "Known"
     if (id === 'privacy') {
       newValue = value === 'Bondhu' ? 'Bondhu' : 'Known';
@@ -126,7 +131,7 @@ const Eventlist = () => {
       console.error('Error sending request:', error);
       }
     };
-  
+
 
   const handleUserInfoClick = (user) => {
     console.log("ogo, hete chole jaite mon chaitese na...");
@@ -138,9 +143,49 @@ const Eventlist = () => {
   const handleInputBoxButtonClick = () => {
     setShowInputBoxModal(true);
   };
-  
-  const handleClose = () => setShowUserInfoModal(false);
 
+  const handleClose = () => setShowUserInfoModal(false);
+  const [divisions, setDivisions] = useState([
+        "Dhaka",
+        "Rajshahi",
+        "Khulna",
+        "Barishal",
+        "Chattogram",
+        "Sylhet",
+        "Mymensingh"
+    ]);
+    const [upazilas, setUpazilas] = useState();
+    const [districts, setDistricts] = useState([]);
+    const findThana = (district) => {
+        const res=axios.get(`${api.url}:8000/findthana`,{
+            params: {
+                district: district
+            }
+        }).then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setUpazilas(response.data);
+        }).catch(error => {
+            // Handling errors
+            console.error('Error:', error);
+        });
+    }
+    const findDistrict = (division) => {
+        const res=axios.get(`${api.url}:8000/finddistrict`,{
+            params: {
+                division: division
+            }
+        }) .then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setDistricts(response.data);
+        })
+        .catch(error => {
+            // Handling errors
+            console.error('Error:', error);
+        });
+
+    }        
   return (
     <div className="vox mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
       <div className="box">
@@ -192,10 +237,45 @@ const Eventlist = () => {
                 <label htmlFor="end_time">End Time</label>
                 <input type="time" className="form-control" id="end_time" value={formData.end_time} onChange={handleChange} />
               </div>
-              <div className="form-group">
+              <div className="inputBox " style={{ width: "100%" }}>
+                        <select className='form-control' name="division" id="division" onChange={handleChange}>
+                            <option value="">Select Division</option>
+                            {divisions.map((division) => (
+                                <option key={division} value={division}>
+                                    {division}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    { districts && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select  className='form-control'  name="district" id="district" onChange={handleChange}>
+                                <option value="">Select District</option>
+                                {districts.map((district) => (
+                                    <option key={district} value={district}>
+                                        {district}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+                    {upazilas && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select className='form-control'  name="thana" id="thana" onChange={handleChange}>
+                                <option value="">Select Thana/Upazila</option>
+                                {upazilas.map((upazila) => (
+                                    <option key={upazila} value={upazila}>
+                                        {upazila}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+              {/* <div className="form-group">
                 <label htmlFor="thana">Thana</label>
                 <input type="text" className="form-control" id="thana" value={formData.thana} onChange={handleChange} />
-              </div>
+              </div> */}
               <div className="form-group">
                 <label htmlFor="privacy">Privacy</label>
                 <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
@@ -279,7 +359,9 @@ const Eventlist = () => {
       {selectedUser && (
         <div>
           <p><strong>Name:</strong> {selectedUser.E_creator}</p>
+          <p><strong>Type:</strong> {selectedUser.E_type}</p>
           <p><strong>Location:</strong> {selectedUser.Address}</p>
+          <p><strong>Thana</strong> {selectedUser.thana}</p>
           <p><strong>Description:</strong> {selectedUser.Description}</p>
           <p><strong>Start Date:</strong> {selectedUser.start_date}</p>
           <p><strong>End Date:</strong> {selectedUser.end_date}</p>

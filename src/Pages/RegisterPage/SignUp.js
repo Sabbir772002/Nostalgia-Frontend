@@ -23,13 +23,18 @@ const SignUp = () => {
     const [upazilas, setUpazilas] = useState();
     const [districts, setDistricts] = useState([]);
     const findThana = (district) => {
-        const res=axios.get(`${api.url}:8000/findthana`, {
+        const res=axios.get(`${api.url}:8000/findthana`,{
             params: {
                 district: district
             }
-            
+        }).then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setUpazilas(response.data);
+        }).catch(error => {
+            // Handling errors
+            console.error('Error:', error);
         });
-        setUpazilas(res.data);
     }
     const findDistrict = (division) => {
         const res=axios.get(`${api.url}:8000/finddistrict`,{
@@ -71,9 +76,7 @@ const SignUp = () => {
         if (name === "division") {
             findDistrict(value);
         } else if (name === "district") {
-            findThana(value).then((thanas) => {
-                setUpazilas((prev) => ({ ...prev, [value]: thanas }));
-            });
+            findThana(value);
         }
         };
 

@@ -303,10 +303,11 @@ const Triplist = () => {
       {selectedUser && (
         <div>
           <p><strong>Name:</strong> {selectedUser.creator}</p>
+          <p><strong>Guide:</strong> {selectedUser.guide}</p>
+          <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
           <p><strong>Location:</strong> {selectedUser.location}</p>
           <p><strong>Date:</strong> {selectedUser.start_date}</p>
           <p><strong>End:</strong> {selectedUser.end_date}</p>
-          <p><strong>Time:</strong> {selectedUser.time}</p>
         </div>
       )}
     </Tab>
