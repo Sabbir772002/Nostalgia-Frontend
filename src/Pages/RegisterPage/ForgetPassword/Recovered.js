@@ -42,21 +42,20 @@ export default function Reset() {
      // alert("An error occurred. Please try again.");
     }
   };
-
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <div className="card p-5 shadow-sm">
         <h2 className="mb-4 text-center">Reset Password</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="inputValue">Enter Email or Username</label>
+            <label htmlFor="inputValue">Enter Username</label>
             <input
               type="text"
               name="inputValue"
               id="inputValue"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Enter your email or username"
+              placeholder="Enter your  username"
               className={`form-control ${error ? 'is-invalid' : ''}`} // Apply 'is-invalid' class if error exists
               required
             />

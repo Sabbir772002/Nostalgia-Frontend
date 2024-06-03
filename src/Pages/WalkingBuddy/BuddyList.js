@@ -16,6 +16,7 @@ const BuddyList = () => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const [formData, setFormData] = useState({
     walk_name: '',
+    type:"Done",
     w_creator: userData.username,
     address: '',
     walk_date: new Date().toISOString().split('T')[0],
@@ -60,6 +61,7 @@ const BuddyList = () => {
       fetchData();
       setFormData({
         walk_name: '',
+        type:"Done",
         w_creator: userData.username,
         address: '',
         walk_date: new Date().toISOString().split('T')[0],

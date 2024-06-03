@@ -16,7 +16,6 @@ export default function validation(data){
     }
 
 
-
     if(data.password === ""){
         error.password = "* Password is Required"
     }
@@ -29,7 +28,7 @@ export default function validation(data){
         error.confirmpassword="* Confirm password is Required"
     }
     else if(data.password !== data.confirmpassword){
-        error.confirmpassword ="* Confirm password did'nt match"
+        error.confirm_password ="* Confirm password did'nt match"
     }
 
     return error

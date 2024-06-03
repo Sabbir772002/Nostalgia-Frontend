@@ -7,6 +7,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
 import api from '../../util/api';
+import { set } from 'date-fns';
 const SignUp = () => {
     const navigate = useNavigate();
     const [error, setError] = useState({});
@@ -67,9 +68,11 @@ const SignUp = () => {
         thana: '',
         division: '',
         district: '',
+        confirm_password: ''
     });
 
     const handleChange = (e) => {
+        setError({});
         const newObj = { ...data, [e.target.name]: e.target.value };
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
@@ -79,9 +82,12 @@ const SignUp = () => {
             findThana(value);
         }
         };
-
     const handleSignUp = async (e) => {
         e.preventDefault();
+        // if(data.password !== data.confirm_password){
+        //     setError({confirm_password: "Password doesn't match"});
+        //     // return;
+        // }
         setError(validation(data));
         setSubmit(true);
 
@@ -90,6 +96,11 @@ const SignUp = () => {
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");
+            }
+            if(response.status === 400){
+                console.log('Registration failed!');
+                console.log(response);
+                setError(response.data);
             }
         } catch (error) {
             console.error('Failed to register:', error.message);

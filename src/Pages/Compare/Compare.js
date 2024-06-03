@@ -12,7 +12,7 @@ import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
 import SearchIcon from '@mui/icons-material/Search';
-
+import api from '../../util/api';
 const Compare = () => {
   const { username } = useParams();
   console.log(username);
@@ -30,7 +30,7 @@ const Compare = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`,
+        const response = await axios.get(`${api.url}:8000/profile/${username}`,
         {
           params : {
             username: username,

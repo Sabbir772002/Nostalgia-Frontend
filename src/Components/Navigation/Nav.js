@@ -56,7 +56,7 @@ const handlemsg = (e) =>{
       <Link to="/home" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <AiOutlineHome className='nav-icons'/>
       </Link>
-        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
+        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/></Link>
         <Link to="/chat" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <TbMessage className='nav-icons'/>
         </Link>
