@@ -1,6 +1,10 @@
 .interface{
     width: 100%;
 }
+.toto{
+    color:rgb(249,106,2);
+ 
+ }
 .boxi{
     width: 100vw;
     min-height: 100vh;

@@ -21,7 +21,6 @@ const InputPost = ({fetchPosts}) => {
     post_time: formattedTime,
     blog_img: ""
   });
-  
   const [images, setImages] = useState(null); // State variable for images
 
   const handleChange = (e) => {
@@ -40,7 +39,6 @@ const InputPost = ({fetchPosts}) => {
     fetchPosts();
   }, []);
 
-  
   const onSubmit = async (e) => {
     e.preventDefault();
     try {

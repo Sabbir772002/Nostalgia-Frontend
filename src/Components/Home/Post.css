@@ -14,7 +14,6 @@
   max-width: 400px;
   margin: auto;
 }
-
 .edit-textarea {
   width: 100%;
   margin-bottom: 10px;
@@ -127,7 +126,6 @@
     transform: scale(1.1);
     transition: .3s;
 }
-
 .post-like{
     margin-left: 5px;
     cursor: pointer;

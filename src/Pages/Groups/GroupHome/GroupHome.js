@@ -47,7 +47,21 @@ const GroupHome = () => {
   const [showMenu,setShowMenu] =useState(false);
   const [images,setImages] =  useState(null);
   console.log(userData);
-
+  const user= JSON.parse(localStorage.getItem('userData'));
+  const [fndlist, setfndlist] = useState([]);
+  const fetchOverseerList = () => {
+    axios.get(`${api.url}:8000/my_groups`, {
+      params: {
+        user_id: user.id
+      }
+    })
+      .then(response => {
+        setfndlist(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
   return (
     <div className='interface'>
       <Nav 
@@ -63,7 +77,7 @@ const GroupHome = () => {
         ) : (
           <>
             <Middle posts={posts} fetchPosts={fetchPosts} />
-            <Right />
+            <Right fetchOverseerList={fetchOverseerList} />
           </>
         )}
       </div>

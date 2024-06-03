@@ -65,6 +65,7 @@ const Info = ({ group, gprofile }) => {
     }
     console.log("in join");
     console.log(group);
+    fetchData();  
   };
 
   const handleMember = async () => {
@@ -214,7 +215,7 @@ console.log(editGroupData);
           </Modal.Header>
           <Modal.Body>
             <Tabs defaultActiveKey="request">
-              {1 && 1 && 1 === 1 && (
+              {group.admin==user.username && (
                 <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fmembers} members={members} fetchData={fetchData} Rmembers={Rmembers} setRmembers={setMembers} group={group} guser={group.username} />
                 </Tab>
@@ -239,7 +240,7 @@ console.log(editGroupData);
             <FontAwesomeIcon icon={faUserFriends} />
             {group.admin === user.username ? ("Edit Group") : group.member === 1 ? (
               "Joined"
-            ) : (group.accept === 1 ? "Request Sent" :
+            ) : (group.accept == 1 ? "Request Sent" :
               "Join"
             )}
           </button>

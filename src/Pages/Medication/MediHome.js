@@ -15,6 +15,12 @@ const MediHome = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
+  useEffect(() => {
+    if(userData.username.includes("@"))
+      {
+        userData.username=userData.username.split("@")[1];
+      }
+    }, []);
   const [medicationSchedule, setMedicationSchedule] = useState([
     { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
     { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image:`${api.url}:8000/media/d.png` },

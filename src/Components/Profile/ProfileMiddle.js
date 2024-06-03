@@ -5,6 +5,8 @@ import Profile from "../../assets/profile.jpg"
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import "../Profile/ProfileMiddle.css"
+import axios from 'axios'
+import api from '../../util/api'
 
 import moment from 'moment'
 import ProfileInputPost from './ProfileComponents/ProfileInputPost'
@@ -72,6 +74,23 @@ const ProfileMiddle = ({following,
     },[userPostData,search]);
 
     const { username } = useParams();
+    const [posts, setPosts] = useState([]);
+
+    const fetchPosts = async() => {
+      axios.get(`${api.url}:8000/singleblog`,
+      {
+        params: {
+          username: username
+        }
+      })
+      .then(response => {
+          setPosts(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching posts:', error);
+        });
+    };
+
 const user= JSON.parse(localStorage.getItem('userData'));
 if(user.username.includes("@")){
   return (
@@ -102,15 +121,19 @@ if(user.username.includes("@")){
         setImportFile ={setImportFile}
         images={images}
         setImages={setImages}
+        fetchPosts={fetchPosts}
         />
         )}
         
-        <UserHome 
+        <UserHome
+        fetchPosts={fetchPosts}
+        setPosts={setPosts}
         userData={userData}
         profileImg={profileImg}
         setUserPostData={setUserPostData}
         userPostData={searchResults}
         images={images}
+        posts={posts}
         />
     </div>
   )

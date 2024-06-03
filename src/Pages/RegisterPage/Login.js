@@ -75,12 +75,10 @@ const setLocalStorageItem = (key, value) => {
                 setUserData(response.data.user);
                // localStorage.setItem('userData', JSON.stringify(response.data.user));
                exampleUsage(response.data.user);
-
+               
                 //const userData = JSON.stringify(response.data.user);
                 //navigate(`/home?userData=${userData}`);
                 navigate(`/home`);
-
-
             }else{
                 console.log("guru");
             }
@@ -88,33 +86,24 @@ const setLocalStorageItem = (key, value) => {
             console.error('Failed to login:', error.message);
         }
     };
-
-
    function validationLogin(data){
-        const error ={}
-
+        const error ={};
         // const emailPattern= /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const passwordPattern= /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{1,12}$/g;
-
         // if(data.email === ""){
         //     error.email ="* Email is Required"
         // }
         // else if(!emailPattern.test(data.email)){
         //     error.email="* Email did not match"
         // }
-
-        
         if(data.password === ""){
             error.password = "* Password is Required"
         }
         else if(!passwordPattern.test(data.password)){
             error.password="* Password not valid"
         }
-        
         return error
    }
-
-
 
   return (
     <div className="container_log">

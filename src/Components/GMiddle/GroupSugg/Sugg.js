@@ -6,7 +6,7 @@ import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../../../util/api';
 
-const Sugg = () => {
+const Sugg = (fetchOverseerList) => {
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -69,7 +69,6 @@ const Sugg = () => {
   const handleCloseViewModal = () => {
     setShowViewModal(false);
   };
-
   // Define the dlt function to send a POST request
   const dlt = async (groupUsername, username) => {
     try {
@@ -132,6 +131,7 @@ const Sugg = () => {
     console.log("in join");
     console.log(guser);
     fetchgrouplist();
+    fetchOverseerList();
     //setgroup({...group,member:1});
   };
   return (

@@ -9,13 +9,11 @@ import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import api from '../../../util/api';
-
 const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
-  
   const [post, setpost] = useState({
     username: userData.username,
     content: '', // State variable for content
