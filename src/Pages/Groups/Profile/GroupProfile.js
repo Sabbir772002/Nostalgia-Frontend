@@ -7,6 +7,8 @@ import "../Profile/Profile.css"
 import moment from 'moment'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import api from '../../../util/api';
+
 const GroupProfile = () => {
   const { username } = useParams();
   console.log(username);
@@ -25,12 +27,11 @@ const GroupProfile = () => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     gprofile();
-  } 
+  }
   , [username]);
-  
     const gprofile = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/g_profile/${username}`,
+        const response = await axios.get(`${api.url}:8000/g_profile/${username}`,
         {
           params: {
             user_id: user.id
@@ -50,7 +51,7 @@ const GroupProfile = () => {
     };
 
     const fetchPosts = () => {
-      axios.get(`http://localhost:8000/gp_post`,
+      axios.get(`${api.url}:8000/gp_post`,
       {
         params: {
           username:username

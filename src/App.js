@@ -36,12 +36,11 @@ import AppPaths from "./chat_lib/appPaths";
 import Chat from './Pages/Chat/ChatBox';
 import Vid from './Pages/Chat/video';
 import BD from './Pages/Ex/BD';
-
+import Vide from './Pages/Vide';
 
 const App = () => {
   // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
-
   return (
       <UserProvider>
         <div className='App'>
@@ -78,7 +77,8 @@ const App = () => {
             <Route path='/trip' element={<Trip />} />
             <Route path='/chat/:fnd' element={<Chat />} />
             <Route path='/chat' element={<Chat />} />
-            <Route path='/video' element={<Vid />} />
+            {/* <Route path='/video' element={<Vid />} /> */}
+            <Route path='/Vide' element={<Vide />} />
             {/* <Route path='/chat' element={Chat} /> */}
             {/* <Route path='/c/:chatId' element={HomeScreen} />
             <Route path='/chat_login' element={LoginScreen} />

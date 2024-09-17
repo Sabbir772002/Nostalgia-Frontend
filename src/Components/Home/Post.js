@@ -26,6 +26,8 @@ import Profile from "../../assets/profile.jpg";
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+// import api from '../../../util/api';
+import api from '../../util/api';
 
 const Post = ({ post, posts }) => {
     const [postbox,setPostbox] = useState(post);
@@ -46,7 +48,7 @@ const handleCommentSubmit = async (e) => {
     console.log(commentInput.content);
     e.preventDefault();
     try {
-        const response = await axios.post('http://localhost:8000/comment', commentInput);
+        const response = await axios.post(`${api.url}:8000/comment`, commentInput);
         console.log(response.data);
         alert('Comment created successfully');
         setCommentInput(  { 
@@ -69,7 +71,7 @@ const handleCommentSubmit = async (e) => {
       console.log(post.author);
       console.log(post.id);
       
-      const response = await axios.get(`http://localhost:8000/comments`,{
+      const response = await axios.get(`${api.url}:8000/comments`,{
           params: {
           username:post.author,
           blog: post.id
@@ -89,7 +91,7 @@ const handleCommentSubmit = async (e) => {
         id: postbox.id,
         time: moment().fromNow(),
       };
-      const response = await axios.post(`http://localhost:8000/upvote`, { ...upvotedata });
+      const response = await axios.post(`${api.url}:8000/upvote`, { ...upvotedata });
       setLike(response.data.is_upvoted);
       setFilledLike(response.data.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
       //console.log(response.data);
@@ -98,7 +100,6 @@ const handleCommentSubmit = async (e) => {
       console.error('Error liking the post:', error);
     }
   };
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`API_ENDPOINT/posts/${id}`);
@@ -115,13 +116,33 @@ const handleCommentSubmit = async (e) => {
   const handleFriendsId = (id) => {
     // Implement this function as per your requirements
   };
-  
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editedContent, setEditedContent] = useState(postbox.content);
+
+  // Other state variables and functions remain unchanged
+
+  const handleEdit = () => {
+    setEditedContent(postbox.content);
+    setEditModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const updatedPost = { ...postbox, content: editedContent };
+      const response = await axios.put(`${api.url}:8000/posts/${post.id}`, updatedPost);
+      setPostbox(response.data); // Update post data after successful update
+      setEditModalOpen(false); // Close the edit modal
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  };
   return (
     <div className='post'>
+      
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
-            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
             <div className='post-user-info'>
               <h2>{postbox.author}</h2>
               <p className='datePara'>{postbox.post_date}</p>
@@ -131,23 +152,49 @@ const handleCommentSubmit = async (e) => {
 
         <div className='delete'>
          {showDelete && (<div className="options">
-            <button><PiSmileySad />Not Interested in this post</button>
-            <button><IoVolumeMuteOutline />Mute this user</button>
-            <button><MdBlockFlipped />Block this user</button>
+            {/* <button><PiSmileySad />Not Interested in this post</button> */}
+            {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
+            {/* <button><MdBlockFlipped />Block this user</button> */}
+            {postbox.author === userdata.username && (
+              <>
             <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
-            <button><MdReportGmailerrorred />Report post</button>
+            <button onClick={()=>handleEdit(post.id)}><AiOutlineDelete />Edit Post</button>
+            </>
+            )}
+            {/* <button><MdReportGmailerrorred />Report post</button> */}
          </div>
          )}
           <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
          </div>
        </div>
 
+      {/* Edit Modal */}
+      {editModalOpen && (
+     
+      <div className="edit-modal">
+  <textarea
+    className="edit-textarea"
+    value={editedContent}
+    onChange={(e) => setEditedContent(e.target.value)}
+    rows={4}
+    cols={50}
+    placeholder="Edit your post..."
+  />
+  <div className="edit-buttons">
+    <button className="update-button" onClick={handleUpdate}>Update</button>
+    <button className="cancel-button" onClick={() => setEditModalOpen(false)}>Cancel</button>
+  </div>
+</div>
+      
+      )}
+   
+
       <p className='body'>{
         (postbox.content).length <= 300 ?
         postbox.content : `${(postbox.content).slice(0, 300)}...`
       }</p>
 
-      {postbox.blog_img && (<img src={`http://localhost:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
+      {postbox.blog_img && (<img src={`${api.url}:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">
@@ -158,7 +205,7 @@ const handleCommentSubmit = async (e) => {
 
             <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
 
-            <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' />
+            {/* <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' /> */}
 
             {socialIcons && (
               <div className="social-buttons">
@@ -175,7 +222,6 @@ const handleCommentSubmit = async (e) => {
             <div className="commentSection">
               <form onSubmit={handleCommentSubmit}>
                 <div className="cmtGroup">
-                  <SentimentSatisfiedRoundedIcon className='emoji' />
                   <input
                     type="text"
                     id="commentInput"

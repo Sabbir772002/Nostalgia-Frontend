@@ -8,6 +8,7 @@ import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
+import api from '../../util/api'
 const Caregiver = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -15,12 +16,11 @@ const Caregiver = () => {
  // console.log(userData);
      const [caregiverlist, setCaregiverlist] = useState([]);
       useEffect(() => {
-          axios.get('http://localhost:8000/caregiver')
+        axios.get(`${api.url}:8000/caregiver`)
               .then(response => {
                  // console.log("mere fnd");
                  console.log(response.data);
                   setCaregiverlist(response.data);
-                 // console.log(fndlist);
               })
               .catch(error => {
                   console.error('Error fetching data:', error);
@@ -29,7 +29,6 @@ const Caregiver = () => {
       const [search,setSearch] =useState("");
   
 const [following,setFollowing] =useState("");
-      
 const [showMenu,setShowMenu] =useState(false);
 const [images,setImages] =  useState(null);
      const [body,setBody] =useState("");
@@ -45,9 +44,9 @@ const [images,setImages] =  useState(null);
    
         <Left/>
 <div className='fndlist'>
+<h2 className="toto">CareGiver List</h2>
         {caregiverlist.map((caregiver)=>(
              <div className="d-inline-flex p-4">
-
             <CFind 
             caregiverlist={caregiverlist}
             setCaregiverlist={setCaregiverlist}

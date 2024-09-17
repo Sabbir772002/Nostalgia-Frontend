@@ -8,13 +8,12 @@ import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
+import api from '../../../util/api';
 const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
-  
   const [post, setpost] = useState({
     username: userData.username,
     content: '', // State variable for content
@@ -23,7 +22,6 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
     blog_img: "",
     gp:group.username
   });
-
   const [images, setImages] = useState(null); // State variable for images
 
   const handleChange = (e) => {
@@ -56,7 +54,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
         formData.append(key, value);  
       });
       //console.log(formData);
-      const response = await axios.post('http://localhost:8000/addgroupost', formData);
+      const response = await axios.post(`${api.url}:8000/addgroupost`, formData);
       console.log(response.data); 
       console.log(group.username);
       alert('Group Post created successfully');
@@ -82,7 +80,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
     <div className="i-form">
       <form onSubmit={onSubmit}>
         <div className="i-input-box">
-          <img src={Profile} className='i-img'/>
+        <img src={`${api.url}:8000/${userData.p_image}`} className='i-img'/>
           <input 
             type="text" 
             id="i-input" 
@@ -100,8 +98,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
               <PhotoLibraryIcon className="input-svg" style={{fontSize:"38px",color:"orangered"}}/>
               <span className='photo-dis'>Photo</span>
             </label>
-
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
               <span className='photo-dis'>Video</span>
             </div>
@@ -114,7 +111,7 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
             <div className="pv-upload">
               <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
               <span className='photo-dis'>Feelings/Activity</span>
-            </div>
+            </div> */}
           </div>
           <button type='submit'>Share</button>
 

@@ -36,6 +36,7 @@ import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
+import api from '../../util/api'
 
 const Home = () => {
   const location = useLocation();
@@ -44,7 +45,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/blog', {
+    axios.get(`${api.url}:8000/blog`, {
     params: {
         username: userData.username
     }

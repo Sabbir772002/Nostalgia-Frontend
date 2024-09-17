@@ -1,83 +1,108 @@
-import React from 'react'
-
+import React, { useState, useEffect } from 'react';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
-import {FaSmile} from "react-icons/fa"
+import axios from 'axios';
+import api from '../../../util/api';
+import '../../../Components/Post/InputPost.css';
+const ProfileInputPost = (fetchPosts) => {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().split('T')[0];
+  const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
+
+  const [post, setPost] = useState({
+    username: userData.username,
+    content: '',
+    post_date: formattedDate,
+    post_time: formattedTime,
+    blog_img: ""
+  });
+  const [images, setImages] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPost({ ...post, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPost({ ...post, blog_img: file });
+    setImages(file);
+  };
 
 
-const ProfileInputPost = ({handleSubmit,
-                            setBody,
-                            body,
-                            images,
-                            setImages,
-                            profileImg,
-                            userD
-                        }) => {
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      Object.entries(post).forEach(([key, value]) => {
+        if (key === 'blog_img' && !(value instanceof File)) {
+          return;
+        }
+        formData.append(key, value);
+      });
+
+      const response = await axios.post(`${api.url}:8000/addblog`, formData);
+      alert('Blog created successfully');
+      // fetchPosts();
+      setPost({
+        username: userData.username,
+        content: '',
+        post_date: formattedDate,
+        post_time: formattedTime,
+        blog_img: null
+      });
+      setImages(null);
+    } catch (error) {
+      console.error('Error creating blog:', error);
+      alert('Error creating blog. Please try again.');
+    }
+  };
+
   return (
     <div className="i-form">
-        <form onSubmit={handleSubmit}>
-            <div className="i-input-box">
-                <img src={profileImg} className='i-img'/>
-                
-                <input 
-                type="text" 
-                id="i-input" 
-                placeholder={`What's in your mind ${userD.username}?`}
-                required
-                value={body}
-                onChange={(e)=>setBody(e.target.value)}
-                />
-            </div>
+      <form onSubmit={onSubmit}>
+        <div className="i-input-box">
+          <img src={`${api.url}:8000/${userData.p_image}`} className='i-img' alt="Profile" />
+          <input
+            type="text"
+            id="i-input"
+            placeholder={`What's on your mind, ${userData.first_name}?`}
+            required
+            value={post.content}
+            onChange={handleChange}
+            name="content"
+          />
+        </div>
 
-     <div className="file-upload">
-      <div className="file-icons">
-          <label htmlFor='file' className="pv-upload">
-            <PhotoLibraryIcon className="input-svg" style={{fontSize:"38px",color:"orangered"}}/>
-            <span className='photo-dis'>Photo</span>
-          </label>
-
-          <div className="pv-upload">
-            <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
-            <span className='photo-dis'>Video</span>
+        <div className="file-upload">
+          <div className="file-icons">
+            <label htmlFor="file" className="pv-upload">
+              <PhotoLibraryIcon className="input-svg" style={{ fontSize: "38px", color: "orangered" }} />
+              <span className='photo-dis'>Photo</span>
+            </label>
           </div>
-
-          <div className="pv-upload">
-            <KeyboardVoiceRoundedIcon className="input-svg" style={{fontSize:"38px",color:"green"}}/>
-            <span className='photo-dis'>Audio</span>
-          </div>
-
-          <div className="pv-upload">
-            <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
-            <span className='photo-dis'>Location</span>
-          </div>
-      </div>
-      
           <button type='submit'>Share</button>
-            
-      </div>
+        </div>
 
-        <div style={{display:"none"}} >
-            <input 
-            id='file'
-            type="file" 
-            accept=".png,jpeg,.jpg"
-            onChange={(e)=>setImages(e.target.files[0])}
-            
-             />
-          </div>
+        <input
+          type="file"
+          id="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
 
         {images && (
           <div className="displayImg">
-            <CloseRoundedIcon onClick={()=>setImages(null)}/>
-            <img src={URL.createObjectURL(images)} alt="" />
+            <CloseRoundedIcon onClick={() => setImages(null)} />
+            <img src={URL.createObjectURL(images)} alt="Selected" />
           </div>
         )}
+      </form>
+    </div>
+  );
+};
 
-        </form>
-     </div>
-  )
-}
-
-export default ProfileInputPost
+export default ProfileInputPost;

@@ -88,10 +88,10 @@ const EmailVerificationForm = () => {
               </div>
 
               <div className="d-flex justify-content-center align-items-center mt-3 text-sm text-gray-500">
-                <p className="mb-0">Didn't receive code? </p>
+                {/* <p className="mb-0">Didn't receive code? </p>
                 <a href="#" onClick={resendOTP} className="ml-1" id="resendLink">
                   {disable ? `Resend OTP in ${timerCount}s` : "Resend OTP"}
-                </a>
+                </a> */}
               </div>
             </div>
           </form>

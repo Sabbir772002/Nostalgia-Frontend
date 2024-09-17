@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../../../util/api";
 
 export default function Reset() {
     const navigate = useNavigate();
@@ -22,10 +23,10 @@ export default function Reset() {
       // Determine endpoint based on the input value
       if (inputValue.includes("@")) {
         // If input value contains "@" symbol, assume it's an email
-        endpoint = "http://localhost:8000/otp";
+        endpoint = `${api.url}:8000/otp`;
       } else {
         // Otherwise, assume it's a username
-        endpoint = "http://localhost:8000/otp";
+        endpoint = `${api.url}:8000/otp`;
       }
       console.log(inputValue);
       const response = await axios.post(endpoint,{"input":inputValue});
@@ -41,21 +42,20 @@ export default function Reset() {
      // alert("An error occurred. Please try again.");
     }
   };
-
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <div className="card p-5 shadow-sm">
         <h2 className="mb-4 text-center">Reset Password</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="inputValue">Enter Email or Username</label>
+            <label htmlFor="inputValue">Enter Username</label>
             <input
               type="text"
               name="inputValue"
               id="inputValue"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Enter your email or username"
+              placeholder="Enter your  username"
               className={`form-control ${error ? 'is-invalid' : ''}`} // Apply 'is-invalid' class if error exists
               required
             />

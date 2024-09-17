@@ -10,7 +10,6 @@ import "../MediCation/MedicationBox.css"
 
 import moment from 'moment'
 import ProfileInputPost from '../Profile/ProfileComponents/ProfileInputPost'
-
 const MedicationBox = ({following,
                         search,
                         images,

@@ -9,6 +9,15 @@
     border-radius: 20px;
     padding-bottom: 22px;
 }
+.info-details-list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .info-details-list span {
+    margin-left: 10px;
+  }
 .info-cover{
     height: 100px;
     height: 240px;

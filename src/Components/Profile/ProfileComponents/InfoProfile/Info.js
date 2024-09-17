@@ -10,12 +10,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
 import { FaCheckCircle } from 'react-icons/fa';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-
 import { useNavigate } from 'react-router-dom';
 import './Info.css';
 import axios from 'axios';
 import { height } from '@mui/system';
 import { FaUserEdit } from 'react-icons/fa';
+import api from '../../../../util/api';
+import Logout from '../InfoProfile/outlog';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import { useEffect } from 'react';
+import PhoneIcon from '@mui/icons-material/Phone'; // Import phone icon
+import PersonIcon from '@mui/icons-material/Person'; // Import gender icon
 
 const Info = ({
   userPostData,
@@ -40,7 +45,6 @@ const Info = ({
       setProfileImg(profileImg);
     }
   };
-
   const handleFile2 = (e) => {
     if (e.target.files && e.target.files[0]) {
       let img = e.target.files[0];
@@ -62,7 +66,7 @@ const navigate = useNavigate();
   const add_fnf = async () => {
     try {
       console.log("add_fnf");
-        const response = await axios.post('http://localhost:8000/add_fnf', {
+        const response = await axios.post(`${api.url}:8000/add_fnf `, {
             user_id: user.id,
             friend_id: userData.id,
             type: "Sent"
@@ -82,7 +86,7 @@ const navigate = useNavigate();
 const delete_fnd = async () => {
   try {
       
-      const response = await axios.post('http://localhost:8000/delete_fnd', {
+      const response = await axios.post(`${api.url}:8000/delete_fnd`, {
           user_id: user.id,
           friend_id: userData.id,
           type: "Sent"
@@ -97,12 +101,31 @@ const delete_fnd = async () => {
       // Handle errors if any
   }
 };
-console.log(userData);
-  return (
+const [addinfo, setAddinfo] = useState([]);
+const fetchaddinfo = async () => {
+  try {
+    const response = await axios.get(`${api.url}:8000/addinfo`, {
+      params: {
+        user_id: userData.id,
+      }
+    }
+    );
+      setAddinfo(response.data);
+      console.log(response.data);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+}
+useEffect(() => {
+  console.log(userData);
+  fetchaddinfo();
+}, [userData]);
+
+return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
-        <img src={`http://localhost:8000/${userData.pp}`} alt='profile' />
+        <img src={`${api.url}:8000/${userData.pp}`} alt='profile' />
         <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
         </div>
@@ -122,10 +145,7 @@ console.log(userData);
         <p>{userData.last_name}</p>
 
          {userData.username === user.username ? (
-            <Link to='/' className='logout' onClick={logoutUser}>
-              <BiLogOut />
-              Logout
-            </Link>
+            <Logout logoutUser={logoutUser} />
           ) : (
             userData && userData.if_fnf === 1 ? (
               <Link to='' className='logout'>
@@ -175,24 +195,40 @@ console.log(userData);
               </Link>
             )
           )
-        }
-        <div className='info-details'>
-          <div className='info-col-1'>
-          <div className='info-details-list'>
-              <LocationOnOutlinedIcon />
-              <span>{userData.thana}</span>
-            </div>
-            <div className='info-details-list'>
-              <MailOutlineIcon />
-              <span>{userData.phone}</span>
-            </div>
-
-            <div className='info-details-list'>
-              <WorkOutlineRoundedIcon />
-              <span>{userData.gender}</span>
-            </div>
+}
+      <div className="row">
+        <div className="col-md-6">
+          <div className="info-details-list">
+            <LocationOnOutlinedIcon />
+            <span>{userData.thana}</span>
+          </div>
+          <div className="info-details-list">
+            <MailOutlineIcon />
+            <span>{userData.email}</span>
+          </div>
+          <div className="info-details-list">
+            <PersonIcon />
+            <span>{userData.gender}</span>
           </div>
         </div>
+        <div className="col-md-6 text-right">
+        {addinfo && addinfo.length > 0 ? (
+            <>
+              {addinfo.map((add, index) => (
+                <div className="info-details-list" key={index}>
+                  {add.type == 1 && <SchoolOutlinedIcon />}
+                  {add.type == 0 && <WorkOutlineRoundedIcon />}
+                  {add.type == 1 && "Studied at"}
+                  {add.type == 0 && "Works at"}
+                  <span>{add.content}</span>
+                </div>
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+    </div>
       </div>
     </div>
   );

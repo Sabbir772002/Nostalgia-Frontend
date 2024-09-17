@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Sugg.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import api from '../../../../util/api';
 const Sugg = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -15,7 +15,6 @@ const Sugg = () => {
     email: '',
   });
   const user= JSON.parse(localStorage.getItem('userData'));
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value;
@@ -38,18 +37,16 @@ const Sugg = () => {
     fetchOverseerList();
   }, []);
 
-
-
-
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/friendsugg`, {
+    axios.get(`${api.url}:8000/friendsugg`, {
       params: {
-        user_id: user.username
+        user_id: user.id
       }
     })
       .then(response => {
         setfndlist(response.data.users);
-      })
+        console.log('Data has been received:', response.data.users);
+      }) 
       .catch(error => {
         console.error('Error fetching data:', error);
       });
@@ -81,7 +78,7 @@ const Sugg = () => {
       console.log('Data submitted:', formData);   
       formData.id=user.id;  
       formData.username=formData.username; 
-      const response = await axios.post('http://localhost:8000/add_group', formData);
+      const response = await axios.post(`${api.url}:8000/add_group`, formData);
       if(response.data.msg === "Group already exists"){
         alert("Group With this Username already exists")
         return;
@@ -115,20 +112,18 @@ const Sugg = () => {
       {fndlist && fndlist.slice(0,7).map((fnd, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${fnd.p_image}`} alt="" />
+            <img  src= {`${api.url}:8000/${fnd.pp}`} alt="" />
             <h3>{fnd.first_name} {fnd.last_name}</h3>
           </div>
           <div className="s-right">
             <Link to={`/profile/${fnd.username}`}><button>View</button></Link>
-             <Link to={`/compare/${fnd.username}`}><button>Comapre</button> </Link>
+             <Link to={`/compare/${fnd.username}`}><button>Compare</button> </Link>
           </div>
         </div>
       ))}
       <div className="text-center">
       <Link to='/findfrined'><button className="SM-btn">Find Friends</button></Link>
       </div>
-
-
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Create Group</Modal.Title>
@@ -261,5 +256,4 @@ const Sugg = () => {
     </div>
   )
 }
-
 export default Sugg;

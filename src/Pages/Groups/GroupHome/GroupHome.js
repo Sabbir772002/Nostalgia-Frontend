@@ -7,6 +7,8 @@ import Nav from '../../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
 import Right from '../../../Components/GroupRight/Right'
+import api from '../../../util/api'
+
 const GroupHome = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -14,7 +16,7 @@ const GroupHome = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/gt_post', {
+    axios.get(`${api.url}:8000/gt_post`, {
     params: {
         username: userData.username
     }
@@ -45,7 +47,21 @@ const GroupHome = () => {
   const [showMenu,setShowMenu] =useState(false);
   const [images,setImages] =  useState(null);
   console.log(userData);
-
+  const user= JSON.parse(localStorage.getItem('userData'));
+  const [fndlist, setfndlist] = useState([]);
+  const fetchOverseerList = () => {
+    axios.get(`${api.url}:8000/my_groups`, {
+      params: {
+        user_id: user.id
+      }
+    })
+      .then(response => {
+        setfndlist(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  };
   return (
     <div className='interface'>
       <Nav 
@@ -61,7 +77,7 @@ const GroupHome = () => {
         ) : (
           <>
             <Middle posts={posts} fetchPosts={fetchPosts} />
-            <Right />
+            <Right fetchOverseerList={fetchOverseerList} />
           </>
         )}
       </div>

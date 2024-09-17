@@ -3,11 +3,11 @@ import "../Post/InputPost.css";
 import Profile from "../../assets/profile.jpg";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
-import { FaSmile } from "react-icons/fa";
+// import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
+// import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
+// import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
-
+import api from '../../util/api';
 const InputPost = ({fetchPosts}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const currentDate = new Date();
@@ -21,7 +21,6 @@ const InputPost = ({fetchPosts}) => {
     post_time: formattedTime,
     blog_img: ""
   });
-
   const [images, setImages] = useState(null); // State variable for images
 
   const handleChange = (e) => {
@@ -40,7 +39,6 @@ const InputPost = ({fetchPosts}) => {
     fetchPosts();
   }, []);
 
-  
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -54,7 +52,7 @@ const InputPost = ({fetchPosts}) => {
         formData.append(key, value);  
       });
       console.log(formData);
-      const response = await axios.post('http://localhost:8000/addblog', formData);
+      const response = await axios.post(`${api.url}:8000/addblog`, formData);
       console.log(response.data); 
       alert('Blog created successfully');
       // Reset form data
@@ -77,7 +75,7 @@ const InputPost = ({fetchPosts}) => {
     <div className="i-form">
       <form onSubmit={onSubmit}>
         <div className="i-input-box">
-          <img src={Profile} className='i-img'/>
+        <img src={`${api.url}:8000/${userData.p_image}`} className='i-img'/>
           <input 
             type="text" 
             id="i-input" 
@@ -96,20 +94,20 @@ const InputPost = ({fetchPosts}) => {
               <span className='photo-dis'>Photo</span>
             </label>
 
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <PlayCircleFilledOutlinedIcon className="input-svg" style={{fontSize:"38px",color:"black"}}/>
               <span className='photo-dis'>Video</span>
-            </div>
+            </div> */}
 
             {/* <div className="pv-upload">
               <KeyboardVoiceRoundedIcon className="input-svg" style={{fontSize:"38px",color:"green"}}/>
               <span className='photo-dis'>Audio</span>
             </div> */}
 
-            <div className="pv-upload">
+            {/* <div className="pv-upload">
               <FaSmile className="input-svg" style={{fontSize:"30px",color:"red"}}/>
               <span className='photo-dis'>Feelings/Activity</span>
-            </div>
+            </div> */}
           </div>
           <button type='submit'>Share</button>
 

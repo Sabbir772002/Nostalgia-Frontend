@@ -30,7 +30,6 @@ import Uimg1 from "../../assets/User-post/img1.jpg"
 import Uimg2 from "../../assets/User-post/img2.jpg"
 import Uimg3 from "../../assets/User-post/img3.jpg"
 
-
 import "../Friend/Friend.css"
 import FindFlist from "./FindFlist"
 import Left from "../../Components/LeftSide/Left"
@@ -39,7 +38,7 @@ import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
 import { useLocation } from 'react-router-dom';
-
+import api from '../../util/api';
 const FindFriendlist = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -57,7 +56,7 @@ const FindFriendlist = () => {
 // Define the function to fetch data
 // Define the function to fetch data
 const fetchData = () => {
-  axios.get('http://localhost:8000/findfriend', {
+  axios.get(`${api.url}:8000/findfriend`, {
       params: {
           user_id: userData.id
       }
@@ -78,18 +77,11 @@ useEffect(() => {
   fetchData(); // Call the fetchData function
 }, []);
 
-
-  
-
-      
-
-   const [search,setSearch] =useState("")
-
-    
-  const [following,setFollowing] =useState("")
+   const [search,setSearch] =useState("");
+  const [following,setFollowing] =useState("");
         
-  const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null)
+  const [showMenu,setShowMenu] =useState(false);
+  const [images,setImages] =  useState(null);
 
   return (
     <div className='interface'>

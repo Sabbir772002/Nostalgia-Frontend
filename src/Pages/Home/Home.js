@@ -6,9 +6,8 @@ import Middle from "../../Components/MiddleSide/Middle"
 import Right from '../../Components/RightSide/Right'
 import Nav from '../../Components/Navigation/Nav'
 import moment from 'moment/moment'
-
+import api from '../../util/api';
 import { useLocation } from 'react-router-dom';
-
 const Home = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
@@ -16,7 +15,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get('http://localhost:8000/htimeline', {
+    axios.get(`${api.url}:8000/htimeline`, {
     params: {
         username: userData.username
     }

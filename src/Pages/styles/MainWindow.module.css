@@ -1,0 +1,138 @@
+.MainWindow {
+    display: flex;
+    flex-direction: row;
+    background-color: #F3FFFB;
+    color: #F5F7F7;
+}
+
+.SectionControls {
+    background-color: #1B4A43;
+}
+
+section {
+    display: block;
+    height: 100vh;
+    width: 50%;
+}
+
+.MainControls {
+    display: block;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: auto;
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    text-align: left;
+}
+
+.CopyButton {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    margin: 0;
+    background-image: url('https://ik.imagekit.io/t2vnkmzt25/vid/ic_content_copy_24px_nn9hfnP95dWCY.png');
+}
+
+.VideoCallButton {
+    background-image: url('https://ik.imagekit.io/t2vnkmzt25/vid/ic_videocam_24px_kaXiZAv0JBc4.png');
+}
+
+.AudioCallButton {
+    background-image: url('https://ik.imagekit.io/t2vnkmzt25/vid/ic_phone_24px_mlUA0XN9EZVFn.png');
+}
+
+.IDInput {
+    background-color: #C6E4D9;
+    border-radius: 6px;
+    border: none;
+    max-width: 320px;
+    width: 100%;
+    min-width: 200px;
+    height: 32px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    color: #305A55;
+    font-size: 1.2rem;
+    padding: 2px;
+}
+
+.spanbd {
+    display: block;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    font-size: 1.3rem;
+    font-weight: 450;
+    text-align: left;
+}
+.buttonbd {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+    border: none;
+    border-radius: 50%;
+    background-color: #305A55;
+    transition: all 1s;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.MainControls01 {
+    margin-bottom: 25px;
+}
+
+.MainControls02 {
+    width: 100%;
+}
+
+.CallerID {
+    display: inline;
+    font-weight: 700;
+}
+
+.GenerateInstruction {
+    font-weight: 200;
+    font-size: 0.9rem;
+}
+
+.TokenDetails {
+    display: flex;
+    flex-direction: row;
+}
+
+.TokenDetails span {
+    margin-right: 5px;
+}
+
+.MainBackground {
+    background-image: url('https://ik.imagekit.io/t2vnkmzt25/vid/download-icons8_MWG9Q0JuRAF7w.png');
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-color: #F3FFFB;
+    background-position: 50%;
+}
+
+button:hover {
+    background-color: #1F423E;
+}
+
+@media(max-width: 1000px) {
+    .MainWindow {
+        flex-direction: column;
+    }
+
+    section {
+        width: 100%;
+    }
+
+    .MainBackground {
+        display: none;
+    }
+
+    .MainWindow {
+        position: relative;
+    }
+}

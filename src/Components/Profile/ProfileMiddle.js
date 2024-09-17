@@ -5,6 +5,8 @@ import Profile from "../../assets/profile.jpg"
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import "../Profile/ProfileMiddle.css"
+import axios from 'axios'
+import api from '../../util/api'
 
 import moment from 'moment'
 import ProfileInputPost from './ProfileComponents/ProfileInputPost'
@@ -69,11 +71,32 @@ const ProfileMiddle = ({following,
        ))
        setSearchResults(searchData)
        
-    },[userPostData,search])
+    },[userPostData,search]);
 
-  
     const { username } = useParams();
+    const [posts, setPosts] = useState([]);
+
+    const fetchPosts = async() => {
+      axios.get(`${api.url}:8000/singleblog`,
+      {
+        params: {
+          username: username
+        }
+      })
+      .then(response => {
+          setPosts(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching posts:', error);
+        });
+    };
+
 const user= JSON.parse(localStorage.getItem('userData'));
+if(user.username.includes("@")){
+  return (
+    <h2>You are not allowed to view this page!</h2>
+  )
+}else{
   return (
     <div className='profileMiddle'>
         <Info 
@@ -98,18 +121,23 @@ const user= JSON.parse(localStorage.getItem('userData'));
         setImportFile ={setImportFile}
         images={images}
         setImages={setImages}
+        fetchPosts={fetchPosts}
         />
         )}
         
-        <UserHome 
+        <UserHome
+        fetchPosts={fetchPosts}
+        setPosts={setPosts}
         userData={userData}
         profileImg={profileImg}
         setUserPostData={setUserPostData}
         userPostData={searchResults}
         images={images}
+        posts={posts}
         />
     </div>
   )
+}
 }
 
 export default ProfileMiddle

@@ -10,17 +10,23 @@ import { useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MediHome.css';
 import { Row, Col, Card } from 'react-bootstrap';
+import api from '../../util/api';
 const MediHome = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
+  useEffect(() => {
+    if(userData.username.includes("@"))
+      {
+        userData.username=userData.username.split("@")[1];
+      }
+    }, []);
   const [medicationSchedule, setMedicationSchedule] = useState([
-    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication E', dosage: '25mg', times: ['Night'], image: 'http://localhost:8000/media/d.png' },
-    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: 'http://localhost:8000/media/d.png' }
+    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
+    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image:`${api.url}:8000/media/d.png` },
+    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: `${api.url}:8000/media/d.png` },
+    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
+    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` }
   ]);
   const [image, setImage] = useState(null);
   const [nowtime,setnowtime]=useState("");
@@ -41,7 +47,7 @@ const MediHome = () => {
     const timetot=timebox[0].toLocaleLowerCase();
     console.log("here it is...");
     console.log(timetot);
-    axios.get('http://localhost:8000/medtime',
+    axios.get(`${api.url}:8000/medtime`,
     {
       params: {
         username: userData.username
@@ -84,7 +90,7 @@ const MediHome = () => {
     
   };
   useEffect(() => {
-    axios.get('http://localhost:8000/medication',
+    axios.get(`${api.url}:8000/medication`,
     {
       params: {
         username: userData.username
@@ -130,7 +136,7 @@ const MediHome = () => {
     nedmed.append('end_date',newMedication.end_date);
     nedmed.append('img',image);
     console.log(nedmed);
-    axios.post('http://127.0.0.1:8000/medication',nedmed,
+    axios.post(`${api.url}:8000/medication`,nedmed,
       {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -144,7 +150,7 @@ const MediHome = () => {
       // Handle error if needed
       console.error('Error adding medication:', error);
     });
-  axios.get('http://localhost:8000/medication',
+  axios.get(`${api.url}:8000/medication`,
     {
       params: {
         username: userData.username
@@ -200,12 +206,11 @@ const donetime=()=>{
     console.log(nightTime);
   }
 }
-
 useEffect(() => {
   donetime();
 }, [timebox]);
   const fetchdone = () => { 
-    axios.get('http://127.0.0.1:8000/done',
+    axios.get(`${api.url}:8000/done`,
     {
       params: {
         username: userData.username,
@@ -236,7 +241,7 @@ useEffect(() => {
     formdata.append('username', userData.username);
     formdata.append('date', moment().format('YYYY-MM-DD'));
     formdata.append('time',time);
-    axios.post('http://127.0.0.1:8000/done', formdata)
+    axios.post(`${api.url}:8000/done`, formdata)
     .then(response => {
       fetchdone();
       console.log('Medication done status updated successfully:', response.data);
@@ -264,7 +269,7 @@ useEffect(() => {
     fromdata.append('noon',noonTime);
     fromdata.append('night',nightTime);
     fromdata.append('gap',gap);
-    axios.post('http://localhost:8000/medtime',fromdata)
+    axios.post(`${api.url}:8000/medtime`,fromdata)
     .then(response => {
       console.log('Alert time set successfully:', response.data);
     fetchtime();
@@ -284,6 +289,7 @@ useEffect(() => {
         
   const [showMenu,setShowMenu] =useState(false)
   const [images,setImages] =  useState(null);
+
   useEffect(() => {
     // Function to parse time string to hours and minutes
     const parseTime = (timeString) => {
@@ -298,12 +304,16 @@ useEffect(() => {
       const currentMinute = currentTime.getMinutes();
 
       const notificationTime = parseTime(nowtime);
-
+      const currentTimeFrame = sortMedicationByTime();
+      console.log("akhon somoy");
+      console.log(currentTimeFrame);
+      const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
+        console.log("med for now");
       // Check if it's time for notification and task is not done
       if (
         currentHour >= notificationTime.hour &&
         currentMinute >= notificationTime.minute &&
-        done !== true
+        done != true && currentMedications.length>0
       ) {
         console.log("ar kotokhon bhai, matha mutha gelo...");
         console.log(done);
@@ -316,7 +326,6 @@ useEffect(() => {
     // Cleanup function
     return () => clearInterval(interval);
   }, [nowtime, done]);
-
   // Function to show notification
   const showNotification = () => {
     // Code to display notification
@@ -368,7 +377,7 @@ useEffect(() => {
            med.times.includes(timeFrame) && (
              <div className="col-md-4" key={medIndex}>
                <Card className="mb-3">
-                 <Card.Img src={`http://localhost:8000/${med.image}`} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
+                 <Card.Img src={`${api.url}:8000/${med.image}`} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
                  <Card.Body>
                    <Card.Title>{med.name}</Card.Title>
                    <Card.Text>Dosage: {med.dosage}</Card.Text>

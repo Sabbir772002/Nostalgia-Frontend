@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Sugg.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-
+import api from '../../../../util/api';
 const Friends = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -42,7 +42,7 @@ const Friends = () => {
 
 
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/friends`, {
+    axios.get(`${api.url}:8000/friends`, {
       params: {
         user_id: user.id
       }
@@ -81,7 +81,7 @@ const Friends = () => {
       console.log('Data submitted:', formData);   
       formData.id=user.id;  
       formData.username=formData.username; 
-      const response = await axios.post('http://localhost:8000/add_group', formData);
+      const response = await axios.post(`${api.url}:8000/add_group`, formData);
       if(response.data.msg === "Group already exists"){
         alert("Group With this Username already exists")
         return;
@@ -115,7 +115,7 @@ const Friends = () => {
       {fndlist && fndlist.slice(0,7).map((fnd, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${fnd.pp}`} alt="" />
+            <img  src= {`${api.url}:8000/${fnd.pp}`} alt="" />
             <h3>{fnd.first_name} {fnd.last_name}</h3>
           </div>
 

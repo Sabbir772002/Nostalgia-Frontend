@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './EventMember';
+import api from '../../util/api'
 
 const Eventlist = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
@@ -16,7 +17,7 @@ const Eventlist = () => {
   const userData = JSON.parse(localStorage.getItem('userData'));
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/event', {
+      const response = await axios.get(`${api.url}:8000/event`, {
         params: { username: userData.username }
       });
       setUserlist(response.data.events);
@@ -32,7 +33,12 @@ const Eventlist = () => {
   const handleChange = (e) => {
     const { id, value } = e.target;
     let newValue = value; // By default, use the selected value
-
+    if(id === 'division') {
+      findDistrict(value);
+    }
+    if(id === 'district') {
+      findThana(value);
+    }
     // If the id is "privacy", you can map the value to "Bondhu" or "Known"
     if (id === 'privacy') {
       newValue = value === 'Bondhu' ? 'Bondhu' : 'Known';
@@ -50,7 +56,7 @@ const Eventlist = () => {
     delete formData.time;
 
     try {
-      await axios.post('http://localhost:8000/event', formData);
+      await axios.post(`${api.url}:8000/event`, formData);
       console.log('Event data sent successfully:', formData);
       fetchData();
       // Reset form data after successful submission
@@ -93,7 +99,7 @@ const Eventlist = () => {
     console.log("kauke passi na khujte khujte...");
     console.log(user);
     try {
-    const response = await axios.get('http://localhost:8000/eventmembers', {
+    const response = await axios.get(`${api.url}:8000/eventmembers`, {
     params: { id: user.id }
     });
     setMembers(response.data);
@@ -108,7 +114,7 @@ const Eventlist = () => {
         return;
       }
       try {
-     const response= await axios.post('http://localhost:8000/event_request', { 
+     const response= await axios.post(`${api.url}:8000/event_request`, { 
       id: walk.id,
       username: userData.username
       });
@@ -125,7 +131,7 @@ const Eventlist = () => {
       console.error('Error sending request:', error);
       }
     };
-  
+
 
   const handleUserInfoClick = (user) => {
     console.log("ogo, hete chole jaite mon chaitese na...");
@@ -137,9 +143,49 @@ const Eventlist = () => {
   const handleInputBoxButtonClick = () => {
     setShowInputBoxModal(true);
   };
-  
-  const handleClose = () => setShowUserInfoModal(false);
 
+  const handleClose = () => setShowUserInfoModal(false);
+  const [divisions, setDivisions] = useState([
+        "Dhaka",
+        "Rajshahi",
+        "Khulna",
+        "Barishal",
+        "Chattogram",
+        "Sylhet",
+        "Mymensingh"
+    ]);
+    const [upazilas, setUpazilas] = useState();
+    const [districts, setDistricts] = useState([]);
+    const findThana = (district) => {
+        const res=axios.get(`${api.url}:8000/findthana`,{
+            params: {
+                district: district
+            }
+        }).then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setUpazilas(response.data);
+        }).catch(error => {
+            // Handling errors
+            console.error('Error:', error);
+        });
+    }
+    const findDistrict = (division) => {
+        const res=axios.get(`${api.url}:8000/finddistrict`,{
+            params: {
+                division: division
+            }
+        }) .then(response => {
+            // Accessing the data from the response object
+            console.log(response.data);
+            setDistricts(response.data);
+        })
+        .catch(error => {
+            // Handling errors
+            console.error('Error:', error);
+        });
+
+    }        
   return (
     <div className="vox mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
       <div className="box">
@@ -191,10 +237,45 @@ const Eventlist = () => {
                 <label htmlFor="end_time">End Time</label>
                 <input type="time" className="form-control" id="end_time" value={formData.end_time} onChange={handleChange} />
               </div>
-              <div className="form-group">
+              <div className="inputBox " style={{ width: "100%" }}>
+                        <select className='form-control' name="division" id="division" onChange={handleChange}>
+                            <option value="">Select Division</option>
+                            {divisions.map((division) => (
+                                <option key={division} value={division}>
+                                    {division}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    { districts && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select  className='form-control'  name="district" id="district" onChange={handleChange}>
+                                <option value="">Select District</option>
+                                {districts.map((district) => (
+                                    <option key={district} value={district}>
+                                        {district}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+                    {upazilas && (
+                        <div className="inputBox" style={{width:"100%"}}>
+                            <select className='form-control'  name="thana" id="thana" onChange={handleChange}>
+                                <option value="">Select Thana/Upazila</option>
+                                {upazilas.map((upazila) => (
+                                    <option key={upazila} value={upazila}>
+                                        {upazila}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+              {/* <div className="form-group">
                 <label htmlFor="thana">Thana</label>
                 <input type="text" className="form-control" id="thana" value={formData.thana} onChange={handleChange} />
-              </div>
+              </div> */}
               <div className="form-group">
                 <label htmlFor="privacy">Privacy</label>
                 <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
@@ -262,23 +343,25 @@ const Eventlist = () => {
           </tbody>
         </table>
         {/* User Info Modal */}
-        <Modal show={showUserInfoModal} onHide={handleClose} style={{ backgroundColor: 'white' }}>
-         <div className="bg-light">
+        <Modal show={showUserInfoModal} onHide={handleClose} dialogClassName="custom-modal" >
+         {/* <div className="bg-light"> */}
           <Modal.Header closeButton>
             <Modal.Title>User Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
   <Tabs defaultActiveKey="details">
- {userData && selectedUser && userData.username == selectedUser.E_creator && (
+ {/* {userData && selectedUser && userData.username == selectedUser.E_creator && (
              <Tab eventKey="request" title="Request">
                   <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
-                )}
+                )} */}
     <Tab eventKey="details" title="Details">
       {selectedUser && (
         <div>
           <p><strong>Name:</strong> {selectedUser.E_creator}</p>
+          <p><strong>Type:</strong> {selectedUser.E_type}</p>
           <p><strong>Location:</strong> {selectedUser.Address}</p>
+          <p><strong>Thana:</strong> {selectedUser.Thana}</p>
           <p><strong>Description:</strong> {selectedUser.Description}</p>
           <p><strong>Start Date:</strong> {selectedUser.start_date}</p>
           <p><strong>End Date:</strong> {selectedUser.end_date}</p>
@@ -296,7 +379,7 @@ const Eventlist = () => {
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
           </Modal.Footer>
-          </div>
+          {/* </div> */}
         </Modal>
       </div>
     </div>

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Overseer.css";
 import { Modal, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import api from '../../../util/api';
 
 const ShowGroup = () => {
   const [formData, setFormData] = useState({
@@ -39,10 +40,8 @@ const ShowGroup = () => {
   }, []);
 
 
-
-  
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/my_groups`, {
+    axios.get(`${api.url}:8000/my_groups`, {
       params: {
         user_id: user.id
       }
@@ -54,8 +53,6 @@ const ShowGroup = () => {
         console.error('Error fetching data:', error);
       });
   };
-
-
 
 
   const handleAddOverseer = () => {
@@ -75,18 +72,37 @@ const ShowGroup = () => {
     setShowViewModal(false);
   };
 
+  // Define the dlt function to send a POST request
+  const dlt = async (groupUsername, username) => {
+    try {
+      const formData = {
+        guser: groupUsername,
+        username: username
+      };
+      const response = await axios.post(`${api.url}:8000/deletegroup`, formData);
+      if (response.status === 201) {
+        console.log('Successfully left the group');
+        alert("Successfully left the group");
+        fetchOverseerList();
+      } else {
+        console.error('Failed to leave the group');
+      }
+    } catch (error) {
+      console.error('Error leaving the group:', error);
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       console.log('Data submitted:', formData);   
       formData.id=user.id;  
       formData.username=formData.username; 
-      const response = await axios.post('http://localhost:8000/add_group', formData);
+      const response = await axios.post(`${api.url}:8000/add_group`, formData);
       if(response.data.msg === "Group already exists"){
         alert("Group With this Username already exists")
         return;
       }
-       
       console.log('Data submitted:', response.data);
       setFormData({
         username: '',
@@ -116,17 +132,17 @@ const ShowGroup = () => {
       {fndlist.map((group, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${group.gp}`} alt="" />
+            <img  src= {`${api.url}:8000/${group.img}`} alt="" />
             <h3>{group.name}</h3>
           </div>
-
           <div className="s-right">
             <Link to={`/group/${group.username}`}><button>View</button></Link>
-              <button>Leave</button>
+            {group.creator != user.username && (
+          <button onClick={() => dlt(group.username, user.username)}>Leave</button>
+            )}
           </div>
         </div>
       ))}
-
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Create Group</Modal.Title>
@@ -226,7 +242,7 @@ const ShowGroup = () => {
                     <Form.Control type="password" value={selectedUser.password} readOnly />
                   </Form.Group>
                 </div>
-              </div> */}
+          </div> */}
                <div className="card mb-2">
                 <div className="card-body">
                   <Form.Group controlId="formGender">
@@ -242,7 +258,7 @@ const ShowGroup = () => {
                     <Form.Control type="text" value={selectedUser.relation} readOnly />
                   </Form.Group>
                 </div>
-              </div> 
+              </div>
               <div className="card mb-2">
                 <div className="card-body">
                   <Form.Group controlId="formAddress">

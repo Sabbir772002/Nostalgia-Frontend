@@ -9,6 +9,35 @@
     border-radius: 20px;
     padding-bottom: 22px;
 }
+.info-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .info-col {
+    flex: 1;
+  }
+  
+  .info-col-1 {
+    text-align: left;
+  }
+  
+  .info-col-2 {
+    text-align: right;
+  }
+  
+  .info-details-list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .info-details-list span {
+    margin-left: 10px;
+  }
+  
 .info-cover{
     height: 100px;
     height: 240px;
@@ -342,5 +371,7 @@
     .coverDiv svg{
         font-size: 19px;
     }
-    
+    .custom-modal .modal-content {
+        background-color: white;
+      }      
 }

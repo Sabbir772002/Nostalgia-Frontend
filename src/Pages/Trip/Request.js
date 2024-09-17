@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../util/api';
 
 const RequestList = ({user, fmembers}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
@@ -12,7 +13,7 @@ const RequestList = ({user, fmembers}) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/trip!members', {
+      const response = await axios.get(`${api.url}:8000/trip!members`, {
         params: { id: user.id }
       });
      // fmembers();
@@ -42,7 +43,7 @@ const RequestList = ({user, fmembers}) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      const response = await axios.post('http://localhost:8000/handletripmember', { id:id,tid:user.id, type: action});
+      const response = await axios.post(`${api.url}:8000/handletripmember`, { id:id,tid:user.id, type: action});
       console.log(response.data);
       fetchData();
       fmembers();
@@ -68,9 +69,7 @@ const RequestList = ({user, fmembers}) => {
             <td>{member.first_name}</td>
             <td>{member.dob}</td>
             <td>{member.gender}</td>
-            <td>
-              <Button variant="primary" onClick={() => viewProfile(member.username)}>View Profile</Button>
-            </td>
+      
             <td>
               <DropdownButton
                 title="Actions"
@@ -86,6 +85,9 @@ const RequestList = ({user, fmembers}) => {
                 <Dropdown.Item eventKey="confirm" onClick={() => handleConfirm(member.id)}>Confirm</Dropdown.Item>
                 <Dropdown.Item eventKey="delete" onClick={() => handleDelete(member.id)}>Delete</Dropdown.Item>
               </DropdownButton>
+            </td>
+            <td>
+              <Button variant="primary" onClick={() => viewProfile(member.username)}>View Profile</Button>
             </td>
           </tr>
         ))}

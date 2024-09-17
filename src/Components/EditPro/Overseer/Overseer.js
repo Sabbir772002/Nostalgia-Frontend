@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Overseer.css";
 import { Modal, Button, Form} from 'react-bootstrap';
+import api from '../../../util/api';
 
 const Overseer = () => {
   const [formData, setFormData] = useState({
@@ -30,9 +31,6 @@ const Overseer = () => {
   useEffect(() => {
     fetchOverseerList();
   }, []);
-
-
-
   
   const fetchOverseerList = () => {
     axios.get(`http://127.0.0.1:8000/overseerlist`, {
@@ -46,9 +44,7 @@ const Overseer = () => {
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  };
-
-
+    };
 
 
   const handleAddOverseer = () => {
@@ -67,18 +63,27 @@ const Overseer = () => {
   const handleCloseViewModal = () => {
     setShowViewModal(false);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(formData.username.includes("@")){
+        alert("Username can't contain '@'");
+        return;
+
+      }
+      if(fndlist.find((person)=> person.username===formData.username)){
+        alert("Username already exists");
+        return;
+      }
       console.log('Data submitted:', formData);
       formData.username= formData.username+"@"+user.username;
+
       formData.address= formData.Location;
       formData.dob="2021-09-01";
       formData.thana="Dhaka";
       formData.nid="5288";
       formData.gender="Male";
-      const response = await axios.post('http://localhost:8000/add_overseer', formData);
+      const response = await axios.post(`${api.url}:8000/add_overseer`, formData);
        
       console.log('Data submitted:', response.data);
       setFormData({
@@ -97,25 +102,109 @@ const Overseer = () => {
       console.error('Error submitting data:', error);
     }
   };
+  const handleDelete = async (username) => {
+    console.log(username);
+    try{
+    const response = await axios.post(`${api.url}:8000/doverseer`,
+      { username: username, user: user.username });
+      alert(response.data.message);
+    fetchOverseerList();
+  }catch(error){
+    console.error('Error submitting data:', error);
+    alert("Error Deleting Overseer");
+  }
+}
+  const [errors, setErrors] = useState({
+    type: '',
+    institution: ''
+  });
+  // State for the new modal
+  const [showAdditionalModal, setShowAdditionalModal] = useState(false);
+  const [additionalInfo, setAdditionalInfo] = useState({
+    type: '',
+    content: '',
+    username:user.username
+  });
 
-  return (
+  // Function to handle changes in the additional info form
+  const handleAdditionalChange = (e) => {
+    const { name, value } = e.target;
+    setAdditionalInfo({ ...additionalInfo, [name]: value });
+    setErrors({ ...errors, [name]: '' }); // Clear error message when input changes
+  };
+  // Function to handle submitting the additional info form
+  const handleSubmitAdditionalInfo = async(e) => {
+    e.preventDefault();
+    setShowAdditionalModal(false);
+
+    if (!additionalInfo.type || !additionalInfo.content) {
+      alert('Please fill all the fields');
+      return;
+    }
+
+    // Handle submission of additional info, e.g., send it to the server
+    console.log('Additional Info Submitted:', additionalInfo);
+    const response = axios.post(`${api.url}:8000/addhandle`, additionalInfo);
+    console.log('Additional Info Response:', response.data);
+    // Clear the form fields
+    setAdditionalInfo({
+      type: '',
+      content: '',
+      username:user.username
+    });
+    // Close the additional info modal
+    
+  };
+  const handleAddAdditionalInfo = () => {
+    setShowAdditionalModal(true);
+  };
+    return (
     <div className="Sugg-comp">
       <h2 className="font-weight-bold">Overseer List</h2>
 
       {fndlist.map((person, index) => (
         <div className="sugg-people" key={index}>
           <div className="s-left">
-            <img  src= {`http://localhost:8000/${person.pp}`} alt="" />
+            <img  src= {`${api.url}:8000/${person.pp}`} alt="" />
             <h3>{person.first_name}</h3>
             <h3>{person.last_name}</h3>
           </div>
 
           <div className="s-right">
             <button onClick={() => handleViewUser(person)}>View</button>
-            <button>Delete</button>
+            <button onClick={()=> handleDelete(person.username)}>Delete</button>
           </div>
         </div>
       ))}
+     <Modal show={showAdditionalModal} onHide={() => setShowAdditionalModal(false)}    dialogClassName="custom-modal">
+        <Modal.Header closeButton >
+          <Modal.Title>Add Additional Info</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="type">
+              <Form.Label>Type</Form.Label>
+              <Form.Control as="select" name="type" value={additionalInfo.type} onChange={handleAdditionalChange}>
+                <option value="">Select Type</option>
+                <option value="School">School</option>
+                <option value="College">College</option>
+                <option value="University">University</option>
+                <option value="Job">Job</option>
+                {/* <option value="College">College</option> */}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="institution">
+              <Form.Label>Institution</Form.Label>
+              <Form.Control type="text" name="content" value={additionalInfo.content} onChange={handleAdditionalChange} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAdditionalModal(false)}>Close</Button>
+          <Button variant="primary" onClick={handleSubmitAdditionalInfo}>Save</Button>
+        </Modal.Footer>
+      </Modal>
+
 
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
@@ -250,6 +339,9 @@ const Overseer = () => {
       <div className="text-center mt-4">
         <Button variant="primary" onClick={handleAddOverseer}>Add Overseer</Button>
       </div>
+      <div className="text-center mt-4">
+        <Button variant="primary" onClick={handleAddAdditionalInfo}>Add Additional Info</Button>
+        </div>
     </div>
   )
 }

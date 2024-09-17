@@ -5,21 +5,20 @@ import { useLocation,useNavigate,useParams } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import api from '../../util/api';
 
 
-const UserHome = ({setUserPostData,userPostData,profileImg,userData,images}) => {
+const UserHome = ({setUserPostData,userPostData,profileImg,userData,images,posts,fetchPosts,setPosts}) => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const user= JSON.parse(localStorage.getItem('userData'));
   const { username } = useParams();
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
   const [showModal, setShowModal] = React.useState(false);
   useEffect(() => {
     // Fetch posts when component mounts
     fetchPosts();
   }, []);
-
   // React.useEffect(() => {
   //   if (userData && username !== userData.username) {
   //     setShowModal(true);
@@ -33,25 +32,9 @@ const UserHome = ({setUserPostData,userPostData,profileImg,userData,images}) => 
   //  if (userData && username !== userData.username) {
   //   navigate(userData?`/profile/edit/${userData.username}`:'/login');
   //  }
-
-  const fetchPosts = () => {
-    axios.get(`http://localhost:8000/singleblog`,
-    {
-      params: {
-        username: username
-      }
-    })
-    .then(response => {
-        setPosts(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
-      });
-  };
+  
  
   return (
-   
-
     <div>
 
         {posts && posts.length ?<FeedUser 

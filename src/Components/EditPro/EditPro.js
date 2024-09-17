@@ -3,7 +3,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams,Link,useNavigate } from 'react-router-dom';
 import "../EditPro/EditPro.css"
-
+import api from '../../util/api';
 const Notification = ({ message }) => {
   return (
     <div className="notification">
@@ -11,7 +11,6 @@ const Notification = ({ message }) => {
     </div>
   );
 };
-
 const EditProfile = () => {
   const navigate = useNavigate();
   const [notification, setNotification] = useState(null);
@@ -39,7 +38,7 @@ const EditProfile = () => {
 const [nidimg,setnidimg] = useState(null);  
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/profile/${username}`);
+      const response = await axios.get(`${api.url}:8000/profile/${username}`);
       if (response.status === 200) {
         const userData ={...response.data};
         delete userData.id;
@@ -48,20 +47,17 @@ const [nidimg,setnidimg] = useState(null);
         setUser(userData);
         console.log("demon what the helll......");
         console.log(userData);
-        setimg(userData.pp ? `http://localhost:8000/${userData.pp}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
+        setimg(userData.pp ? `${api.url}:8000/${userData.pp}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
         console.log(response.data);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
-  
-
   const handlenidchange = (e) => {
     setnid(URL.createObjectURL(e.target.files[0]));
     setnidimg(e.target.files[0]);
   };
-
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -94,7 +90,7 @@ const [nidimg,setnidimg] = useState(null);
       console.log("ye kya hai, update karte time");
       console.log(formData);
      //setimg(`http://localhost:8000/${user.p_image}`);
-      const response = await axios.put(`http://127.0.0.1:8000/owner/${username}`, formData);
+      const response = await axios.put(`${api.url}:8000/owner/${username}`, formData);
       //console.log('User data updated:', response.data);
       setNotification('Profile updated');
       navigate(`/profile/${user.username}`);
@@ -116,7 +112,7 @@ const [nidimg,setnidimg] = useState(null);
       nidv.append('username',username);
       console.log(nidv.get('nid'));
 
-  const response = await axios.post(`http://127.0.0.1:8000/nidimg`, nidv);
+  const response = await axios.post(`${api.url}:8000/nidimg`, nidv);
   if (response.status === 201) {
     setProcessing(false); // Hide processing indicator
     alert("NID verified");
@@ -128,8 +124,7 @@ const [nidimg,setnidimg] = useState(null);
         alert("Try with Clear Image or Correct Information");
       }
     }catch (error) {
-      setProcessing(false); 
-
+      setProcessing(false);
       console.error('Error updating user data:', error);
       alert("Try with Clear image or Correct Information")
     }

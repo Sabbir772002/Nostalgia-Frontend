@@ -11,7 +11,7 @@ import {useState } from 'react';
 import { useNavigate } from 'react-router';
 import Profile from "../../assets/profile.jpg"
 import axios from 'axios';
-
+import api from '../../util/api';
 const Nav = ({setPosts,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
 const [search,setSearch] =useState('');
@@ -21,7 +21,7 @@ const handlemsg = (e) =>{
   if(setPosts === undefined)navigate("/home");
   if(setPosts === undefined)return;
   if(search === "")setSearch(" ");
-  const box=axios.get('http://localhost:8000/search', { 
+  const box=axios.get(`${api.url}:8000/search`, { 
     params: {
         search: search,
         username: userData.username
@@ -33,13 +33,12 @@ const handlemsg = (e) =>{
 }
 
   return (
-    <nav>
+    <nav className='m-0'>
         <div className="n-logo">
             <Link to="/home" className='logo' style={{color:"black",textDecoration:"none"}}>
               <h1>Nos<span>talgia</span></h1>
             </Link>
         </div>
-
       <div className="n-form-button" >
         <form className='n-form' onSubmit={handlemsg} >
           <SearchIcon className='search-icon'/>
@@ -57,8 +56,7 @@ const handlemsg = (e) =>{
       <Link to="/home" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <AiOutlineHome className='nav-icons'/>
       </Link>
-
-        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
+        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/></Link>
         <Link to="/chat" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <TbMessage className='nav-icons'/>
         </Link>
@@ -72,7 +70,7 @@ const handlemsg = (e) =>{
        <div className="n-profile" >
           {/* <Link to="/profile">  */}
            <Link to={`/profile/${userData.username}`}>
-            <img src={profileImg ? (profileImg) : Profile} className='n-img' style={{marginBottom:"-7px"}}/>
+            <img src={`${api.url}:8000/${userData.p_image}`} className='n-img' style={{marginBottom:"-7px"}}/>
           </Link>
       </div>
   

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation,Link} from "react-router-dom";
-
+import api from "../../../util/api";
 export default function Reset() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,7 +28,7 @@ export default function Reset() {
       alert("otp not verified");
     }else{
       try {
-        const response = await fetch("http://localhost:8000/resetpass", {
+        const response = await fetch(`${api.url}:8000/resetpass`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

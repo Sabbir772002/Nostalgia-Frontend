@@ -26,6 +26,7 @@ import Profile from "../../assets/profile.jpg";
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import api from '../../util/api';
 
 const Post = ({ post, posts }) => {
   const [comments, setComments] = useState([]);
@@ -56,7 +57,7 @@ const Post = ({ post, posts }) => {
         id: postbox.id,
         time: moment().fromNow(),
       };
-      const response = await axios.post(`http://localhost:8000/upvote`, { ...upvotedata });
+      const response = await axios.post(`${api.url}:8000/upvote`, { ...upvotedata });
       setLike(response.data.is_upvoted);
       setFilledLike(response.data.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
       //console.log(response.data);
@@ -102,7 +103,7 @@ const Post = ({ post, posts }) => {
 
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
 
-            <img src={`http://localhost:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
                 <Link to={`/group/${post.group_username}`}>
                 <h2 className='' style={{ marginBottom: '5px' }}>{post.group_name}</h2>
@@ -115,15 +116,15 @@ const Post = ({ post, posts }) => {
 
         <div className='delete'>
         <h4 className='ml-2' style={{fontSize: '10px'}}>Posted on: {postbox.post_date}</h4>
-         {showDelete && (<div className="options">
+         {/* {showDelete && (<div className="options">
             <button><PiSmileySad />Not Interested in this post</button>
             <button><IoVolumeMuteOutline />Mute this user</button>
             <button><MdBlockFlipped />Block this user</button>
             <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
             <button><MdReportGmailerrorred />Report post</button>
          </div>
-         )}
-          <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
+         )} */}
+          {/* <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/> */}
          </div>
        </div>
 
@@ -132,18 +133,18 @@ const Post = ({ post, posts }) => {
         postbox.content : `${(postbox.content).slice(0, 300)}...`
       }</p>
 
-      {postbox.post_img && (<img src={`http://localhost:8000/${postbox.post_img}`} alt="" className="post-img" />)}
+      {postbox.post_img && (<img src={`${api.url}:8000/${postbox.post_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">
           <div className="like-icons">
-            <p className='heart' onClick={handleLike}>
+            {/* <p className='heart' onClick={handleLike}>
               {filledLike}
-            </p>
+            </p> */}
 
-            <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
+            {/* <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' /> */}
 
-            <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' />
+            {/* <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' /> */}
 
             {socialIcons && (
               <div className="social-buttons">
@@ -152,12 +153,12 @@ const Post = ({ post, posts }) => {
             )}
           </div>
 
-          <div className="like-comment-details">
+          {/* <div className="like-comment-details">
             <span className='post-like'>{postbox.upvote} people Upvoted it,</span>
             <span className='post-comment'>{comments.length} comments</span>
-          </div>
+          </div> */}
 
-          {showComment && (
+          {/* {showComment && (
             <div className="commentSection">
               <form onSubmit={handleCommentInput}>
                 <div className="cmtGroup">
@@ -184,7 +185,7 @@ const Post = ({ post, posts }) => {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

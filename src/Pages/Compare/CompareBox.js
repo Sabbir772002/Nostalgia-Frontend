@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import api from '../../util/api';
 
 const CompareBox = ({userData}) => {
   const [image1, setImage1] = useState(null);
@@ -8,7 +9,7 @@ const CompareBox = ({userData}) => {
   // const [image2, setImage2] = useState(null);
   const [compareResult, setCompareResult] = useState('');
   const [leftImage, setLeftImage] = useState(null);
-  const [rightImage, setRightImage] = useState(`http://localhost:8000${userData.pp}`);
+  const [rightImage, setRightImage] = useState(`${api.url}:8000${userData.pp}`);
   const [process, setProcess] = useState(false);
   const handleImage1Upload = (e) => {
     setImage1(e.target.files[0]);
@@ -33,7 +34,7 @@ const CompareBox = ({userData}) => {
 
     try {
       console.log(formData);
-      const response = await axios.post('http://127.0.0.1:8000/compare', formData, {
+      const response = await axios.post(`${api.url}:8000/compare`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setProcess(false);
@@ -58,7 +59,7 @@ const CompareBox = ({userData}) => {
           {/* <input type="file" accept="image/*" onChange={handleImage2Upload} /> */}
           <h5> Profile Image of:  <Link to={`/profile/${userData.username}`}>{userData.first_name} {userData.last_name}</Link></h5>
           {/* {rightImage && <img src={`http://localhost:8000${userData.pp}`} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />} */}
-          <img src={`http://localhost:8000/${userData.pp}`} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />
+          <img src={`${api.url}:8000/${userData.pp}`} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />
           {/* {rightImage && <img src={rightImage} alt="Right Image" className="img-fluid mt-3" style={{minHeight:'400px', maxHeight:'400px', maxWidth: '100%', height: 'auto' }} />} */}
           </div>
       </div>
@@ -73,8 +74,8 @@ const CompareBox = ({userData}) => {
         <div className="row justify-content-center items-align-center text-center">
           <div className="col-md-8">
             <div className="result-box">
-              <h3>Comparison Result</h3>
-              <p>{compareResult}</p>
+              <h3>Two People face are {compareResult}% simillar.</h3>
+              {/* <p>{compareResult}</p> */}
             </div>
           </div>
         </div>

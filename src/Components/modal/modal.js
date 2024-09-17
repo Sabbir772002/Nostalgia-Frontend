@@ -23,7 +23,7 @@ const Modal = ({ modalCloseHandler, show, children }) => {
             onClick={modalCloseHandler}
             aria-hidden="true"
           >
-            ×
+            
           </span>
         </div>
         <div className="mr-4 ml-4 mb-2 modal-body">{children}</div>
