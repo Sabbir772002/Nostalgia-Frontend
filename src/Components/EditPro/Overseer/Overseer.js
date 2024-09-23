@@ -33,7 +33,7 @@ const Overseer = () => {
   }, []);
   
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/overseerlist`, {
+    axios.get(`${api.url}:8000/overseerlist`, {
       params: {
         target: user.username
       }
@@ -67,7 +67,8 @@ const Overseer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if(formData.username.contains("@")){
+      var username = formData.username;
+      if(username.includes("@")){
         alert("Username can't contain '@'");
         return;
 
