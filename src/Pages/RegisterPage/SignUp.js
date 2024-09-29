@@ -84,11 +84,12 @@ const SignUp = () => {
         };
     const handleSignUp = async (e) => {
         e.preventDefault();
-        // if(data.password !== data.confirm_password){
-        //     setError({confirm_password: "Password doesn't match"});
-        //     // return;
-        // }
-        setError(validation(data));
+        if(data.password != data.confirm_password){
+            setError({confirm_password: "Password doesn't match"});
+             return;
+        }
+        // setError(validation(data));
+        // if (Object.keys(validation(data)).length > 0) return;
         setSubmit(true);
 
         try {
