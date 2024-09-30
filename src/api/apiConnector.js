@@ -12,6 +12,7 @@ const sendGetRequest = (relativeUrl) => {
     .catch((error) => false);
 };
 
+
 const sendPostRequest = (relativeUrl, requestBody, isAuth, isFormData) => {
   const url = ServerUrl.BASE_URL + relativeUrl;
   let options = {
