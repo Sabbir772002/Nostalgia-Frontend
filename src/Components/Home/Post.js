@@ -100,7 +100,6 @@ const handleCommentSubmit = async (e) => {
       console.error('Error liking the post:', error);
     }
   };
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`API_ENDPOINT/posts/${id}`);
@@ -117,7 +116,6 @@ const handleCommentSubmit = async (e) => {
   const handleFriendsId = (id) => {
     // Implement this function as per your requirements
   };
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState(postbox.content);
 
@@ -138,8 +136,6 @@ const handleCommentSubmit = async (e) => {
       console.error('Error updating post:', error);
     }
   };
-
-
   return (
     <div className='post'>
       
@@ -165,7 +161,7 @@ const handleCommentSubmit = async (e) => {
             <button onClick={()=>handleEdit(post.id)}><AiOutlineDelete />Edit Post</button>
             </>
             )}
-            <button><MdReportGmailerrorred />Report post</button>
+            {/* <button><MdReportGmailerrorred />Report post</button> */}
          </div>
          )}
           <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
@@ -226,7 +222,6 @@ const handleCommentSubmit = async (e) => {
             <div className="commentSection">
               <form onSubmit={handleCommentSubmit}>
                 <div className="cmtGroup">
-                  <SentimentSatisfiedRoundedIcon className='emoji' />
                   <input
                     type="text"
                     id="commentInput"

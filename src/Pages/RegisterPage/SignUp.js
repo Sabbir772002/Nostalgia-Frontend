@@ -7,6 +7,9 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
 import api from '../../util/api';
+import { set } from 'date-fns';
+import { FaGenderless, FaRegCalendarAlt, FaMapMarkerAlt,FaPhone,FaIdCard } from "react-icons/fa"; // Use FaGenderless for gender neutral
+
 const SignUp = () => {
     const navigate = useNavigate();
     const [error, setError] = useState({});
@@ -67,9 +70,11 @@ const SignUp = () => {
         thana: '',
         division: '',
         district: '',
+        confirm_password: ''
     });
 
     const handleChange = (e) => {
+        setError({});
         const newObj = { ...data, [e.target.name]: e.target.value };
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
@@ -79,9 +84,12 @@ const SignUp = () => {
             findThana(value);
         }
         };
-
     const handleSignUp = async (e) => {
         e.preventDefault();
+        // if(data.password !== data.confirm_password){
+        //     setError({confirm_password: "Password doesn't match"});
+        //     // return;
+        // }
         setError(validation(data));
         setSubmit(true);
 
@@ -90,6 +98,11 @@ const SignUp = () => {
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");
+            }
+            if(response.status === 400){
+                console.log('Registration failed!');
+                console.log(response);
+                setError(response.data);
             }
         } catch (error) {
             console.error('Failed to register:', error.message);
@@ -161,7 +174,7 @@ const SignUp = () => {
                     {error.email && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.email}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='address' />
+                        <FaMapMarkerAlt className='address' />
                         <input  className='form-control' type="text"
                             name="address"
                             id="address"
@@ -172,7 +185,7 @@ const SignUp = () => {
                     {error.address && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.address}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='nid' />
+                        <FaIdCard className='nid' />
                         <input  className='form-control' type="text"
                             name="nid"
                             id="nid"
@@ -183,7 +196,7 @@ const SignUp = () => {
                     {error.nid && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.nid}</span>}
 
                     <div className="inputBox" >
-                        <FiMail className='phone' />
+                        <FaPhone className='phone' />
                         <input className='form-control' type="text"
                             name="phone"
                             id="phone"
@@ -233,7 +246,7 @@ const SignUp = () => {
                     {error.thana && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.thana}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='gender' />
+                        <FaGenderless className='gender' />
                         <input  className='form-control' type="text"
                             name="gender"
                             id="gender"
@@ -244,7 +257,7 @@ const SignUp = () => {
                     {error.gender && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.gender}</span>}
 
                     <div className="inputBox">
-                        <FiMail className='dob' />
+                        <FaRegCalendarAlt className='dob' />
                         <input  className='form-control'
                             type="date"
                             name="dob"
@@ -284,7 +297,7 @@ const SignUp = () => {
                 </form>
 
                 <div className='dont'>
-                    <p>Already have an account? <Link to="/"><span>Sign in</span></Link></p>
+                    <p>Already have an account in Nostalgia? <Link to="/"><span>Sign in</span></Link></p>
                 </div>
             </div>
         </div>

@@ -39,7 +39,6 @@ const handlemsg = (e) =>{
               <h1>Nos<span>talgia</span></h1>
             </Link>
         </div>
-
       <div className="n-form-button" >
         <form className='n-form' onSubmit={handlemsg} >
           <SearchIcon className='search-icon'/>
@@ -57,8 +56,7 @@ const handlemsg = (e) =>{
       <Link to="/home" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <AiOutlineHome className='nav-icons'/>
       </Link>
-
-        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/><span>5</span></Link>
+        <Link to="/notification" id='notifi' style={{marginTop:"8px"}}><IoNotificationsOutline className='nav-icons'/></Link>
         <Link to="/chat" style={{textDecoration:"none",display:"flex",alignItems:"center",color:"white"}}>
         <TbMessage className='nav-icons'/>
         </Link>
@@ -72,7 +70,7 @@ const handlemsg = (e) =>{
        <div className="n-profile" >
           {/* <Link to="/profile">  */}
            <Link to={`/profile/${userData.username}`}>
-            <img src={profileImg ? (profileImg) : Profile} className='n-img' style={{marginBottom:"-7px"}}/>
+            <img src={`${api.url}:8000/${userData.p_image}`} className='n-img' style={{marginBottom:"-7px"}}/>
           </Link>
       </div>
   

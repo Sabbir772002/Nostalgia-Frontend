@@ -410,7 +410,6 @@ function getLastSeenTime(lastSeen) {
     scrollToBottom();
   }, [messages]);
  
-
     return (
         <div className='interface'>
             <Nav
@@ -429,14 +428,14 @@ function getLastSeenTime(lastSeen) {
                     <div className='card chat-app'>
                         <div className='col-lg-3'>
                             <div id='plist' className='people-list'>
-                                <h2>Friends List</h2>
+                                <h2>Recent Message</h2>
                                 <div className='input-group'>
                                     {/* <div className='input-group-prepend'>
                                         <span className='input-group-text' style={{ height: '38px' }}>
                                             <i className='fas fa-search' style={{ fontSize: '16px' }}></i>
                                         </span>
                                     </div> */}
-                                    <input type='text' className='form-control' style={{ height: '38px' }} placeholder='Search...' />
+                                    {/* <input type='text' className='form-control' style={{ height: '38px' }} placeholder='Search...' /> */}
                                 </div>
                                 <hr />
                                 <ul className='list-unstyled chat-list mt-2 mb-0' style={{ maxHeight: '500px', overflowY: 'auto', marginBottom: '20px' }}>
@@ -466,7 +465,7 @@ function getLastSeenTime(lastSeen) {
                                         <div className='chat-about'>
                                         <Link to={`/profile/${fd}`} className="text-dark">
                                             <h6 className='m-b-0'>{fndname}</h6>
-                                            <small>Last seen:{getLastSeenTime(lastseen)} </small>
+                                            <small> {fd && userbox.find(user => user.name === fd)?.online ? 'online' : getLastSeenTime(lastseen)}</small>
                                             </Link>
                                         </div>
                                     </div>

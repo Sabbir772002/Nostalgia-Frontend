@@ -41,7 +41,7 @@ const ShowGroup = () => {
 
 
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/my_groups`, {
+    axios.get(`${api.url}:8000/my_groups`, {
       params: {
         user_id: user.id
       }
@@ -53,8 +53,6 @@ const ShowGroup = () => {
         console.error('Error fetching data:', error);
       });
   };
-
-
 
 
   const handleAddOverseer = () => {
@@ -137,14 +135,14 @@ const ShowGroup = () => {
             <img  src= {`${api.url}:8000/${group.img}`} alt="" />
             <h3>{group.name}</h3>
           </div>
-
           <div className="s-right">
             <Link to={`/group/${group.username}`}><button>View</button></Link>
+            {group.creator != user.username && (
           <button onClick={() => dlt(group.username, user.username)}>Leave</button>
+            )}
           </div>
         </div>
       ))}
-
       <Modal show={showModal} onHide={handleCloseModal} centered scrollable dialogClassName="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title>Create Group</Modal.Title>

@@ -361,7 +361,7 @@ const Eventlist = () => {
           <p><strong>Name:</strong> {selectedUser.E_creator}</p>
           <p><strong>Type:</strong> {selectedUser.E_type}</p>
           <p><strong>Location:</strong> {selectedUser.Address}</p>
-          <p><strong>Thana</strong> {selectedUser.thana}</p>
+          <p><strong>Thana:</strong> {selectedUser.Thana}</p>
           <p><strong>Description:</strong> {selectedUser.Description}</p>
           <p><strong>Start Date:</strong> {selectedUser.start_date}</p>
           <p><strong>End Date:</strong> {selectedUser.end_date}</p>

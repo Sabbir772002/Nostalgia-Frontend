@@ -63,12 +63,10 @@ const Overseer = () => {
   const handleCloseViewModal = () => {
     setShowViewModal(false);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      var username = formData.username;
-      if(username.includes("@")){
+      if(formData.username.includes("@")){
         alert("Username can't contain '@'");
         return;
 
@@ -115,7 +113,7 @@ const Overseer = () => {
     console.error('Error submitting data:', error);
     alert("Error Deleting Overseer");
   }
-  }
+}
   const [errors, setErrors] = useState({
     type: '',
     institution: ''

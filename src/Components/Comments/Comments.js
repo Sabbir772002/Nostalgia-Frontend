@@ -49,7 +49,6 @@ const Comments = ({ cmt, post }) => {
                 console.error('There was an error submitting the comment!', error);
             });
     };
-
     return (
         <div className="overAllCommentList">
             <div className="commentList">
@@ -80,26 +79,7 @@ const Comments = ({ cmt, post }) => {
                             <div className="commentSection">
                                 <form onSubmit={handleSubmit}>
                                     <div className="cmtGroup">
-                                        <SentimentSatisfiedRoundedIcon
-                                            className='emoji'
-                                            onClick={() => setShowSentimentDropdown(!showSentimentDropdown)}
-                                            style={{ cursor: 'pointer' }}
-                                        />
-                                        {showSentimentDropdown && (
-                                            <select
-                                                id="sentimentSelect"
-                                                name="sentiment"
-                                                value={selectedSentiment}
-                                                onChange={handleSentimentChange}
-                                                className="sentimentDropdown"
-                                            >
-                                                <option value="">Select a sentiment</option>
-                                                <option value="Happy">Happy</option>
-                                                <option value="Sad">Sad</option>
-                                                <option value="Angry">Angry</option>
-                                                <option value="Surprised">Surprised</option>
-                                            </select>
-                                        )}
+                                  
                                         <input
                                             type="text"
                                             id="commentInput"

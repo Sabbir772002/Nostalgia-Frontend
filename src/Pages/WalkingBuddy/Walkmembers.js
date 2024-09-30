@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import axios from 'axios';
+import { Link, redirect } from 'react-router-dom';
+import api from '../../util/api';
+import { Button } from 'react-bootstrap';
 const MemberList = ({ members }) => {
     console.log("yo yo bro, hete chole jabo bohudur...");
     return (
@@ -21,7 +24,7 @@ const MemberList = ({ members }) => {
               <td>{member.first_name}</td>
               <td>{member.dob}</td>
               <td>{member.gender}</td>
-              {/* <td><Button variant="primary" onClick={() =>}>View Profile</Button></td> */}
+              <td><Link to={`/profile/${member.username}`}>View Profile</Link></td>
             </tr>
           ))}
         </tbody>

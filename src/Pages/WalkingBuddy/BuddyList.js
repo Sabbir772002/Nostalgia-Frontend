@@ -3,8 +3,6 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import './Buddylist.css';
 import { Tab, Tabs, Table } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './Walkmembers';
 import api from '../../util/api';
@@ -12,15 +10,17 @@ import api from '../../util/api';
 const BuddyList = () => {
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [showInputBoxModal, setShowInputBoxModal] = useState(false);
+  const [showEditBoxModal, setShowEditBoxModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userlist, setUserlist] = useState([]);
   const userData = JSON.parse(localStorage.getItem('userData'));
   const [formData, setFormData] = useState({
     walk_name: '',
+    type:"Done",
     w_creator: userData.username,
     address: '',
-    walk_date: new Date().toISOString().split('T')[0], // Set to current date
-    end_date: new Date().toISOString().split('T')[0], // Set to current date
+    walk_date: new Date().toISOString().split('T')[0],
+    end_date: new Date().toISOString().split('T')[0],
     time: '',
     privacy: 'Bondhu'
   });
@@ -59,19 +59,59 @@ const BuddyList = () => {
       await axios.post(`${api.url}:8000/walk`, formData);
       console.log('Walk data sent successfully:', formData);
       fetchData();
-      // Reset form data after successful submission
       setFormData({
         walk_name: '',
+        type:"Done",
         w_creator: userData.username,
         address: '',
-        walk_date: new Date().toISOString().split('T')[0], // Set to current date
-        end_date: new Date().toISOString().split('T')[0], // Set to current date
+        walk_date: new Date().toISOString().split('T')[0],
+        end_date: new Date().toISOString().split('T')[0],
         time: '',
         privacy: 'Bondhu'
       });
     } catch (error) {
       console.error('Error sending walk data:', error);
     }
+  };
+
+  const handleEditSubmit = async (e) => {
+    
+    e.preventDefault();
+
+    formData.type="Update";
+    try {
+      await axios.post(`${api.url}:8000/walk`, formData);
+      console.log('Walk data updated successfully:', formData);
+      fetchData();
+      setShowEditBoxModal(false);
+    } catch (error) {
+      console.error('Error updating walk data:', error);
+    }
+  };
+  const formatDateString = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleEditButtonClick = (user) => {
+    setFormData(user);
+    console.log(user);
+    setFormData(
+      {
+        walk_name: user.walk_name,
+        w_creator: user.w_creator,
+        address: user.location,
+        walk_date: formatDateString(user.date),
+        end_date: formatDateString(user.end),
+        time: user.time,
+        privacy: user.privacy,
+        id: user.id
+      }
+    )
+    setShowEditBoxModal(true);
   };
 
   const [members, setMembers] = useState([]);
@@ -111,13 +151,13 @@ const BuddyList = () => {
       console.error('Error sending request:', error);
     }
   };
+
   const handleUserInfoClick = (user) => {
     console.log("ogo, hete chole jaite mon chaitese na...");
     setSelectedUser(user);
     fetchmembers(user);
     setShowUserInfoModal(true);
   };
-
   const handleInputBoxButtonClick = () => {
     setShowInputBoxModal(true);
   };
@@ -176,7 +216,6 @@ const BuddyList = () => {
                 </div>
               </div>
             </div>
-            {/* Button to open Input Box Modal */}
             <div style={{ textAlign: 'right' }}>
               <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
             </div>
@@ -194,6 +233,7 @@ const BuddyList = () => {
               <th>Time</th>
               <th>Request</th>
               <th>View Info</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -220,14 +260,16 @@ const BuddyList = () => {
                 {(user.w_creator !== userData.username && user.member === 0) && (
                   <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
                 )}
-
-                <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button></td>
+                <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button>
+                {user.w_creator === userData.username && (
+                  <Button variant="warning" onClick={() => handleEditButtonClick(user)}>Edit</Button>
+                )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        {/* User Info Modal */}
         <Modal show={showUserInfoModal} onHide={handleClose} dialogClassName="custom-modal">
           <div className="bg-light">
             <Modal.Header closeButton>
@@ -240,15 +282,14 @@ const BuddyList = () => {
                     <RequestList fmembers={fetchmembers} user={selectedUser} />
                   </Tab>
                 )}
-
                 <Tab eventKey="details" title="Details">
                   {selectedUser && (
                     <div>
-                    <p><strong>Walk Name:</strong> {selectedUser.walk_name}</p>
-                    <p><strong>Creator:</strong> {selectedUser.w_creator}</p>
-                    <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
+                      <p><strong>Walk Name:</strong> {selectedUser.walk_name}</p>
+                      <p><strong>Creator:</strong> {selectedUser.w_creator}</p>
+                      <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
                       <p><strong>Location:</strong> {selectedUser.location}</p>
-                      <p><strong>Date:</strong> {selectedUser.date}</p>
+                      <p><strong>Start:</strong> {selectedUser.date}</p>
                       <p><strong>End:</strong> {selectedUser.end}</p>
                       <p><strong>Time:</strong> {selectedUser.time}</p>
                     </div>
@@ -262,6 +303,46 @@ const BuddyList = () => {
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>Close</Button>
             </Modal.Footer>
+          </div>
+        </Modal>
+
+        <Modal show={showEditBoxModal} onHide={() => setShowEditBoxModal(false)} dialogClassName="custom-modal">
+          <div className="bg-light">
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Walk</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={handleEditSubmit}>
+                <div className="form-group">
+                  <label htmlFor="walk_name">Walk Name</label>
+                  <input type="text" className="form-control" id="walk_name" value={formData.walk_name} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="address">Address</label>
+                  <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="walk_date">Start Date</label>
+                  <input type="date" className="form-control" id="walk_date" value={formData.walk_date} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="end_date">End Date</label>
+                  <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="time">Time</label>
+                  <input type="time" className="form-control" id="time" value={formData.time} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="privacy">Privacy</label>
+                  <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
+                    <option value="Bondhu">Bondhu</option>
+                    <option value="Known">Known</option>
+                  </select>
+                </div>
+                <button type="submit" className="btn btn-primary mt-2">Save</button>
+              </form>
+            </Modal.Body>
           </div>
         </Modal>
       </div>

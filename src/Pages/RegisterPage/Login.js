@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import api from '../../util/api'
-
+import './login.css'
 const Login = () => {
     // Set the item in localStorage
 const setLocalStorageItem = (key, value) => {
@@ -45,8 +45,6 @@ const setLocalStorageItem = (key, value) => {
       console.error('Error:', error);
     }
   }
-  
-  
     const navigate =useNavigate()
     const [error,setError] =useState({})
     const [submit,setSubmit] =useState(false)
@@ -77,12 +75,10 @@ const setLocalStorageItem = (key, value) => {
                 setUserData(response.data.user);
                // localStorage.setItem('userData', JSON.stringify(response.data.user));
                exampleUsage(response.data.user);
-
+               
                 //const userData = JSON.stringify(response.data.user);
                 //navigate(`/home?userData=${userData}`);
                 navigate(`/home`);
-
-
             }else{
                 console.log("guru");
             }
@@ -90,39 +86,30 @@ const setLocalStorageItem = (key, value) => {
             console.error('Failed to login:', error.message);
         }
     };
-
-
    function validationLogin(data){
-        const error ={}
-
+        const error ={};
         // const emailPattern= /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
         const passwordPattern= /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{1,12}$/g;
-
         // if(data.email === ""){
         //     error.email ="* Email is Required"
         // }
         // else if(!emailPattern.test(data.email)){
         //     error.email="* Email did not match"
         // }
-
-        
         if(data.password === ""){
             error.password = "* Password is Required"
         }
         else if(!passwordPattern.test(data.password)){
             error.password="* Password not valid"
         }
-        
         return error
    }
-
-
 
   return (
     <div className="container_log">
         <div className="container-form">
             <form onSubmit={handleSignUp}>
-                <h1>Login</h1>
+            <h1>Login to <span class="highlight">Nos</span>talgia</h1>
                 <p>Please sign in to continue.</p>
                 <div className="inputBox">
                     <FiMail className='mail'/>
