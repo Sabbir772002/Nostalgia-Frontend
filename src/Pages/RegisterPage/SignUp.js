@@ -83,14 +83,66 @@ const SignUp = () => {
         } else if (name === "district") {
             findThana(value);
         }
-        };
+    };
+
+    const isAgeLessThan50 = (dob) => {
+        let currentDate = new Date();
+        let birthDate = new Date(dob);
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+      
+        // Adjust if the birthday hasn't occurred this year yet
+        let monthDifference = currentDate.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && currentDate.getDate() < birthDate.getDate())) {
+          age--;
+        }
+      
+        // Check if age is less than 50 years
+        if (age < 50) {
+          return false;
+        }
+      
+        return true;
+      };
+      
+
+      
     const handleSignUp = async (e) => {
+        setError({});
         e.preventDefault();
-        // if(data.password !== data.confirm_password){
-        //     setError({confirm_password: "Password doesn't match"});
-        //     // return;
-        // }
-        setError(validation(data));
+        const emailPattern= /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+        const passwordPattern= /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{1,4}$/g;
+
+        if(data.username === ""){
+            setError({username: "username Shouldn't empty "});
+            return;
+        }
+
+        if(data.first_name === ""){
+            setError({first_name: "Name Shouldn't empty "});
+            return;
+        }
+        else if(!emailPattern.test(data.email)){
+            setError({email: "Give Correct Email"});
+            return;
+
+        }
+        if(!isAgeLessThan50(data.dob)){
+            setError({dob:"Age should be more than 50"});
+            return;
+
+        }
+    
+    
+        if(data.password == ""){
+            setError({password: "Password Shouldn't empty"});
+            return;
+        }
+        if(data.password != data.confirm_password){
+            setError({confirm_password: "Password doesn't match"});
+             return;
+        }
+        // setError(validation(data));
+        // if (Object.keys(validation(data)).length > 0) return;
         setSubmit(true);
 
         try {

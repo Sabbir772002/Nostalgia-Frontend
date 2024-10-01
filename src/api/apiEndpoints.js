@@ -6,4 +6,5 @@ const ApiEndpoints = {
   USER_CHAT_URL: "api/v1/users/<userId>/chats",
   CHAT_MESSAGE_URL: "api/v1/chats/<chatId>/messages",
 };
+
 export default ApiEndpoints;
