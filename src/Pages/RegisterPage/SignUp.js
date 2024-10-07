@@ -150,13 +150,16 @@ const SignUp = () => {
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");
+            }else{
+                setError({username: "Username Unavailable"});
             }
-            if(response.status === 400){
-                console.log('Registration failed!');
-                console.log(response);
-                setError(response.data);
-            }
+            // if(response.status === 400){
+            //     console.log('Registration failed!');
+            //     console.log(response);
+            //     // setError(response.data);
+            // }
         } catch (error) {
+            setError({username: "Username Unavailable"});
             console.error('Failed to register:', error.message);
         }
     };
