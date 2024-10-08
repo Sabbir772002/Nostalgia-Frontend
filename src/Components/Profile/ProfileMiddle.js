@@ -124,17 +124,21 @@ if(user.username.includes("@")){
         fetchPosts={fetchPosts}
         />
         )}
-        
+       {userData && userData.is_fnf === 1 ? (
         <UserHome
-        fetchPosts={fetchPosts}
-        setPosts={setPosts}
-        userData={userData}
-        profileImg={profileImg}
-        setUserPostData={setUserPostData}
-        userPostData={searchResults}
-        images={images}
-        posts={posts}
+          fetchPosts={fetchPosts}
+          setPosts={setPosts}
+          userData={userData}
+          profileImg={profileImg}
+          setUserPostData={setUserPostData}
+          userPostData={searchResults}
+          images={images}
+          posts={posts}
         />
+) : (
+  <h2>You are not allowed to view Post.!</h2>
+)}
+
     </div>
   )
 }
