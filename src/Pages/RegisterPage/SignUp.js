@@ -7,7 +7,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
 import validation from './Validation';
 import api from '../../util/api';
-import { set } from 'date-fns';
+
 const SignUp = () => {
     const navigate = useNavigate();
     const [error, setError] = useState({});
@@ -23,36 +23,31 @@ const SignUp = () => {
     ]);
     const [upazilas, setUpazilas] = useState();
     const [districts, setDistricts] = useState([]);
+
     const findThana = (district) => {
-        const res=axios.get(`${api.url}:8000/findthana`,{
+        const res = axios.get(`${api.url}:8000/findthana`, {
             params: {
                 district: district
             }
         }).then(response => {
-            // Accessing the data from the response object
-            console.log(response.data);
             setUpazilas(response.data);
         }).catch(error => {
-            // Handling errors
             console.error('Error:', error);
         });
     }
+
     const findDistrict = (division) => {
-        const res=axios.get(`${api.url}:8000/finddistrict`,{
+        const res = axios.get(`${api.url}:8000/finddistrict`, {
             params: {
                 division: division
             }
-        }) .then(response => {
-            // Accessing the data from the response object
-            console.log(response.data);
+        }).then(response => {
             setDistricts(response.data);
-        })
-        .catch(error => {
-            // Handling errors
+        }).catch(error => {
             console.error('Error:', error);
         });
+    }
 
-    }        
     const [data, setData] = useState({
         username: '',
         password: '',
@@ -81,15 +76,30 @@ const SignUp = () => {
         } else if (name === "district") {
             findThana(value);
         }
-        };
+    };
+
     const handleSignUp = async (e) => {
         e.preventDefault();
-        if(data.password != data.confirm_password){
-            setError({confirm_password: "Password doesn't match"});
-             return;
+
+        // Age validation: Calculate age from DOB and check if it's more than 50
+        let currentDate = new Date();
+        let birthDate = new Date(data.dob);
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+        let month = currentDate.getMonth() - birthDate.getMonth();
+        if (month < 0 || (month === 0 && currentDate.getDate() < birthDate.getDate())) {
+            age--;
         }
-        // setError(validation(data));
-        // if (Object.keys(validation(data)).length > 0) return;
+
+        if (age < 50) {
+            setError({ dob: "You must be more than 50 years old to register." });
+            return;
+        }
+
+        if (data.password !== data.confirm_password) {
+            setError({ confirm_password: "Password doesn't match" });
+            return;
+        }
+
         setSubmit(true);
 
         try {
@@ -98,9 +108,8 @@ const SignUp = () => {
                 console.log('Registration successful!');
                 navigate("/");
             }
-            if(response.status === 400){
+            if (response.status === 400) {
                 console.log('Registration failed!');
-                console.log(response);
                 setError(response.data);
             }
         } catch (error) {
@@ -108,20 +117,6 @@ const SignUp = () => {
         }
     };
 
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-
-    const handleEmailVerification = async () => {
-        try {
-            const response = await axios.post('http://your-backend-api-url/send-verification-email', {
-                email: email,
-            });
-            setMessage(response.data.message);
-        } catch (error) {
-            setMessage('Error sending verification email');
-            console.error(error);
-        }
-    };
     return (
         <div className="container">
             <div className="container-form">
@@ -131,7 +126,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <AiOutlineUser className='username' />
-                        <input className='form-control'  type='text'
+                        <input className='form-control' type='text'
                             name="username"
                             id="username"
                             onChange={handleChange}
@@ -142,7 +137,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <AiOutlineUser className='first_name' />
-                        <input  className='form-control' type='text'
+                        <input className='form-control' type='text'
                             name="first_name"
                             id="first_name"
                             onChange={handleChange}
@@ -150,9 +145,10 @@ const SignUp = () => {
                         />
                     </div>
                     {error.first_name && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.first_name}</span>}
+
                     <div className="inputBox">
                         <AiOutlineUser className='last_name' />
-                        <input  className='form-control' type='text'
+                        <input className='form-control' type='text'
                             name="last_name"
                             id="last_name"
                             onChange={handleChange}
@@ -163,7 +159,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <FiMail className='mail' />
-                        <input  className='form-control' type="email"
+                        <input className='form-control' type="email"
                             name="email"
                             id="email"
                             onChange={handleChange}
@@ -174,7 +170,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <FiMail className='address' />
-                        <input  className='form-control' type="text"
+                        <input className='form-control' type="text"
                             name="address"
                             id="address"
                             onChange={handleChange}
@@ -185,7 +181,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <FiMail className='nid' />
-                        <input  className='form-control' type="text"
+                        <input className='form-control' type="text"
                             name="nid"
                             id="nid"
                             onChange={handleChange}
@@ -194,7 +190,7 @@ const SignUp = () => {
                     </div>
                     {error.nid && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.nid}</span>}
 
-                    <div className="inputBox" >
+                    <div className="inputBox">
                         <FiMail className='phone' />
                         <input className='form-control' type="text"
                             name="phone"
@@ -205,7 +201,7 @@ const SignUp = () => {
                     </div>
                     {error.phone && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.phone}</span>}
 
-                    <div className="inputBox " style={{ width: "100%" }}>
+                    <div className="inputBox" style={{ width: "100%" }}>
                         <select className='form-control' name="division" id="division" onChange={handleChange}>
                             <option value="">Select Division</option>
                             {divisions.map((division) => (
@@ -216,9 +212,10 @@ const SignUp = () => {
                         </select>
                     </div>
                     {error.division && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.division}</span>}
-                    { districts && (
-                        <div className="inputBox" style={{width:"100%"}}>
-                            <select  className='form-control'  name="district" id="district" onChange={handleChange}>
+
+                    {districts && (
+                        <div className="inputBox" style={{ width: "100%" }}>
+                            <select className='form-control' name="district" id="district" onChange={handleChange}>
                                 <option value="">Select District</option>
                                 {districts.map((district) => (
                                     <option key={district} value={district}>
@@ -231,8 +228,8 @@ const SignUp = () => {
                     {error.district && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.district}</span>}
 
                     {upazilas && (
-                        <div className="inputBox" style={{width:"100%"}}>
-                            <select className='form-control'  name="thana" id="thana" onChange={handleChange}>
+                        <div className="inputBox" style={{ width: "100%" }}>
+                            <select className='form-control' name="thana" id="thana" onChange={handleChange}>
                                 <option value="">Select Thana/Upazila</option>
                                 {upazilas.map((upazila) => (
                                     <option key={upazila} value={upazila}>
@@ -246,7 +243,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <FiMail className='gender' />
-                        <input  className='form-control' type="text"
+                        <input className='form-control' type="text"
                             name="gender"
                             id="gender"
                             onChange={handleChange}
@@ -257,8 +254,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <FiMail className='dob' />
-                        <input  className='form-control'
-                            type="date"
+                        <input className='form-control' type="date"
                             name="dob"
                             id="dob"
                             onChange={handleChange}
@@ -269,7 +265,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <RiLockPasswordLine className='password' />
-                        <input  className='form-control' type="password"
+                        <input className='form-control' type="password"
                             name="password"
                             id="password"
                             onChange={handleChange}
@@ -280,7 +276,7 @@ const SignUp = () => {
 
                     <div className="inputBox">
                         <RiLockPasswordLine className='password' />
-                        <input  className='form-control' type="password"
+                        <input className='form-control' type="password"
                             name="confirm_password"
                             id="confirm_password"
                             onChange={handleChange}
@@ -302,4 +298,5 @@ const SignUp = () => {
         </div>
     );
 };
+
 export default SignUp;
