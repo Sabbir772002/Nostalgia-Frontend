@@ -10,6 +10,7 @@ import axios from 'axios';
 import api from '../../util/api';
 const InputPost = ({fetchPosts}) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
+  const token= localStorage.getItem('token');
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
@@ -50,8 +51,10 @@ const InputPost = ({fetchPosts}) => {
           return; 
         }
         formData.append(key, value);  
+        formData.append('token', token);
       });
       console.log(formData);
+
       const response = await axios.post(`${api.url}:8000/addblog`, formData);
       console.log(response.data); 
       alert('Blog created successfully');

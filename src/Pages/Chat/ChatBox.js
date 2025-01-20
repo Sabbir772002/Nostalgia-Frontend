@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useRef } from 'react';
 import io from 'socket.io-client';
-import Nav from '../../Components/Navigation/Nav';
+import Nav from '../../../Nostalgia-Frontend/src/Components/Navigation/Nav';
 import { useLocation, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
@@ -36,6 +36,7 @@ const Chat = () => {
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket(`${api.url}:5000`);
     const [lastseen, setLastseen] = useState("");
+    
     useEffect(() => {
         if (fnd && !done) {
             console.log("fnd alreadt set   "+fnd);
