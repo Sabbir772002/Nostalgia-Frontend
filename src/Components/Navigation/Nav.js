@@ -2,7 +2,6 @@ import React from 'react'
 import "../Navigation/Nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-
 import {AiOutlineHome} from "react-icons/ai"
 import {LiaUserFriendsSolid} from "react-icons/lia"
 import {IoNotificationsOutline} from "react-icons/io5"
@@ -11,7 +10,7 @@ import {useState } from 'react';
 import { useNavigate } from 'react-router';
 import Profile from "../../assets/profile.jpg"
 import axios from 'axios';
-import api from '../../../../FundWave-Frontend-/util/api';
+import api from '../../util/api';
 const Nav = ({setPosts,setShowMenu,profileImg}) => {
 const userData = JSON.parse(localStorage.getItem('userData'));
 const [search,setSearch] =useState('');

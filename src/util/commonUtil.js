@@ -1,5 +1,5 @@
 //import jwt_decode from "jwt-decode";
-import Constants from "../../Nostalgia-Frontend/src/chat_lib/constants";
+import Constants from "../chat_lib/constants";
 import CookieUtil from "./cookieUtil";
 import { jwtDecode } from "jwt-decode";
 const is_date = (date) => {

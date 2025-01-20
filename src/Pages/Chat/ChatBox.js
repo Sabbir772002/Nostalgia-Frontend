@@ -1,13 +1,13 @@
 import React, { useState, useEffect,useRef } from 'react';
 import io from 'socket.io-client';
-import Nav from '../../../Nostalgia-Frontend/src/Components/Navigation/Nav';
+import Nav from '../../Components/Navigation/Nav.js';
 import { useLocation, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaReact } from 'react-icons/fa';
-import api from '../../util/api';
+import api from '../../util/api.js';
 
 const useSocket = (url) => {
     const [socket, setSocket] = useState(null);
