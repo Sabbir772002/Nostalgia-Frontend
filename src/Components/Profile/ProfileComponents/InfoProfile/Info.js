@@ -120,6 +120,8 @@ useEffect(() => {
   console.log(userData);
   fetchaddinfo();
 }, [userData]);
+console.log("this is dbg for img");
+console.log(`${api.url}:8000/${userData.pp}`);
 
 return (
     <div className='info'>

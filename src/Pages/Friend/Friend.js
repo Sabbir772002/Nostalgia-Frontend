@@ -44,6 +44,8 @@ const Friend = () => {
   const location = useLocation();
   //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
   const userData= JSON.parse(localStorage.getItem('userData'));
+  console.log("here is fndid and list of fnd");
+  console.log(userData);
 
  // console.log(userData);
 
@@ -58,7 +60,7 @@ const Friend = () => {
           const response = await axios.get(`${api.url}:8000/friends`,
           {
             params: {
-              user_id: userData.id
+              user_id: userData.username
             }
         });
           setfndlist(response.data.users);

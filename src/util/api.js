@@ -4,7 +4,7 @@ const api = {
   // url:"http://192.168.1.105",
   // url:"http://192.168.1.105",
    // url:"http://10.10.200.137",
-   img:'http://localhost:3000/api/campaign'
+   // img:'http://localhost:3000/api/campaign'
   };
   export default api;
   
