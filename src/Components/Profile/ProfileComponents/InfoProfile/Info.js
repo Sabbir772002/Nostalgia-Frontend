@@ -59,7 +59,7 @@ const navigate = useNavigate();
     // Remove 'userData' from localStorage or perform logout actions
     localStorage.removeItem('userData');
     console.log("logout "+user.username);
-    localStorage.clear();
+    // localStorage.clear();
     navigate('/')
     // Add other logout logic here
   };

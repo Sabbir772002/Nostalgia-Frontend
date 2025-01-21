@@ -19,7 +19,6 @@ const Login = () => {
       }
     });
   };
-
   const getLocalStorageItem = (key) => {
     return new Promise((resolve, reject) => {
       try {
@@ -46,16 +45,18 @@ const Login = () => {
   const [error, setError] = useState({});
   const [submit, setSubmit] = useState(false);
   const { setUserData } = useUser();
-  const [data, setData] = useState({
-    username: '',
-    password: '',
-  });
+
+
   const [showModal, setShowModal] = useState(false);
   const [otpInput, setOtpInput] = useState('');
   const [serverOtp, setServerOtp] = useState(null);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-
+  const [data, setData] = useState({
+    username: '',
+    password: '',
+    tt:''
+  });
   const handleChange = (e) => {
     const newObj = { ...data, [e.target.name]: e.target.value };
     setData(newObj);
@@ -65,6 +66,13 @@ const Login = () => {
     e.preventDefault();
     setError(validationLogin(data));
     setSubmit(true);
+    let tt=localStorage.getItem('token');
+    console.log("this is code");
+    console.log(tt);
+    setData(prevState => ({
+      ...prevState,
+      tt: tt || ''
+    }));    
 
     try {
       const response = await axios.post(`${api.url}:8000/login`, data);
@@ -73,12 +81,19 @@ const Login = () => {
         console.log(response.data.otp);
         setServerOtp(response.data.otp);
         // setUserData(response.data.user);
+        console.log("this is logged user");
+        console.log(response.data.user);
+        console.log("this is end of userdata");
+
         setUser(response.data.user);
         console.log(response.data.token);
         setToken(response.data.token);
         localStorage.setItem('token', response.data.token);
         exampleUsage(response.data.user);
-        setShowModal(true); // Show OTP modal
+        setShowModal(true); 
+        // setOtpInput("1234");
+        // setServerOtp("1234");
+        
       } else {
         console.log('Invalid Username or Password');
         setError({ ...error, username: 'Invalid Username or Password' });
