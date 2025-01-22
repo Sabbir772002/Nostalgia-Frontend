@@ -66,14 +66,20 @@ const Login = () => {
     e.preventDefault();
     setError(validationLogin(data));
     setSubmit(true);
-    let tt=localStorage.getItem('token');
+    // let tt=localStorage.getItem('token');
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = crypto.randomUUID();
+        localStorage.setItem('deviceId', deviceId);
+    }
+    let tot=deviceId;
+
     console.log("this is code");
-    console.log(tt);
+    console.log(tot);
     setData(prevState => ({
       ...prevState,
-      tt: tt || ''
-    }));    
-
+      tt: tot || ''
+    }));
     try {
       const response = await axios.post(`${api.url}:8000/login`, data);
       if (response.status === 200) {

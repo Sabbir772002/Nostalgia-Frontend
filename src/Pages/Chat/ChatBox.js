@@ -36,6 +36,10 @@ const Chat = () => {
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket(`${api.url}:5000`);
     const [lastseen, setLastseen] = useState("");
+    const [n,setn]=useState("");
+    const [e,sete]=useState("");
+    const [d,setd]=useState("");
+    const [msg,setmsg]=useState("");
     
     useEffect(() => {
         if (fnd && !done) {
@@ -44,9 +48,44 @@ const Chat = () => {
             findname(fnd);
             msgbox();
         }
-
     }, [fnd,done]);
     // console.log(fnd)
+    const encrypt = (message) => {
+        axios.get(`${api.url}:8000/msge`, {
+            params: {
+                msg: message,
+                e: e,
+                n: n,
+                d: d
+            }
+        }).then(response => {
+            console.log('Encrypted Message:', response.data);
+            setmsg(response.data);
+        })
+        .catch(error => {
+            console.error('Error fetching user data:',error);
+        });
+     }
+    const decrypt = async (message) => {
+        console.log("this is decrypted function");
+        console.log(message);
+        try {
+            const response = await axios.get(`${api.url}:8000/msgd`, {
+                params: {
+                    msg: message,
+                    e: e,
+                    n: n,
+                    d: d
+                }
+            });
+            // console.log('Decrypted Message:', response.data);
+            return response.data; 
+        } catch (error) {
+            console.error('Error fetching decrypted message:', error);
+            throw error;
+        }
+    };
+
     const finduserlist = async () => {
         try {
             const response = await axios.get(`${api.url}:5000/api/userbox/` + userData.username);
@@ -74,7 +113,6 @@ const Chat = () => {
             console.error('Error fetching users:', error);
         }
     };
-    
     const fetchUserImages = async (userList) => {
         const userImages = await Promise.all(userList.map(async (user) => {
             try {
@@ -94,7 +132,6 @@ const Chat = () => {
         }));
         setUserbox(updatedUserBox);
     };
-    
     async function fetchUserImage(username, currentUser) {
         try {
             const response = await axios.get(`${api.url}:8000/profile/${username}`, {
@@ -108,7 +145,7 @@ const Chat = () => {
             console.error('Error fetching user image:', error);
             return null;
         }
-    }    
+    }
     useEffect(()=>{
         if (!socket) return;
         socket.on('users status', (usersStatus) => {
@@ -147,7 +184,7 @@ const Chat = () => {
             console.log('Socket disconnected');
         })
         
-        socket.on('chat message', (message) => {
+        socket.on('chat message', async (message) => {
             // console.log('New message received from:', message.sender);
             // console.log('New message received:', message);
             const messageExists = messages.some(msg => msg.id == msg.id);
@@ -156,7 +193,15 @@ const Chat = () => {
             // console.log(message.receiver);
             // console.log(userData.username);
             if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
-                // console.log("after rcv msg");
+                console.log("msg in socket");
+                console.log(message);
+                try {
+                    message.content = await decrypt(message.content);
+                } catch (error) {
+                    console.error("Error decrypting content:", error);
+                    // Optional: Provide a fallback value for message.content
+                    message.content = "Error decrypting content";
+                }
                 setMessages(prevMessages => [...prevMessages, message]);
                 const chatHistory = document.getElementById('chat-history');
                 chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
@@ -263,6 +308,7 @@ const Chat = () => {
 
 
     const sendMessage = () => {
+        encrypt(newMessage);
         if (selectedImage) {
             // Create a FormData object to send the image file
             const formData = new FormData();
@@ -287,21 +333,24 @@ const Chat = () => {
             // Clear the selected image after sending
             setSelectedImage(null);
         }else if (newMessage.trim() !== '') {
-            
+        
             const message = {
                 id: messages.length + 1,
                 sender: userData.username,
                 receiver: fd,
-                content: newMessage,
+                content: msg,
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
                 img:0,
                 image: null
             };
             socket.emit('set username', userData.username);
-            socket.emit('chat message', message);    
+            socket.emit('chat message', message);   
+            console.log("msg send now"); 
+            console.log(message);
             setNewMessage('');
-                  // Save message to MongoDB using Axios
+            setmsg('');
+        // Save message to MongoDB using Axios
         axios.post(`${api.url}:5000/api/messages`, message)
         .then(response => {
             console.log('Message saved:', response.data);
@@ -318,15 +367,24 @@ const Chat = () => {
                 id2: fd
             }
         })
-        .then(response => {
-            console.log('Message Retrieve:', response.data);
-            setMessages(response.data);
-            const user = userbox.find(user => user.name === fd);
-            setLastseen(user ? user.lastSeen : lastseen);
-            
+        .then(async (response) => {
+            const encryptedMessages = response.data;
+            // console.log("This is rcv msg");
+            // for(let i=0;i<encryptedMessages.length;i++){
+            //     console.log(encryptedMessages[i].content);
+            // }
+
+            const decryptedMessages = await Promise.all(
+                encryptedMessages.map(async (message) => {
+                    const decryptedContent = await decrypt(message.content);
+                    return { ...message, content: decryptedContent }; 
+                })
+            );
+            setMessages(decryptedMessages);
+            // setMessages(encryptedMessages);
         })
-        .catch(error => {
-            console.error('Error fetching messages:', error);
+        .catch((error) => {
+            console.error('Error fetching messages:', error);    
         });
         const chatHistory = document.getElementById('chat-history');
         chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
@@ -345,6 +403,20 @@ const Chat = () => {
     const findname = (name) => {
         // console.log(name);
         // if (name==null)return;
+        axios.get(`${api.url}:5000/api/findpbvt`, {
+            params: {id1: name, id2: userData.username}}).then(response => {
+            setd(response.data.d);
+            sete(response.data.e);
+            setn(response.data.n);
+            // console.log('Box of Key Data:', response.data);
+            
+        })
+         .catch(error => {
+            console.error('Error fetching user data:', error);
+        });
+        // console.log("E",e);
+        // console.log("N",n);
+        // console.log("D",d);
         axios.get(`${api.url}:8000/profile/${name}`, {
             params: {
                 username: name,
