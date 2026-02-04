@@ -2,7 +2,6 @@ import React from 'react'
 import "../Navigation/Nav.css"
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
-
 import {AiOutlineHome} from "react-icons/ai"
 import {LiaUserFriendsSolid} from "react-icons/lia"
 import {IoNotificationsOutline} from "react-icons/io5"

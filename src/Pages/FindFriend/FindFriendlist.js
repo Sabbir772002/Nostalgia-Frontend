@@ -58,7 +58,7 @@ const FindFriendlist = () => {
 const fetchData = () => {
   axios.get(`${api.url}:8000/findfriend`, {
       params: {
-          user_id: userData.id
+          user_id: userData.username
       }
   })
   .then(response => {

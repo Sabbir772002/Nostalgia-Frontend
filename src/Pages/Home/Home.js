@@ -31,13 +31,9 @@ const Home = () => {
     // Fetch posts when component mounts
     fetchPosts();
   }, []);
-
-
-
   const [following,setFollowing] =useState("")
         
-  const [showMenu,setShowMenu] =useState(false)
-  
+  const [showMenu,setShowMenu] =useState(false);
   return (
     <div className='interface'>
         <Nav 

@@ -131,7 +131,7 @@ const Sugg = (fetchOverseerList) => {
     console.log("in join");
     console.log(guser);
     fetchgrouplist();
-    fetchOverseerList();
+    // fetchOverseerList();
     //setgroup({...group,member:1});
   };
   return (

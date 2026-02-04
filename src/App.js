@@ -13,13 +13,13 @@ import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
 import DD from './Pages/Ex/DD';
-import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
-import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
-import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
+// import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
+// import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
+// import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import Compare from './Pages/Compare/Compare';
 import NHome from './Pages/NHome/NHome';
 import Caregiver from './Pages/Caregiver/Caregiver';
-import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
+// import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
 import Trip from './Pages/Trip/Trip';
@@ -60,10 +60,10 @@ const App = () => {
             <Route path='/friend' element={<Friend />} />
             <Route path='/image' element={<ImgBox />} />
             <Route path='/ex' element={<Ex />} />
-            <Route path='/forget' element={<Recovered />} />
+            {/* <Route path='/forget' element={<Recovered />} />
             <Route path='/Reset' element={<Reset />} />
             <Route path='/OTP' element={<OTPInput />} />
-            <Route path='/OTPP' element={<OTPInput />} />
+            <Route path='/OTPP' element={<OTPInput />} /> */}
             <Route path='/walk' element={<Buddy />} />
             <Route path='/comparebox' element={<Compare />} />
             <Route path='/compare/:username' element={<Compare />} />

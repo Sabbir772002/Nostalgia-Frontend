@@ -92,6 +92,10 @@ const ProfileMiddle = ({following,
     };
 
 const user= JSON.parse(localStorage.getItem('userData'));
+console.log("you are in profile page");
+console.log(user.username);
+console.log(username)
+console.log(user);
 if(user.username.includes("@")){
   return (
     <h2>You are not allowed to view this page!</h2>
@@ -124,17 +128,21 @@ if(user.username.includes("@")){
         fetchPosts={fetchPosts}
         />
         )}
-        
+       {(user.username==username) || (userData && userData.is_fnf === 1) ? (
         <UserHome
-        fetchPosts={fetchPosts}
-        setPosts={setPosts}
-        userData={userData}
-        profileImg={profileImg}
-        setUserPostData={setUserPostData}
-        userPostData={searchResults}
-        images={images}
-        posts={posts}
+          fetchPosts={fetchPosts}
+          setPosts={setPosts}
+          userData={userData}
+          profileImg={profileImg}
+          setUserPostData={setUserPostData}
+          userPostData={searchResults}
+          images={images}
+          posts={posts}
         />
+) : (
+  <h2>You are not allowed to view Post.!</h2>
+)}
+
     </div>
   )
 }

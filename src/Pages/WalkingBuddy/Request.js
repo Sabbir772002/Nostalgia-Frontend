@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import api from '../../util/api';
 
+
 const RequestList = ({user, fmembers}) => {
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [selectedId, setSelectedId] = useState(null); // State for selected member ID
@@ -46,8 +47,9 @@ const RequestList = ({user, fmembers}) => {
       console.log(id);
       const response = await axios.post(`${api.url}:8000/handlemember`, { id:id,walk_id:user.id, type: action});
       console.log(response.data);
-      fetchData();
       fmembers();
+      fetchData();
+      
       //set members from buddylist
     } catch (error) {
       console.error('Error performing action:', error);

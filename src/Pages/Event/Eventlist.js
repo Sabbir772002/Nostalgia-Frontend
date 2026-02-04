@@ -120,11 +120,11 @@ const Eventlist = () => {
       });
       fetchData();
       if(response.data.user == userData.username){
-        alert("You have already requested to join this walk. Please wait for the owner to accept your request.");
+        alert("You have successfully joined the event.");
         return;
       }
       console.log('Request sent successfully:', walk.id); 
-      alert("Request sent successfully. Please wait for the owner to accept your request.");
+      alert("You have successfully joined the event.");
       } catch (error) {
         alert("Some issue! Try again after some moment!.");
         //something need to be done, as for network failure....

@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import "../RegisterPage/RegisterPage.css";
+// import "../RegisterPage/RegisterPage.css";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiMail } from "react-icons/fi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link, useNavigate } from 'react-router-dom';
-import validation from './Validation';
+import { FaGenderless, FaRegCalendarAlt, FaMapMarkerAlt, FaPhone, FaIdCard } from "react-icons/fa";
 import api from '../../util/api';
-import { set } from 'date-fns';
+
 const SignUp = () => {
     const navigate = useNavigate();
     const [error, setError] = useState({});
-    const [submit, setSubmit] = useState(false);
     const [divisions, setDivisions] = useState([
         "Dhaka",
         "Rajshahi",
@@ -21,38 +20,8 @@ const SignUp = () => {
         "Sylhet",
         "Mymensingh"
     ]);
-    const [upazilas, setUpazilas] = useState();
     const [districts, setDistricts] = useState([]);
-    const findThana = (district) => {
-        const res=axios.get(`${api.url}:8000/findthana`,{
-            params: {
-                district: district
-            }
-        }).then(response => {
-            // Accessing the data from the response object
-            console.log(response.data);
-            setUpazilas(response.data);
-        }).catch(error => {
-            // Handling errors
-            console.error('Error:', error);
-        });
-    }
-    const findDistrict = (division) => {
-        const res=axios.get(`${api.url}:8000/finddistrict`,{
-            params: {
-                division: division
-            }
-        }) .then(response => {
-            // Accessing the data from the response object
-            console.log(response.data);
-            setDistricts(response.data);
-        })
-        .catch(error => {
-            // Handling errors
-            console.error('Error:', error);
-        });
-
-    }        
+    const [upazilas, setUpazilas] = useState([]);
     const [data, setData] = useState({
         username: '',
         password: '',
@@ -71,9 +40,24 @@ const SignUp = () => {
         confirm_password: ''
     });
 
+    const findThana = (district) => {
+        axios.get(`${api.url}:8000/findthana`, { params: { district } })
+            .then(response => {
+                setUpazilas(response.data);
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
+    const findDistrict = (division) => {
+        axios.get(`${api.url}:8000/finddistrict`, { params: { division } })
+            .then(response => {
+                setDistricts(response.data);
+            })
+            .catch(error => console.error('Error:', error));
+
+    };
     const handleChange = (e) => {
         setError({});
-        const newObj = { ...data, [e.target.name]: e.target.value };
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
         if (name === "division") {
@@ -81,45 +65,35 @@ const SignUp = () => {
         } else if (name === "district") {
             findThana(value);
         }
-        };
+    };
     const handleSignUp = async (e) => {
         e.preventDefault();
-        if(data.password != data.confirm_password){
-            setError({confirm_password: "Password doesn't match"});
-             return;
-        }
-        // setError(validation(data));
-        // if (Object.keys(validation(data)).length > 0) return;
-        setSubmit(true);
 
-        try {
+        // Age validation
+        const currentDate = new Date();
+        const birthDate = new Date(data.dob);
+        const age = currentDate.getFullYear() - birthDate.getFullYear() -
+            (currentDate.getMonth() < birthDate.getMonth() || 
+            (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate()) ? 1 : 0);
+
+        if (age < 50) {
+            setError({ dob: "You must be more than 50 years old to register." });
+            return;
+        }
+        if (data.password !== data.confirm_password) {
+            setError({ confirm_password: "Passwords do not match" });
+            return;
+        }        try {
             const response = await axios.post(`${api.url}:8000/sign`, data);
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");
-            }
-            if(response.status === 400){
-                console.log('Registration failed!');
-                console.log(response);
-                setError(response.data);
+            } else if (response.status === 400) {
+                // setError({ ...response.data });
+                alert('Registration failed, please try again with valid data.');
             }
         } catch (error) {
             console.error('Failed to register:', error.message);
-        }
-    };
-
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-
-    const handleEmailVerification = async () => {
-        try {
-            const response = await axios.post('http://your-backend-api-url/send-verification-email', {
-                email: email,
-            });
-            setMessage(response.data.message);
-        } catch (error) {
-            setMessage('Error sending verification email');
-            console.error(error);
         }
     };
     return (
@@ -129,84 +103,86 @@ const SignUp = () => {
                     <h1>Create Account</h1>
                     <p>Please fill in the inputs below:</p>
 
+                    {/* Username */}
                     <div className="inputBox">
                         <AiOutlineUser className='username' />
-                        <input className='form-control'  type='text'
+                        <input className='form-control' type='text'
                             name="username"
-                            id="username"
                             onChange={handleChange}
-                            placeholder='Username'
+                          placeholder='Username'
                         />
                     </div>
-                    {error.username && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.username}</span>}
+                    {error.username && <span style={{ color: "red" }}>{error.username}</span>}
 
+                    {/* First Name */}
                     <div className="inputBox">
                         <AiOutlineUser className='first_name' />
-                        <input  className='form-control' type='text'
+                        <input className='form-control' type='text'
                             name="first_name"
-                            id="first_name"
                             onChange={handleChange}
                             placeholder='First Name'
                         />
                     </div>
-                    {error.first_name && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.first_name}</span>}
+                    {error.first_name && <span style={{ color: "red" }}>{error.first_name}</span>}
+
+                    {/* Last Name */}
                     <div className="inputBox">
                         <AiOutlineUser className='last_name' />
-                        <input  className='form-control' type='text'
+                        <input className='form-control' type='text'
                             name="last_name"
-                            id="last_name"
                             onChange={handleChange}
                             placeholder='Last Name'
                         />
                     </div>
-                    {error.last_name && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.last_name}</span>}
+                    {error.last_name && <span style={{ color: "red" }}>{error.last_name}</span>}
 
+                    {/* Email */}
                     <div className="inputBox">
                         <FiMail className='mail' />
-                        <input  className='form-control' type="email"
+                        <input className='form-control' type="email"
                             name="email"
-                            id="email"
                             onChange={handleChange}
                             placeholder='Email'
                         />
                     </div>
-                    {error.email && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.email}</span>}
+                    {error.email && <span style={{ color: "red" }}>{error.email}</span>}
 
+                    {/* Address */}
                     <div className="inputBox">
-                        <FiMail className='address' />
-                        <input  className='form-control' type="text"
+                        <FaMapMarkerAlt className='address' />
+                        <input className='form-control' type="text"
                             name="address"
-                            id="address"
                             onChange={handleChange}
                             placeholder='Address'
                         />
                     </div>
-                    {error.address && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.address}</span>}
+                    {error.address && <span style={{ color: "red" }}>{error.address}</span>}
 
+                    {/* NID */}
                     <div className="inputBox">
-                        <FiMail className='nid' />
-                        <input  className='form-control' type="text"
+                        <FaIdCard className='nid' />
+                        <input className='form-control' type="text"
                             name="nid"
-                            id="nid"
                             onChange={handleChange}
                             placeholder='NID'
                         />
                     </div>
-                    {error.nid && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.nid}</span>}
+                    {error.nid && <span style={{ color: "red" }}>{error.nid}</span>}
 
-                    <div className="inputBox" >
-                        <FiMail className='phone' />
+                    {/* Phone */}
+                    <div className="inputBox">
+                        <FaPhone className='phone' />
                         <input className='form-control' type="text"
                             name="phone"
-                            id="phone"
                             onChange={handleChange}
                             placeholder='Phone'
                         />
                     </div>
-                    {error.phone && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.phone}</span>}
+                    {error.phone && <span style={{ color: "red" }}>{error.phone}</span>}
 
-                    <div className="inputBox " style={{ width: "100%" }}>
-                        <select className='form-control' name="division" id="division" onChange={handleChange}>
+                    {/* Division */}
+                    <div className="inputBox">
+                        <select className='form-control' name="division" onChange={handleChange}>
                             <option value="">Select Division</option>
                             {divisions.map((division) => (
                                 <option key={division} value={division}>
@@ -215,10 +191,12 @@ const SignUp = () => {
                             ))}
                         </select>
                     </div>
-                    {error.division && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.division}</span>}
-                    { districts && (
-                        <div className="inputBox" style={{width:"100%"}}>
-                            <select  className='form-control'  name="district" id="district" onChange={handleChange}>
+                    {error.division && <span style={{ color: "red" }}>{error.division}</span>}
+
+                    {/* District */}
+                    {districts.length > 0 && (
+                        <div className="inputBox">
+                            <select className='form-control' name="district" onChange={handleChange}>
                                 <option value="">Select District</option>
                                 {districts.map((district) => (
                                     <option key={district} value={district}>
@@ -228,11 +206,12 @@ const SignUp = () => {
                             </select>
                         </div>
                     )}
-                    {error.district && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.district}</span>}
+                    {error.district && <span style={{ color: "red" }}>{error.district}</span>}
 
-                    {upazilas && (
-                        <div className="inputBox" style={{width:"100%"}}>
-                            <select className='form-control'  name="thana" id="thana" onChange={handleChange}>
+                    {/* Thana */}
+                    {upazilas.length > 0 && (
+                        <div className="inputBox">
+                            <select className='form-control' name="thana" onChange={handleChange}>
                                 <option value="">Select Thana/Upazila</option>
                                 {upazilas.map((upazila) => (
                                     <option key={upazila} value={upazila}>
@@ -242,59 +221,59 @@ const SignUp = () => {
                             </select>
                         </div>
                     )}
-                    {error.thana && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.thana}</span>}
+                    {error.thana && <span style={{ color: "red" }}>{error.thana}</span>}
 
+                    {/* Gender */}
                     <div className="inputBox">
-                        <FiMail className='gender' />
-                        <input  className='form-control' type="text"
+                        <FaGenderless className='gender' />
+                        <input className='form-control' type="text"
                             name="gender"
-                            id="gender"
                             onChange={handleChange}
                             placeholder='Gender'
                         />
                     </div>
-                    {error.gender && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.gender}</span>}
+                    {error.gender && <span style={{ color: "red" }}>{error.gender}</span>}
 
+                    {/* Date of Birth */}
                     <div className="inputBox">
-                        <FiMail className='dob' />
-                        <input  className='form-control'
-                            type="date"
+                        <FaRegCalendarAlt className='dob' />
+                        <input className='form-control' type="date"
                             name="dob"
-                            id="dob"
                             onChange={handleChange}
-                            placeholder="Date of Birth"
                         />
                     </div>
-                    {error.dob && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.dob}</span>}
+                    {error.dob && <span style={{ color: "red" }}>{error.dob}</span>}
 
+                    {/* Password */}
                     <div className="inputBox">
                         <RiLockPasswordLine className='password' />
-                        <input  className='form-control' type="password"
+                        <input className='form-control' type="password"
                             name="password"
-                            id="password"
                             onChange={handleChange}
                             placeholder='Password'
                         />
                     </div>
-                    {error.password && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.password}</span>}
+                    {error.password && <span style={{ color: "red" }}>{error.password}</span>}
 
+                    {/* Confirm Password */}
                     <div className="inputBox">
                         <RiLockPasswordLine className='password' />
-                        <input  className='form-control' type="password"
+                        <input className='form-control' type="password"
                             name="confirm_password"
-                            id="confirm_password"
                             onChange={handleChange}
                             placeholder='Confirm Password'
                         />
                     </div>
-                    {error.confirm_password && <span style={{ color: "red", display: "block", marginTop: "5px" }}>{error.confirm_password}</span>}
+                    {error.confirm_password && <span style={{ color: "red" }}>{error.confirm_password}</span>}
 
+                    {/* Submit Button */}
                     <div className='divBtn'>
                         <small className='FG'><Link to="/forget">Forgot Password?</Link></small>
                         <button className='loginBtn'>SIGN UP</button>
                     </div>
                 </form>
 
+                {/* Already have an account */}
                 <div className='dont'>
                     <p>Already have an account? <Link to="/"><span>Sign in</span></Link></p>
                 </div>
@@ -302,4 +281,5 @@ const SignUp = () => {
         </div>
     );
 };
+
 export default SignUp;

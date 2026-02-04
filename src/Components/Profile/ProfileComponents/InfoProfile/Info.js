@@ -59,7 +59,7 @@ const navigate = useNavigate();
     // Remove 'userData' from localStorage or perform logout actions
     localStorage.removeItem('userData');
     console.log("logout "+user.username);
-    localStorage.clear();
+    // localStorage.clear();
     navigate('/')
     // Add other logout logic here
   };
@@ -120,15 +120,17 @@ useEffect(() => {
   console.log(userData);
   fetchaddinfo();
 }, [userData]);
+console.log("this is dbg for img");
+console.log(`${api.url}:8000/${userData.pp}`);
 
 return (
     <div className='info'>
       <div className='info-cover'>
         <img src={coverImg} alt='' />
         <img src={`${api.url}:8000/${userData.pp}`} alt='profile' />
-        <div className='coverDiv'>
+        {/* <div className='coverDiv'>
           <IoCameraOutline className='coverSvg' onClick={() => importCover.current.click()} />
-        </div>
+        </div> */}
           {userData && userData.verify===1 ?(
                     <div className='profileDiv bg-light' style={{width:24,height:24}}>
                     <FaCheckCircle className='text-primary' style={{ width: 25, height: 25 }} />

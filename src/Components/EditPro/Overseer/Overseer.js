@@ -33,7 +33,7 @@ const Overseer = () => {
   }, []);
   
   const fetchOverseerList = () => {
-    axios.get(`http://127.0.0.1:8000/overseerlist`, {
+    axios.get(`${api.url}:8000/overseerlist`, {
       params: {
         target: user.username
       }
