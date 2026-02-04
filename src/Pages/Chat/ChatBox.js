@@ -19,7 +19,6 @@ const useSocket = (url) => {
             socketInstance.disconnect();
         };
     }, [url]);
-
     return socket;
 };
 const Chat = () => {
@@ -183,24 +182,24 @@ const Chat = () => {
         socket.on('disconnect', () => {
             console.log('Socket disconnected');
         })
-        
         socket.on('chat message', async (message) => {
             // console.log('New message received from:', message.sender);
             // console.log('New message received:', message);
-            const messageExists = messages.some(msg => msg.id == msg.id);
+            // const messageExists = messages.some(msg => msg.id == msg.id);
             // console.log(fd);
             // console.log(message.sender);
             // console.log(message.receiver);
             // console.log(userData.username);
-            if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
-                console.log("msg in socket");
-                console.log(message);
+            // if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
+            if ( (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase()) {
+                // console.log("msg in socket");
+                // console.log(message);
                 try {
                     message.content = await decrypt(message.content);
                 } catch (error) {
                     console.error("Error decrypting content:", error);
                     // Optional: Provide a fallback value for message.content
-                    message.content = "Error decrypting content";
+                    message.content = "hlw";
                 }
                 setMessages(prevMessages => [...prevMessages, message]);
                 const chatHistory = document.getElementById('chat-history');
@@ -307,7 +306,7 @@ const Chat = () => {
     };
 
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         encrypt(newMessage);
         if (selectedImage) {
             // Create a FormData object to send the image file
@@ -343,7 +342,35 @@ const Chat = () => {
                 date: new Date().toLocaleDateString(),
                 img:0,
                 image: null
+            }; 
+            const newmsg = {
+                id: messages.length + 1,
+                sender: userData.username,
+                receiver: fd,
+                content: newMessage,
+                time: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString(),
+                img:0,
+                image: null
             };
+            //cmnt below to go before 
+            setMessages((prevMessages) => [...prevMessages, newmsg]);
+
+            // try {
+            //     // Decrypt the message content
+            //     const decryptedContent = await decrypt(newMessage);
+        
+            //     // Update the message with decrypted content
+            //     setMessages((prevMessages) =>
+            //         prevMessages.map((msg) =>
+            //             msg.id === newMessage.id
+            //                 ? { ...msg, content: decryptedContent, isDecrypted: true }
+            //                 : msg
+            //         )
+            //     );
+            // } catch (error) {
+            //     console.error("Error decrypting message:", error);
+            // }
             socket.emit('set username', userData.username);
             socket.emit('chat message', message);   
             console.log("msg send now"); 

@@ -54,8 +54,8 @@ const SignUp = () => {
                 setDistricts(response.data);
             })
             .catch(error => console.error('Error:', error));
-    };
 
+    };
     const handleChange = (e) => {
         setError({});
         const { name, value } = e.target;
@@ -66,7 +66,6 @@ const SignUp = () => {
             findThana(value);
         }
     };
-
     const handleSignUp = async (e) => {
         e.preventDefault();
 
@@ -81,25 +80,22 @@ const SignUp = () => {
             setError({ dob: "You must be more than 50 years old to register." });
             return;
         }
-
         if (data.password !== data.confirm_password) {
             setError({ confirm_password: "Passwords do not match" });
             return;
-        }
-
-        try {
+        }        try {
             const response = await axios.post(`${api.url}:8000/sign`, data);
             if (response.status === 201) {
                 console.log('Registration successful!');
                 navigate("/");
             } else if (response.status === 400) {
-                setError(response.data);
+                // setError({ ...response.data });
+                alert('Registration failed, please try again with valid data.');
             }
         } catch (error) {
             console.error('Failed to register:', error.message);
         }
     };
-
     return (
         <div className="container">
             <div className="container-form">
@@ -113,7 +109,7 @@ const SignUp = () => {
                         <input className='form-control' type='text'
                             name="username"
                             onChange={handleChange}
-                            placeholder='Username'
+                          placeholder='Username'
                         />
                     </div>
                     {error.username && <span style={{ color: "red" }}>{error.username}</span>}

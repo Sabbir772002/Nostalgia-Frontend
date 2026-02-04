@@ -45,8 +45,7 @@ const Login = () => {
   const [error, setError] = useState({});
   const [submit, setSubmit] = useState(false);
   const { setUserData } = useUser();
-
-
+  
   const [showModal, setShowModal] = useState(false);
   const [otpInput, setOtpInput] = useState('');
   const [serverOtp, setServerOtp] = useState(null);
@@ -73,7 +72,6 @@ const Login = () => {
         localStorage.setItem('deviceId', deviceId);
     }
     let tot=deviceId;
-
     console.log("this is code");
     console.log(tot);
     setData(prevState => ({
@@ -90,7 +88,6 @@ const Login = () => {
         console.log("this is logged user");
         console.log(response.data.user);
         console.log("this is end of userdata");
-
         setUser(response.data.user);
         console.log(response.data.token);
         setToken(response.data.token);
