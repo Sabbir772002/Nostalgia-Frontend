@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import InputPost from '../Post/InputPost'
-import Homepage from "../GHome/Homepage"
-import "../MiddleSide/Middle.css"
-
+import React from 'react';
+import Homepage from "../GHome/Homepage";
+import "../MiddleSide/Middle.css";
 
 const Middle = ({posts,fetchPosts}) => {
-    
-  
-    const [searchResults,setSearchResults] =useState("")
     
     // useEffect(()=>{
     //   const searchData = posts.filter((val)=>(

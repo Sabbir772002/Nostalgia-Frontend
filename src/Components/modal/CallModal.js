@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from '../styles/CallModal.module.css'
+import style from '../../Pages/styles/CallModal.module.css';
 
 const CallModal = ({ status, callFrom, startCall, rejectCall }) => {
 

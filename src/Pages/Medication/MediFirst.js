@@ -7,12 +7,12 @@ import api from '../../util/api';
 const Medi = () => {
   // State variables for medication schedule, notes, and new medication
   const [medicationSchedule, setMedicationSchedule] = useState([
-    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication E', dosage: '25mg', times: ['Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` }
+    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8001/media/d.png` },
+    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image: `${api.url}:8001/media/d.png` },
+    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: `${api.url}:8001/media/d.png` },
+    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: `${api.url}:8001/media/d.png` },
+    { name: 'Medication E', dosage: '25mg', times: ['Night'], image: `${api.url}:8001/media/d.png` },
+    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8001/media/d.png` }
   ]);
   const [notes, setNotes] = useState([]);
   const [showModal, setShowModal] = useState(false);

@@ -1,18 +1,452 @@
 @import url('https://fonts.googleapis.com/css2?family=Merienda:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap');
+
 *{
     padding: 0;
     margin: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
 }
+
 html{
     scroll-behavior: smooth;
 }
-body{
-    overflow-x: hidden
-}
-.App{
-    width: 100vw;
+
+body {
+    overflow-x: clip;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    background-attachment: fixed !important;
+    color: #1e293b; /* slate-800 */
 }
 
+.App {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
 
+/* Base Text elements default to dark slate for high contrast */
+body, p, span, label, li, td, th {
+    color: #334155; /* slate-700 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a; /* slate-900 */
+}
+
+/* Global Link color - Premium Cobalt Blue */
+a {
+    color: #2563eb !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+a:hover {
+    color: #1d4ed8 !important;
+    text-shadow: 0 0 8px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* Page Background Transparencies & Layout Containment */
+.tot, .interface, .medHome, .Buddy, .caregiver-container, .Trip, .Event, .profile-container, .group-container, .chat-container, .vox, .box {
+    background: transparent !important;
+    background-color: transparent !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Master Responsive Page Grids (Left Sidebar + Content Layout) */
+.btw, .tot, .hoi, .boxi, .medhome, .home {
+    background: transparent !important;
+    background-color: transparent !important;
+    display: grid !important;
+    grid-template-columns: 260px 1fr !important;
+    column-gap: 24px !important;
+    row-gap: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 20px 24px !important;
+    align-items: start !important;
+    box-sizing: border-box !important;
+}
+
+/* Ensure the main content column shrinks properly without overflowing grid bounds */
+.btw > *:nth-child(2), 
+.tot > *:nth-child(2), 
+.hoi > *:nth-child(2), 
+.boxi > *:nth-child(2), 
+.medhome > *:nth-child(2), 
+.home > *:nth-child(2) {
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+.home, .medhome {
+    grid-template-columns: 260px 1fr 300px !important;
+}
+
+@media screen and (max-width: 1024px) {
+    .btw, .tot, .hoi, .boxi, .medhome, .home {
+        grid-template-columns: 220px 1fr !important;
+        column-gap: 16px !important;
+        padding: 16px 16px !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .btw, .tot, .hoi, .boxi, .medhome, .home {
+        grid-template-columns: 1fr !important;
+        padding: 12px 12px !important;
+    }
+}
+
+/* Sticky Left & Right Sidebars */
+.L-features, .R-Side, .R-features {
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - 100px) !important;
+    overflow-y: auto !important;
+    position: sticky !important;
+    top: 85px !important;
+    align-self: start !important;
+    margin: 0 !important;
+    z-index: 100 !important;
+}
+
+/* Sticky Header Navigation */
+nav {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03) !important;
+}
+.n-logo h1, .logo h1 {
+    color: #0f172a !important;
+}
+.n-logo span, .logo span {
+    color: #2563eb !important; /* Cobalt blue accent */
+    text-shadow: 0 0 10px rgba(37, 99, 235, 0.1) !important;
+}
+.social-icons .nav-icons {
+    color: #475569 !important;
+    transition: all 0.3s ease !important;
+}
+.social-icons .nav-icons:hover {
+    color: #2563eb !important;
+    transform: scale(1.1) !important;
+}
+#n-search {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    color: #0f172a !important;
+    border-radius: 30px !important;
+    font-size: 15px !important;
+}
+#n-search:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Sidebars (Left & Right) */
+.L-features, .R-features, .CFind, .edit-modal, .groupProfileLeft {
+    background: rgba(255, 255, 255, 0.75) !important; /* Translucent white glass */
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04) !important;
+}
+.L-features a {
+    color: #1e293b !important;
+}
+#L-box {
+    color: #475569 !important;
+    transition: all 0.3s ease !important;
+}
+#L-box:hover {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    color: #2563eb !important;
+}
+#L-box.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2) !important;
+}
+#L-box.active p {
+    background-color: #ffffff !important;
+    color: #2563eb !important;
+}
+#L-box.active span {
+    color: #ffffff !important;
+}
+
+/* Cards, Posts, Feed, & Widgets */
+.post, .InputPost-container, .commentSection, .BuddyList_fnd, .card, .profile-card, .fnd-card, .group-card, .event-card, .trip-card, .logOutExitContainer {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.03) !important;
+}
+.post-header h2, .post-user h2, .post-header a, .post-user a {
+    color: #2563eb !important;
+}
+.post-header p, .post-user .datePara, .like-comment-details, .commentSection .time {
+    color: #64748b !important;
+}
+.commentSection {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+.cmtGroup input {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+}
+.cmtGroup input:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2) !important;
+    outline: none !important;
+}
+
+/* Form Controls & Inputs */
+.form-control, select.form-control, textarea.form-control {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+.form-control:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Button Component Overrides */
+.loginBtn, .btn-primary, .btn-success, .btn-danger, .btn-info, .update-button, .cancel-button {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+    transition: all 0.3s ease !important;
+}
+.loginBtn:hover, .btn-primary:hover, .btn-success:hover, .update-button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25) !important;
+    background: #1d4ed8 !important;
+}
+.btn-danger, .cancel-button {
+    background: #dc2626 !important;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15) !important;
+}
+.btn-danger:hover, .cancel-button:hover {
+    background: #b91c1c !important;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.25) !important;
+}
+
+/* Remove Bootstrap's solid bg-light override from Modals and Main Page wrappers */
+.modal-content.bg-light, 
+.modal-content .bg-light, 
+.vox.bg-light {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Modal Styling Overrides (React Bootstrap & ReactModal) - Premium Light Glass Theme */
+.modal-backdrop, .modal[style*="display: block"] {
+    background-color: rgba(15, 23, 42, 0.35) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    transition: all 0.3s ease;
+}
+
+.modal-content, .ReactModal__Content {
+    background: rgba(255, 255, 255, 0.95) !important; /* Semi-transparent clean white */
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.15) !important;
+    color: #0f172a !important;
+    overflow: hidden !important;
+    animation: modal-fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    background: rgba(0, 0, 0, 0.01) !important;
+    padding: 1.25rem 1.5rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    letter-spacing: -0.3px;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: initial !important;
+}
+
+.modal-body {
+    padding: 1.75rem 1.5rem !important;
+    font-size: 0.92rem !important;
+    color: #334155 !important;
+}
+
+.modal-body p, .modal-body span, .modal-body label {
+    color: #334155 !important;
+}
+
+.modal-body label {
+    font-weight: 600 !important;
+    color: #475569 !important;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-body .form-control, .modal-body select.form-control, .modal-body textarea.form-control {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+    border-radius: 10px !important;
+    padding: 0.625rem 0.875rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.modal-body .form-control:focus, .modal-body select.form-control:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Ensure inner cards inside modal body blend cleanly */
+.modal-body .card {
+    background: rgba(0, 0, 0, 0.02) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    padding: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Ensure modal dialog inner tabs are professionally styled */
+.modal-body .nav-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 1.25rem !important;
+}
+.modal-body .nav-tabs .nav-link {
+    border: none !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.9rem !important;
+    border-bottom: 2px solid transparent !important;
+    transition: all 0.2s ease;
+}
+.modal-body .nav-tabs .nav-link.active {
+    background: transparent !important;
+    color: #2563eb !important;
+    border-bottom: 2px solid #2563eb !important;
+}
+.modal-body .nav-tabs .nav-link:hover {
+    color: #0f172a !important;
+}
+
+/* Ensure dropdown options are readable */
+.modal-body select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+    background: rgba(0, 0, 0, 0.01) !important;
+    padding: 1.25rem 1.5rem !important;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.modal-footer .btn {
+    border-radius: 10px !important;
+    padding: 0.6rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.modal-footer .btn-secondary {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.modal-footer .btn-primary {
+    background: #2563eb !important; /* Cobalt Blue */
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2) !important;
+}
+
+.modal-footer .btn-primary:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3) !important;
+}
+
+.btn-close {
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.custom-modal, .custom-modal.modal-dialog {
+    max-width: 580px !important;
+    width: 95% !important;
+    margin: 1.75rem auto !important;
+}
+
+@keyframes modal-fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Unify all page header colors and override legacy orange styling */
+.toto, h1.toto, h2.toto {
+    color: #2563eb !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: initial !important;
+    font-weight: 700 !important;
+    font-size: 1.75rem !important;
+    letter-spacing: -0.5px;
+}

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MediHome.css';
-// import './Medi.css'; // Custom CSS for styling
-import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
 
 const Medi = () => {
 

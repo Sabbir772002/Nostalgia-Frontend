@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useParams,Link,useNavigate } from 'react-router-dom';
-import "../EditPro/EditPro.css"
-import api from '../../util/api';
-const Notification = ({ message }) => {
-  return (
-    <div className="notification">
-      {message}
-    </div>
-  );
-};
+import { useParams, useNavigate } from 'react-router-dom';
+import "../EditPro/EditPro.css";
+import ServerUrl, { getImageUrl } from '../../api/serverUrl';
+import { FaCamera, FaSave, FaCheckCircle, FaIdCard } from 'react-icons/fa';
+
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [notification, setNotification] = useState(null);
   const { username } = useParams();
   const [processing, setProcessing] = useState(false);
+
   const [user, setUser] = useState({
     email: '',
     username: '',
@@ -28,204 +22,332 @@ const EditProfile = () => {
     nid: '',
     p_image: null,
     thana: '',
+    walk_type: 'General Walk',
+    relation: '',
+    location: '',
+    is_overseer: false,
+    verify: 0,
   });
-  useEffect(() => {
-    console.log("yo bat");
-    fetchUserData();
-  }, []);
+
   const [img, setimg] = useState(null);
-  const [nid,setnid] = useState(null);
-const [nidimg,setnidimg] = useState(null);  
-  const fetchUserData = async () => {
+  const [nid, setnid] = useState(null);
+  const [nidimg, setnidimg] = useState(null);
+
+  const fetchUserData = useCallback(async () => {
+    if (!username) return;
     try {
-      const response = await axios.get(`${api.url}:8000/profile/${username}`);
+      const response = await axios.get(`${ServerUrl.BASE_URL}profile/${username}`);
       if (response.status === 200) {
-        const userData ={...response.data};
+        const userData = { ...response.data };
         delete userData.id;
-        //delete userData.p_image;
-       // delete userData.walk_type;
         setUser(userData);
-        console.log("demon what the helll......");
-        console.log(userData);
-        setimg(userData.pp ? `${api.url}:8000/${userData.pp}` : "http://bootdey.com/img/Content/avatar/avatar1.png");
-        console.log(response.data);
+        setimg(getImageUrl(userData.pp || userData.p_image));
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
-  };
+  }, [username]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
   const handlenidchange = (e) => {
-    setnid(URL.createObjectURL(e.target.files[0]));
-    setnidimg(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      setnid(URL.createObjectURL(e.target.files[0]));
+      setnidimg(e.target.files[0]);
+    }
   };
+
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+
   const handleImageChange = (e) => {
-    setimg(URL.createObjectURL(e.target.files[0]));
-    //console.log(e.target.files[0]);
-    setUser({ ...user, p_image: e.target.files[0] });
-    console.log(user.p_image);
-   // console.log(user.p_image);
+    if (e.target.files && e.target.files[0]) {
+      setimg(URL.createObjectURL(e.target.files[0]));
+      setUser({ ...user, p_image: e.target.files[0] });
+    }
   };
-   const handleSubmit = async (e) => {
-    //e.preventDefault();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      //console.log(user);
       const formData = new FormData();
-      console.log("ye kya hai");
-      console.log(user);
       Object.entries(user).forEach(([key, value]) => {
         if (key === 'p_image' && !(value instanceof File)) {
-          console.log("No image provided.");
           return;
         }
-        if(key == 'walk_type'){
-          console.log("walk type");
-          console.log(value);
-
+        if (key === 'is_overseer' || key === 'relation' || key === 'location' || key === 'verify') {
+          return;
         }
-        formData.append(key, value);
+        if (value !== null && value !== undefined) {
+          formData.append(key, value);
+        }
       });
-      console.log("ye kya hai, update karte time");
-      console.log(formData);
-     //setimg(`http://localhost:8000/${user.p_image}`);
-      const response = await axios.put(`${api.url}:8000/owner/${username}`, formData);
-      //console.log('User data updated:', response.data);
-      setNotification('Profile updated');
+
+      if (user.is_overseer) {
+        formData.append('Relation', user.relation || '');
+        formData.append('Location', user.location || '');
+      }
+
+      await axios.put(`${ServerUrl.BASE_URL}owner/${username}`, formData);
+      alert('Profile updated successfully!');
       navigate(`/profile/${user.username}`);
     } catch (error) {
       console.error('Error updating user data:', error);
+      alert('Failed to update profile. Please verify your data.');
     }
   };
-  useEffect(() => {
-    fetchUserData();
-  }
-  , [username]);
-  const handlenid = async (e) => {
-    //e.preventDefault();
-    setProcessing(true); 
+
+  const handlenid = async () => {
+    if (!nidimg) {
+      alert("Please select an NID image first.");
+      return;
+    }
+    setProcessing(true);
     try {
-      //console.log(user);
       const nidv = new FormData();
-      nidv.append('nid',nidimg);
-      nidv.append('username',username);
-      console.log(nidv.get('nid'));
+      nidv.append('nid', nidimg);
+      nidv.append('username', username);
 
-  const response = await axios.post(`${api.url}:8000/nidimg`, nidv);
-  if (response.status === 201) {
-    setProcessing(false); // Hide processing indicator
-    alert("NID verified");
-    // Call fetchUserData() or do whatever you want to do next
-    fetchUserData();
-      }else{
-        setProcessing(false);
-
-        alert("Try with Clear Image or Correct Information");
+      const response = await axios.post(`${ServerUrl.BASE_URL}nidimg`, nidv);
+      if (response.status === 201) {
+        alert("NID verified successfully!");
+        fetchUserData();
+      } else {
+        alert("Verification failed. Please try with a clearer image.");
       }
-    }catch (error) {
-      setProcessing(false);
-      console.error('Error updating user data:', error);
-      alert("Try with Clear image or Correct Information")
-    }
-    finally {
+    } catch (error) {
+      console.error('Error updating NID:', error);
+      alert("Verification failed. Please try again.");
+    } finally {
       setProcessing(false);
     }
-  }
-  return (
-            <div className="container-xl px-4 mt-4">
-                <hr className="mt-0 mb-4" />
-                <div className="row">
-                    <div className="col-xl-4">
-                    <div className="card mb-4 mb-xl-0">
-                            <div className="card-header">Profile Picture</div>
-                            <div className="card-body text-center">
-                            <img className="img-account-profile rounded-circle mb-2" style={{ width: "140px", height: "200px" }} src={img} alt="" />
-                            <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                            <input type="file" accept="image/*"  onChange={handleImageChange} />
+  };
 
-                            </div>
-                        </div>  
-                        <div className="card mb-4 mb-xl-0 mt-2">
-                         
-              {user && user.verify === 1 ? (
-                  <button className="btn btn-primary" type="button">Verified</button>
-              ) : (
-                  <div>
-                      <div className="card-header">Verify Account</div>
-                      <div className="card-body text-center">
-                          <img className="img-account-profile rounded-circle mb-2" style={{ width: "140px", height: "200px" }} src={nid} alt="" />
-                          <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                          <input type="file" accept="image/*" onChange={handlenidchange} />
-                          <button className="btn btn-primary mt-2" type="button" onClick={() => handlenid('Save changes')}>Verify</button>
-                      </div>
-                  </div>
-              )}
-                  </div>
-                    </div>
-                    <div className="col-xl-8">
-                        <div className="card mb-4">
-                            <div className="card-header">Account Details</div>
-                            <div className="card-body">
-                                <form>
-                                    <div className="mb-3">
-                                        <label className="small mb-1" htmlFor="username">Username </label>
-                                        <input className="form-control" onChange={handleInputChange} id="username" type="text" name="username" placeholder="Enter your username" value={user.username} />
-                                    </div>
-                                    <div className="row gx-3 mb-3">
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="first_name">First name</label>
-                                            <input className="form-control" onChange={handleInputChange} id="first_name" name="first_name" type="text" placeholder="Enter your first name" value={user.first_name} />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="last_name">Last name</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="last_name" name="last_name" type="text" placeholder="Enter your last name" value={user.last_name}/>
-                                        </div>
-                                    </div>
-                                    <div className="row gx-3 mb-3">
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="gender">Gender</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="gender" type="text" name="gender" placeholder="Enter your organization name" value={user.gender} />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="address">Address</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="address" name="address" type="text" placeholder="Enter your location" value={user.address} />
-                                        </div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="small mb-1" htmlFor="inputEmailAddress">Email</label>
-                                        <input className="form-control" onChange={handleInputChange}  id="inputEmailAddress" type="email" name="email" placeholder="Enter your email address" value={user.email} />
-                                    </div>
-                                    <div className="row gx-3 mb-3">
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="inputPhone">Phone number</label>
-                                            <input className="form-control" onChange={handleInputChange}  id="inputPhone" type="tel" name="phone" placeholder="Enter your phone number" value={user.phone} />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label className="small mb-1" htmlFor="dob">DOB</label>
-                                            <input className="form-control" onChange={handleInputChange}   id="inputDOB" type="text" name="dob" placeholder="Enter your birthday" value={user.dob} />
-                                        </div>
-                                    </div>
-                                    <button className="btn btn-primary" type="button" onClick={() => handleSubmit('Save changes')}>Save changes</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <div className="edit-profile-wrapper" style={{ padding: '30px 15px', maxWidth: '1100px', margin: '0 auto' }}>
+      <div className="row g-4">
+        {/* Left Column: Avatar & NID Cards */}
+        <div className="col-lg-4">
+          {/* Avatar Card */}
+          <div className="edit-card shadow-sm p-4 text-center mb-4">
+            <h5 className="card-title fw-bold mb-3">Profile Picture</h5>
+            <div className="avatar-edit-container position-relative d-inline-block mb-3">
+              <img
+                className="img-account-profile rounded-circle"
+                style={{ width: "150px", height: "150px", objectFit: 'cover', border: '4px solid #1877f2' }}
+                src={img || "https://bootdey.com/img/Content/avatar/avatar1.png"}
+                alt="profile"
+              />
+              <label
+                htmlFor="profile-upload"
+                className="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2 cursor-pointer shadow"
+                style={{ cursor: 'pointer', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <FaCamera />
+              </label>
+              <input id="profile-upload" className="d-none" type="file" accept="image/*" onChange={handleImageChange} />
+            </div>
+            <p className="text-muted small">JPG or PNG allowed. Click camera icon to upload.</p>
+          </div>
+
+          {/* NID Card */}
+          {!user.is_overseer && (
+            <div className="edit-card shadow-sm p-4 text-center">
+              <h5 className="card-title fw-bold mb-3 d-flex align-items-center justify-content-center gap-2">
+                <FaIdCard className="text-primary" /> NID Verification
+              </h5>
+              {user.verify === 1 ? (
+                <div className="alert alert-success d-flex align-items-center justify-content-center gap-2 m-0 fw-bold">
+                  <FaCheckCircle /> Account Verified
                 </div>
+              ) : (
                 <div>
-                {processing && (
-        <div className="modal text-center bg-transparent fade-in" style={{ left: '48%', width: '200px' }}>
-          <div className="modal-content">
-            <div className="processing-circle"></div>
+                  {nid && (
+                    <img
+                      className="img-account-profile rounded mb-3 border"
+                      style={{ width: "100%", height: "120px", objectFit: 'contain' }}
+                      src={nid}
+                      alt="NID preview"
+                    />
+                  )}
+                  <p className="text-muted small mb-3">Upload clear photo of your National ID Card</p>
+                  <input className="form-control mb-3" type="file" accept="image/*" onChange={handlenidchange} />
+                  <button
+                    className="btn btn-outline-primary w-100 fw-bold"
+                    type="button"
+                    disabled={processing}
+                    onClick={handlenid}
+                  >
+                    {processing ? "Verifying..." : "Verify NID"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Account Details Form */}
+        <div className="col-lg-8">
+          <div className="edit-card shadow-sm p-4">
+            <h4 className="fw-bold mb-4 text-primary">Account Details</h4>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Username</label>
+                <input
+                  className="form-control bg-light"
+                  type="text"
+                  name="username"
+                  value={user.username || ''}
+                  readOnly
+                />
+              </div>
+
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">First Name</label>
+                  <input
+                    className="form-control"
+                    name="first_name"
+                    type="text"
+                    placeholder="First name"
+                    value={user.first_name || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Last Name</label>
+                  <input
+                    className="form-control"
+                    name="last_name"
+                    type="text"
+                    placeholder="Last name"
+                    value={user.last_name || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Gender</label>
+                  <select
+                    className="form-select"
+                    name="gender"
+                    value={user.gender || ''}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Address / Thana</label>
+                  <input
+                    className="form-control"
+                    name="thana"
+                    type="text"
+                    placeholder="Location / Thana"
+                    value={user.thana || user.address || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Email Address</label>
+                <input
+                  className="form-control"
+                  type="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  value={user.email || ''}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="row g-3 mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Phone Number</label>
+                  <input
+                    className="form-control"
+                    type="tel"
+                    name="phone"
+                    placeholder="+880..."
+                    value={user.phone || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fw-semibold">Date of Birth</label>
+                  <input
+                    className="form-control"
+                    type="date"
+                    name="dob"
+                    value={user.dob || ''}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              {!user.is_overseer ? (
+                <div className="mb-4">
+                  <label className="form-label fw-semibold">Walk Preference</label>
+                  <select
+                    className="form-select"
+                    name="walk_type"
+                    value={user.walk_type || 'General Walk'}
+                    onChange={handleInputChange}
+                  >
+                    <option value="Morning Walk">Morning Walk</option>
+                    <option value="Evening Walk">Evening Walk</option>
+                    <option value="General Walk">General Walk</option>
+                  </select>
+                </div>
+              ) : (
+                <div className="row g-3 mb-4">
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">Relation to Owner</label>
+                    <input
+                      className="form-control"
+                      name="relation"
+                      type="text"
+                      placeholder="e.g. Son / Caregiver"
+                      value={user.relation || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-semibold">Overseer Location</label>
+                    <input
+                      className="form-control"
+                      name="location"
+                      type="text"
+                      placeholder="Location"
+                      value={user.location || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <button
+                className="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2 shadow-sm"
+                type="submit"
+                style={{ borderRadius: '10px', background: 'linear-gradient(135deg, #1877f2, #0056b3)' }}
+              >
+                <FaSave /> Save Changes
+              </button>
+            </form>
           </div>
         </div>
-      )}
+      </div>
     </div>
-  </div>
-            
   );
 };
 
 export default EditProfile;
-
-// {'id': 17, 'username': 'Sabbir11', 'email': 'sabbir@bro.com', 'first_name': 'Sabbir', 'last_name': 'Selim', 'gender': 'male', 'phone': '0188884564', 'dob': '1990-01-01', 'address': 'Dhaka', 'nid': '001995', 'p_image': '/media/image/1.png', 'thana': 1, 'walk_type': '99'}

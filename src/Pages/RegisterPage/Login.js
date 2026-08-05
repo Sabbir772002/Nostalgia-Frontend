@@ -43,14 +43,12 @@ const Login = () => {
 
   const navigate = useNavigate();
   const [error, setError] = useState({});
-  const [submit, setSubmit] = useState(false);
   const { setUserData } = useUser();
   
   const [showModal, setShowModal] = useState(false);
   const [otpInput, setOtpInput] = useState('');
   const [serverOtp, setServerOtp] = useState(null);
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [data, setData] = useState({
     username: '',
     password: '',
@@ -63,50 +61,45 @@ const Login = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError(validationLogin(data));
-    setSubmit(true);
-    // let tt=localStorage.getItem('token');
+    const validationErrors = validationLogin(data);
+    setError(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
+
     let deviceId = localStorage.getItem('deviceId');
     if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem('deviceId', deviceId);
+      deviceId = crypto.randomUUID();
+      localStorage.setItem('deviceId', deviceId);
     }
-    let tot=deviceId;
-    console.log("this is code");
-    console.log(tot);
-    setData(prevState => ({
-      ...prevState,
-      tt: tot || ''
-    }));
-    try {
-      const response = await axios.post(`${api.url}:8000/login`, data);
-      if (response.status === 200) {
-        console.log('login done!');
-        console.log(response.data.otp);
-        setServerOtp(response.data.otp);
-        // setUserData(response.data.user);
-        console.log("this is logged user");
-        console.log(response.data.user);
-        console.log("this is end of userdata");
-        setUser(response.data.user);
-        console.log(response.data.token);
-        setToken(response.data.token);
-        localStorage.setItem('token', response.data.token);
-        exampleUsage(response.data.user);
-        setShowModal(true); 
-        // setOtpInput("1234");
-        // setServerOtp("1234");
-        
-      } else {
-        console.log('Invalid Username or Password');
-        setError({ ...error, username: 'Invalid Username or Password' });
-        setError({ ...error, password: 'Invalid Username or Password' });
+    const loginPayload = { ...data, tt: deviceId };
 
+    try {
+      const response = await axios.post(`${api.url}:8001/login`, loginPayload);
+      if (response.status === 200 && response.data) {
+        console.log('Login successful:', response.data.user);
+        setUser(response.data.user);
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
+        await exampleUsage(response.data.user);
+        if (response.data.otp) {
+          setServerOtp(response.data.otp);
+          setShowModal(true);
+        } else {
+          setUserData(response.data.user);
+          if (response.data.user.username && response.data.user.username.includes("@")) {
+            navigate(`/caregiver`);
+          } else {
+            navigate(`/home`);
+          }
+        }
+      } else {
+        setError({ username: 'Invalid Username or Password', password: 'Invalid Username or Password' });
       }
     } catch (error) {
       console.error('Failed to login:', error.message);
-      setError({ ...error, username: 'Invalid Username or Password' });
-      setError({ ...error, password: 'Invalid Username or Password' });
+      setError({ username: 'Invalid Username or Password', password: 'Invalid Username or Password' });
     }
   };
 
@@ -114,7 +107,11 @@ const Login = () => {
     if (otpInput === serverOtp) {
       console.log('OTP matched!');
       setUserData(user);
-      navigate(`/home`);
+      if (user && user.username && user.username.includes("@")) {
+        navigate(`/caregiver`);
+      } else {
+        navigate(`/home`);
+      }
     } else {
       alert('Invalid OTP. Please try again.');
     }
@@ -122,9 +119,9 @@ const Login = () => {
 
   const validationLogin = (data) => {
     const error = {};
-    const passwordPattern = /^[a-zA-Z0-9!@#\$%\^\&*_=+-]{1,12}$/g;
+    const passwordPattern = /^[a-zA-Z0-9!@#$%^&*_=+-]{1,30}$/;
 
-    if (data.password === '') {
+    if (!data.password || data.password === '') {
       error.password = '* Password is Required';
     } else if (!passwordPattern.test(data.password)) {
       error.password = '* Password not valid';

@@ -1,57 +1,44 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BiLogOut } from 'react-icons/bi';
-import Modal from 'react-modal';
-
-// Custom styling for the modal (optional)
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
+import ModernDrawer from '../Common/ModernDrawer';
 
 const LogoutButton = ({ logoutUser }) => {
-  const [btnActive, setBtnActive] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   const confirmLogout = () => {
     logoutUser();
-    closeModal();
+    setIsOpen(false);
   };
 
   return (
     <div>
-
-     <Link to="/" style={{ textDecoration: "none", color: "black" }} onClick={(e) => { e.preventDefault(); openModal(); }}>
-        <div id='L-box' onClick={() => setBtnActive("logout")}>
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }} onClick={(e) => { e.preventDefault(); setIsOpen(true); }}>
+        <div id='L-box'>
           <BiLogOut className='margin' />
           <span>Log Out</span>
         </div>
       </Link>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Confirm Logout"
+      <ModernDrawer
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Confirm Logout"
       >
-        <h2>Confirm Logout</h2>
-        <p>Are you sure you want to log out?</p>
-        <button className='m-2 p-1 bg-primary' onClick={confirmLogout}>Yes</button>
-        <button className='m-2 p-1 bg-danger' onClick={closeModal}>No</button>
-      </Modal>
+        <div className="text-center py-3">
+          <BiLogOut size={48} className="text-danger mb-3" />
+          <h4 className="fw-bold mb-2">Log Out of Nostalgia?</h4>
+          <p className="text-muted mb-4">You can always log back in at any time.</p>
+          
+          <div className="d-flex gap-2">
+            <button className="btn-modern-outline w-50 py-2" onClick={() => setIsOpen(false)}>
+              Cancel
+            </button>
+            <button className="btn-modern-primary bg-danger border-danger text-white w-50 py-2" onClick={confirmLogout}>
+              Log Out
+            </button>
+          </div>
+        </div>
+      </ModernDrawer>
     </div>
   );
 };

@@ -1,9 +1,7 @@
-import React from 'react'
-import Sugg from "./RightComponents/Suggestion/Sugg"
-import Friends from "./RightComponents/Friends/Sugg"
-import Online from "./RightComponents/Online/Online"
-import FollowingU from "./RightComponents/Following/FollowingU"
-import "../RightSide/Right.css"
+import React from 'react';
+import Sugg from "./RightComponents/Suggestion/Sugg";
+import Friends from "./RightComponents/Friends/Sugg";
+import "../RightSide/Right.css";
 import {GrFormClose} from "react-icons/gr"
 
 const Right = ({following,setFollowing,showMenu,setShowMenu}) => {

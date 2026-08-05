@@ -34,7 +34,12 @@ import { Link } from 'react-router-dom';
 
 
 
+import SinglePostModal from '../Post/SinglePostModal';
+import { getImageUrl } from '../../api/serverUrl';
+
 const Post = ({post,posts,key}) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const currentUser = localStorage.getItem('username') || post.author;
 
   const [comments,setComments] =useState([
     {
@@ -43,29 +48,11 @@ const Post = ({post,posts,key}) => {
         likes:23,
         username:"Violet",
         time:"3 Hours Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi laboriosam vitae voluptatem animi maiores voluptatibus."
-    },
-    {
-        id:2,
-        profilePic:img2,
-        likes:5,
-        username:"Brandon",
-        time:"1 Hour Ago",
         comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    {
-        id:3,
-        profilePic:img3,
-        likes:50,
-        username:"Lilly",
-        time:"30 Mins Ago",
-        comment:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse asperiores debitis saepe itaque, eligendi quasi"
     }
-])
+  ])
 
-
-
-  const [like,setLike] =useState(post.like)
+  const [like,setLike] =useState(post.like || post.upvote || 0)
   const [unlike,setUnlike] =useState(false)
 
   const [filledLike,setFilledLike] =useState(<FavoriteBorderOutlinedIcon />)
@@ -83,100 +70,101 @@ const Post = ({post,posts,key}) => {
   const [showDelete,setShowDelete] = useState(false)
   const [showComment,setShowComment] = useState(false)
 
-const handleDelete=(id)=>{
-  const deleteFilter =posts.filter(val=> val.id !== id)
-    setShowDelete(false)
-  }
+  const handleDelete = (id) => {
+    setShowDelete(false);
+  };
  
-  const [commentInput,setCommentInput] =useState("")
+  const [commentInput, setCommentInput] = useState("");
 
-  const handleCommentInput=(e)=>{
-     e.preventDefault()
+  const handleCommentInput = (e) => {
+    e.preventDefault();
 
-    const id=comments.length ? comments[comments.length -1].id +1 : 1
-    const profilePic =Profile
-    const username="Vijay"
-    const comment =commentInput
-    const time= moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow()
+    const id = comments.length ? comments[comments.length - 1].id + 1 : 1;
+    const profilePic = Profile;
+    const username = "Vijay";
+    const comment = commentInput;
+    const time = moment.utc(new Date(), 'yyyy/MM/dd kk:mm:ss').local().startOf('seconds').fromNow();
 
-    const commentObj ={
-      id:id,
-      profilePic:profilePic,
-      likes:0,
-      username:username,
-      comment:comment,
-      time:time
-    }
-    const insert =[...comments,commentObj]
-    setComments(insert)
-    setCommentInput("")
-  }
+    const commentObj = {
+      id: id,
+      profilePic: profilePic,
+      likes: 0,
+      username: username,
+      comment: comment,
+      time: time
+    };
+    const insert = [...comments, commentObj];
+    setComments(insert);
+    setCommentInput("");
+  };
 
-   const handleFriendsId=(id)=>{
-      const friendsIdFilter = posts.filter(val => val.id === id)
-   }
+  const handleFriendsId = (id) => {};
 
    const [socialIcons,setSocialIcons] = useState(false)
 
-
-
-
   return (
-    <div className='post'>
-      <div className='post-header'>
-        <Link to={`/profile/${post.author}`} style={{textDecoration:"none"}}>
-        <div className='post-user' onClick={()=>handleFriendsId(post.id)} style={{cursor:"pointer"}}>
-            <img src={`http://localhost:8000/${post.author_img}`} className='p-img' alt="" />
-            <div className='post-user-info'>
-            <h2>{post.author}</h2>
-            <p className='datePara'>{post.post_date}</p>
-            </div>
-        </div>
-        </Link>
+    <>
+      <div className='post'>
+        <div className='post-header'>
+          <Link to={`/profile/${post.author}`} style={{textDecoration:"none"}}>
+          <div className='post-user' onClick={()=>handleFriendsId(post.id)} style={{cursor:"pointer"}}>
+              <img src={getImageUrl(post.author_img)} className='p-img' alt="" />
+              <div className='post-user-info'>
+              <h2>{post.author}</h2>
+              <Link to={`/blog/${post.blogid || post.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <p className='datePara' style={{ cursor: "pointer" }}>{post.post_date}</p>
+              </Link>
+              </div>
+          </div>
+          </Link>
 
-         
-         <div className='delete'>
-         {showDelete && (<div className="options">
-            <button><PiSmileySad />Not Interested in this post</button>
-            <button><IoVolumeMuteOutline />Mute this user</button>
-            <button><MdBlockFlipped />Block this user</button>
-            <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
-            <button><MdReportGmailerrorred />Report post</button>
+           <div className='delete'>
+           {showDelete && (<div className="options">
+              <button><PiSmileySad />Not Interested in this post</button>
+              <button><IoVolumeMuteOutline />Mute this user</button>
+              <button><MdBlockFlipped />Block this user</button>
+              <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
+              <button><MdReportGmailerrorred />Report post</button>
+           </div>
+          
+           )}
+            <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
+           </div>
          </div>
-        
-         )}
-          <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
-         </div>
-       </div>
 
-       <p className='body'>
-  {post.content && typeof post.content === 'string' && post.content.length > 300 ? (
-    `${post.content.slice(0, 300)}...`
-  ) : (
-    post.content
-  )}
-</p>
-
-
-
-       {post.blog_img && (<img src={`http://localhost:8000/${post.blog_img}`} alt="" className="post-img" />)}
-  
-
-
-      <div className="post-foot">
-       <div className="post-footer">
-        <div className="like-icons">
-          <p className='heart' 
-            onClick={handlelikes}
-            style={{marginTop:"5px"}}
-          >
-              {filledLike}
+         <p className='body' onClick={() => setModalOpen(true)} style={{ cursor: 'pointer' }}>
+            {post.content && typeof post.content === 'string' && post.content.length > 300 ? (
+              `${post.content.slice(0, 300)}... (View Detail)`
+            ) : (
+              post.content
+            )}
           </p>
 
-          <MessageRoundedIcon 
-            onClick= {()=>setShowComment(!showComment)}
-            className='msg'  
-          />
+         {post.blog_img && (
+           <img
+             src={getImageUrl(post.blog_img)}
+             alt=""
+             className="post-img"
+             onClick={() => setModalOpen(true)}
+             style={{ cursor: 'pointer' }}
+           />
+         )}
+
+        <div className="post-foot">
+         <div className="post-footer">
+          <div className="like-icons">
+            <p className='heart' 
+              onClick={handlelikes}
+              style={{marginTop:"5px"}}
+            >
+                {filledLike}
+            </p>
+
+            <MessageRoundedIcon 
+              onClick={() => setModalOpen(true)}
+              className='msg'
+              style={{ cursor: 'pointer' }}
+            />
 
           <ShareOutlinedIcon 
             onClick={()=>setSocialIcons(!socialIcons)}
@@ -266,6 +254,13 @@ const handleDelete=(id)=>{
       </div>     
     </div>
   </div>
+  <SinglePostModal
+    blogId={post.blogid || post.id}
+    isOpen={modalOpen}
+    onClose={() => setModalOpen(false)}
+    currentUser={currentUser}
+  />
+  </>
   )
 }
 

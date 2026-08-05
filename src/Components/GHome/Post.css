@@ -25,7 +25,7 @@
     align-items: center;
     cursor: pointer;
     gap: 28px;
-    color: orangered;
+    color: #2563eb;
     position: relative;
     width: 100%;
 }
@@ -90,7 +90,7 @@
     padding:0px 7px;
     font-weight:600;
     font-size: 20px;
-    color: orangered;
+    color: #2563eb;
 }
 .post-header p{
     color: black;
@@ -182,7 +182,7 @@
    
 }
 .cmtGroup input:focus{
-    outline: 1px solid orangered;
+    outline: 1px solid #2563eb;
 }
 .cmtGroup svg{
     font-size: 30px;
@@ -194,11 +194,11 @@
     top: 50%;
     left: 25px;
     transform: translate(-50%,-50%);
-    color: orangered;
+    color: #2563eb;
 }
 .cmtGroup .send{
     margin-left: 10px;
-    color: orangered;
+    color: #2563eb;
 }
 .cmtGroup button{
     border: none;
@@ -261,8 +261,8 @@ a:active {
   /* Instagram Button Styling */
 
   .instagram {
-    border-color: orangered;
-    background-color: orangered;
+    border-color: #2563eb;
+    background-color: #2563eb;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -271,7 +271,7 @@ a:active {
   }
   .instagram:hover {
     background-color: #ffff;
-    color: orangered;
+    color: #2563eb;
   }
  
   /* Linkedin Button Styling */

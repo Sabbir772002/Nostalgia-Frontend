@@ -1,58 +1,31 @@
-import React from 'react'
-import FeedUser from './FeedUser'
-import { useState,useEffect } from 'react';
-import { useLocation,useNavigate,useParams } from 'react-router-dom';
-import axios from 'axios';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import api from '../../util/api';
+import React, { useEffect } from 'react';
+import FeedUser from './FeedUser';
 
-
-const UserHome = ({setUserPostData,userPostData,profileImg,userData,images,posts,fetchPosts,setPosts}) => {
-  const location = useLocation();
-  //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const user= JSON.parse(localStorage.getItem('userData'));
-  const { username } = useParams();
-  const navigate = useNavigate();
-  const [showModal, setShowModal] = React.useState(false);
+const UserHome = ({ setUserPostData, userPostData, profileImg, userData, images, posts, fetchPosts, setPosts }) => {
   useEffect(() => {
-    // Fetch posts when component mounts
-    fetchPosts();
-  }, []);
-  // React.useEffect(() => {
-  //   if (userData && username !== userData.username) {
-  //     setShowModal(true);
-  //   }
-  // }, [username, userData]);
+    if (fetchPosts) {
+      fetchPosts();
+    }
+  }, [fetchPosts]);
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
-  //  if (userData && username !== userData.username) {
-  //   navigate(userData?`/profile/edit/${userData.username}`:'/login');
-  //  }
-  
- 
   return (
     <div>
-
-        {posts && posts.length ?<FeedUser 
-                               userData ={userData}
-                               profileImg={profileImg}
-                               posts={posts}
-                               setPosts={setPosts}
-                               images={images}
-                               /> 
-        :
-        (<p style={{textAlign:"center",marginBottom:"40px"}}>
-            NO POSTS ARE HERE
-        </p>)
-        }
+      {posts && posts.length ? (
+        <FeedUser 
+          userData={userData}
+          profileImg={profileImg}
+          posts={posts}
+          setPosts={setPosts}
+          images={images}
+        /> 
+      ) : (
+        <p style={{ textAlign: "center", marginBottom: "40px" }}>
+          NO POSTS ARE HERE
+        </p>
+      )}
     </div>
-    
-  )
-}
+  );
+};
 
-export default UserHome 
+export default UserHome;
 

@@ -1,107 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import FndVox from "../../Components/Fndlist/FndVox";
+import React, { useState, useEffect, useCallback } from 'react';
+import FndVox from "../../Components/FriendList/FndVox";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import  api from '../../util/api';
+import api from '../../util/api';
+import '../styles/ModernUI.css';
 
-const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => { 
+const Fndbox = ({ fndlist, setfndlist, fetchfnd }) => {
   const [searchText, setSearchText] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const rawUser = JSON.parse(localStorage.getItem('userData')) || {};
+  const activeUsername = rawUser.username ? (rawUser.username.includes('@') ? rawUser.username.split('@')[1] : rawUser.username) : '';
+  const userData = { ...rawUser, username: activeUsername };
   const [fdlist, setFdlist] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState('all');
+
   const handleSearch = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     try {
-      const response = await axios.get(`${api.url}:8000/searchfndbox`, {
+      const response = await axios.get(`${api.url}:8001/searchfndbox`, {
         params: {
           search: searchText,
           username: userData.username
         }
       });
-      setfndlist(response.data.users);
-      setFdlist(response.data.users);
-      console.log('Response:', response.data);
+      const usersData = response.data.users || [];
+      setfndlist(usersData);
+      setFdlist(usersData);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Search friends error:', error);
     }
   };
-  useEffect(() => {
-    handleSelectChanged();
+
+  const filterFriends = useCallback((option, list) => {
+    const srcList = list || fndlist;
+    if (option === "Known") {
+      setFdlist(srcList.filter(fnd => fnd && fnd.type === "Known"));
+    } else if (option === "Bondhu") {
+      setFdlist(srcList.filter(fnd => fnd && fnd.type === "Bondhu"));
+    } else {
+      setFdlist(srcList);
+    }
   }, [fndlist]);
 
-  const handleSelectChanged = () => {
-    console.log('Selected Option:', selectedOption);
-    if (selectedOption == "Known") {
-      setFdlist(fndlist.filter(fnd =>fnd.type == "Known"));
-    } else if (selectedOption == "Bondhu") {
-      setFdlist(fndlist.filter(fnd => fnd.type == "Bondhu"));
-    } else {
-      setFdlist(fndlist);
-    }
-  };
-  const handleSelectChangedd = (option) => {
-    console.log('Selected Option:', option);
-    if (option == "Known") {
-      setFdlist(fndlist.filter(fnd =>fnd.type == option));
-    } else if (option == "Bondhu") {
-      setFdlist(fndlist.filter(fnd => fnd.type == option));
-    } else {
-      setFdlist(fndlist);
-    }
-    console.log(fdlist);
-  };
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-    handleSelectChangedd(event.target.value);
-  };
+  useEffect(() => {
+    filterFriends(selectedOption, fndlist);
+  }, [fndlist, selectedOption, filterFriends]);
 
-  const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
+  const handleSelectChange = (event) => {
+    const val = event.target.value;
+    setSelectedOption(val);
+    filterFriends(val, fndlist);
   };
 
   return (
-    <div className="fndlist">
-      <h1>Your Friends</h1>
-      <form onSubmit={handleSearch}>
-        <div className="form-group">
-          <div className="input-group">
+    <div className="fndlist container-fluid px-3 py-2">
+      {/* Hero Header */}
+      <div className="page-hero-banner">
+        <h1 className="page-hero-title">My Network & Friends</h1>
+        <p className="page-hero-subtitle">
+          Manage your connected inner circle, category groups (Bondhu / Known), and start real-time chats.
+        </p>
+      </div>
+
+      {/* Glass Search & Filter Panel */}
+      <div className="glass-search-card">
+        <form onSubmit={handleSearch}>
+          <div className="input-group search-input-group">
             <input
               type="text"
               className="form-control"
-              id="searchInput"
-              placeholder="Search..."
+              placeholder="Search your friends by name or handle..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button className="btn btn-success" type="submit">Search</button>
+            <button className="btn search-btn-gradient" type="submit">
+              <i className="fa fa-search me-1"></i> Search Friends
+            </button>
+          </div>
+        </form>
+
+        <div className="d-flex align-items-center justify-content-between mt-3 pt-3 border-top">
+          <div className="d-flex align-items-center">
+            <span className="fw-bold text-dark me-2">Category Filter:</span>
+            <select
+              className="filter-pill-select"
+              onChange={handleSelectChange}
+              value={selectedOption}
+            >
+              <option value="all">ALL FRIENDS</option>
+              <option value="Bondhu">BONDHU (CLOSE FRIENDS)</option>
+              <option value="Known">KNOWN (ACQUAINTANCES)</option>
+            </select>
+          </div>
+
+          <div className="badge bg-success px-3 py-2 rounded-pill" style={{ fontSize: '0.85rem' }}>
+            {fdlist.length} Friends Connected
           </div>
         </div>
-      </form>
-      <div className="d-flex mt-2">
-        <h5 className='m-2'>Sort By:</h5>
-        <select className='m-2' onChange={handleSelectChange} value={selectedOption}>
-          <option value="all">ALL</option>
-          <option value="Bondhu">Bondhu</option>
-          <option value="Known">Known</option>
-        </select>
       </div>
-      <div className="d-inline-flex p-4 flex-wrap">
-        {fdlist.map((fnd, index) => (
-          <FndVox
-            key={index}
-            fndlist={fndlist}
-            setfndlist={setfndlist}
-            fnd={fnd}
-            fetchfnd={fetchfnd}
-            handleSelectChangedd={handleSelectChangedd}
-            setFdlist={setFdlist}
-            fdlist={fdlist}
-            selectedOption={selectedOption}
-          />
-        ))}
-      </div>
+
+      {/* Friends Cards Grid */}
+      {fdlist.length === 0 ? (
+        <div className="text-center py-5 bg-white rounded-3 shadow-sm my-4">
+          <h4 className="text-secondary fw-bold">No Friends in this Category</h4>
+          <p className="text-muted">Explore the "Find Friends" tab to request and add new connections to your list.</p>
+        </div>
+      ) : (
+        <div className="cards-grid">
+          {fdlist.map((fnd, index) => (
+            <FndVox
+              key={fnd.id || index}
+              fndlist={fndlist}
+              setfndlist={setfndlist}
+              fnd={fnd}
+              fetchfnd={fetchfnd}
+              setFdlist={setFdlist}
+              fdlist={fdlist}
+              selectedOption={selectedOption}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
-}
+};
+
 export default Fndbox;

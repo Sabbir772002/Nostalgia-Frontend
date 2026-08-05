@@ -1,76 +1,37 @@
-import {  useState,useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import Left from "../../Components/LeftSide/Left"
-import Middle from "../../Components/MiddleSide/Middle"
-import Right from '../../Components/RightSide/Right'
-import Nav from '../../Components/Navigation/Nav'
-import moment, { now } from 'moment/moment';
-import notificationSoundFile from './mixkit-access-allowed-tone-2869.wav';
-import { useLocation } from 'react-router-dom';
+import Left from "../../Components/LeftSide/Left";
+import Nav from '../../Components/Navigation/Nav';
+import PageHeader from '../../Components/Common/PageHeader';
+import ModernDrawer from '../../Components/Common/ModernDrawer';
+import moment from 'moment';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './MediHome.css';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import api from '../../util/api';
+import '../styles/ModernUI.css';
+
 const MediHome = () => {
-  const location = useLocation();
-  //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const userData= JSON.parse(localStorage.getItem('userData'));
-  useEffect(() => {
-    if(userData.username.includes("@"))
-      {
-        userData.username=userData.username.split("@")[1];
-      }
-    }, []);
-  const [medicationSchedule, setMedicationSchedule] = useState([
-    { name: 'Medication A', dosage: '10mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication B', dosage: '20mg', times: ['Morning', 'Noon'], image:`${api.url}:8000/media/d.png` },
-    { name: 'Medication C', dosage: '5mg', times: ['Morning', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication D', dosage: '15mg', times: ['Noon', 'Night'], image: `${api.url}:8000/media/d.png` },
-    { name: 'Medication F', dosage: '30mg', times: ['Morning', 'Noon', 'Night'], image: `${api.url}:8000/media/d.png` }
-  ]);
-  const [image, setImage] = useState(null);
-  const [nowtime,setnowtime]=useState("");
-  const timefind = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return ['Morning', 'Noon', 'Night'];
-    if (currentTime >= 12 && currentTime < 18) return ['Noon', 'Night','Morning' ];
-    return ['Night','Morning', 'Noon'];
-  };
-  const timebox=timefind();
-  const today = new Date();
-  const endDate = new Date(today);
-  endDate.setDate(endDate.getDate() + 30);
+  const rawUser = JSON.parse(localStorage.getItem('userData')) || {};
+  const activeUsername = rawUser.username ? (rawUser.username.includes('@') ? rawUser.username.split('@')[1] : rawUser.username) : '';
+  const userData = { ...rawUser, username: activeUsername };
+
+  const [medicationSchedule, setMedicationSchedule] = useState([]);
   const [morningTime, setMorningTime] = useState('08:00');
   const [noonTime, setNoonTime] = useState('14:00');
   const [nightTime, setNightTime] = useState('20:00');
-  const fetchtime = () =>{
-    const timetot=timebox[0].toLocaleLowerCase();
-    console.log("here it is...");
-    console.log(timetot);
-    axios.get(`${api.url}:8000/medtime`,
-    {
-      params: {
-        username: userData.username
-      }
-    })
-    .then((response) => {
-      setMorningTime(response.data.morning);
-      setNoonTime(response.data.noon);
-      setNightTime(response.data.night);
-      setgap(response.data.gap);
-      setnowtime(response.data[timetot]);
-     console.log("now time(fetch time):", nowtime);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-  useEffect(() => {
-    fetchtime();
-  },  []);
-  const [newMedication, setNewMedication] = useState
-  ({
-    user:userData.username,
+  const [gap, setGap] = useState('30');
+  const [done, setDone] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [image, setImage] = useState(null);
+  const [search, setSearch] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+
+  const today = new Date();
+  const endDate = new Date(today);
+  endDate.setDate(endDate.getDate() + 30);
+
+  const [newMedication, setNewMedication] = useState({
+    user: userData.username,
     name: '',
     dosage: '',
     morning: false,
@@ -82,477 +43,365 @@ const MediHome = () => {
     end_date: endDate.toISOString().split('T')[0],
     img: null
   });
-  let intervalId;
-  const [done,setDone] =useState(false);
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-    setNewMedication({ ...newMedication, img: e.target.files[0] });
-    
-  };
-  useEffect(() => {
-    axios.get(`${api.url}:8000/medication`,
-    {
-      params: {
-        username: userData.username
-      }
-    })
-    .then((response) => {
-      console.log(response.data);
-      setMedicationSchedule(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }, [newMedication]);
-  const [notes, setNotes] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [alertTime, setAlertTime] = useState('');
-  // State variable for new medication input
-  
-    const handleTimeCheckboxChange = (time) => {
-    setNewMedication(prevState => ({
-      ...prevState,
-      [time]: !prevState[time]
-    }));
-  };
-  // Function to handle adding medication
-  const handleAddMedication = () => {
-    // Update medication schedule with new medicatiom
-    
-    // setMedicationSchedule([...medicationSchedule, newMedication]);
-    // Add new medication to notes
-    // setNotes([...notes, { ...newMedication, time: newMedication.time || 'General' }]);
-     console.log(newMedication);
-    const nedmed = new FormData();
-    nedmed.append('user',userData.username);
-    nedmed.append('name',newMedication.name);
-    nedmed.append('dosage',newMedication.dosage);
-    nedmed.append('morning',newMedication.morning?1:0);
-    nedmed.append('noon',newMedication.noon?1:0);
-    nedmed.append('night',newMedication.night?1:0);
-    nedmed.append('after',newMedication.after);
-    nedmed.append('note',newMedication.note);
-    nedmed.append('start_date',newMedication.start_date);
-    nedmed.append('end_date',newMedication.end_date);
-    nedmed.append('img',image);
-    console.log(nedmed);
-    axios.post(`${api.url}:8000/medication`,nedmed,
-      {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    })
-    .then(response => {
-      // Handle successful response if needed
-      console.log('Medication added successfully:', response.data);
-    })
-    .catch(error => {
-      // Handle error if needed
-      console.error('Error adding medication:', error);
-    });
-  axios.get(`${api.url}:8000/medication`,
-    {
-      params: {
-        username: userData.username
-      }
-    })
-    .then((response) => {
-      console.log(response.data);
-      setMedicationSchedule(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  // Calculate today's date
-  const today = new Date();
-  // Calculate end date: Today's date + 30 days
-  const endDate = new Date(today);
-  endDate.setDate(endDate.getDate() + 30);
-    // Clear the new medication form fields
-    setNewMedication({
-      user:userData.username,
-      name: '',
-      dosage: '',
-      morning: false,
-      noon: false,
-      night: false,
-      after: 'After Meal',
-      note: '',
-      start_date: today.toISOString().split('T')[0],
-      end_date: endDate.toISOString().split('T')[0],
-      img: null
-  });
-  setImage(null);
-  };
-  const sortMedicationByTime = () => {
-    const currentTime = new Date().getHours();
-    if (currentTime >= 6 && currentTime < 12) return 'Morning';
-    if (currentTime >= 12 && currentTime < 18) return 'Noon';
+
+  const getTimeFrame = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) return 'Morning';
+    if (hour >= 12 && hour < 18) return 'Noon';
     return 'Night';
   };
-const time=sortMedicationByTime();
-const donetime=()=>{
-  console.log(time);
-    console.log("akhono somoy hoini"); 
-     if(time=='Morning'){
-    setnowtime(morningTime);
-  }
-  else if(time=='Noon'){
-    setnowtime(noonTime);
-  }
-  else{
-    setnowtime(nightTime);
-    console.log("akhon rat");
-    console.log(nightTime);
-  }
-}
-useEffect(() => {
-  donetime();
-}, [timebox]);
-  const fetchdone = () => { 
-    axios.get(`${api.url}:8000/done`,
-    {
-      params: {
-        username: userData.username,
-        date: moment().format('YYYY-MM-DD'),
-        time: time
-      }
-    }).then((response) => {
-      console.log(response.data);
-      if(response.data.done==0){
-        setDone(false);
-      }
-      else if(response.data.done==1){
-        setDone(true);  
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
 
-    useEffect(() => {
-      fetchdone();
-    }, [nowtime]);
+  const currentFrame = getTimeFrame();
+  const timeFrames = ['Morning', 'Noon', 'Night'];
 
-  const handlenow = () => {
-    const formdata = new FormData();
-    formdata.append('type', done?'notdone':'done');
-    formdata.append('username', userData.username);
-    formdata.append('date', moment().format('YYYY-MM-DD'));
-    formdata.append('time',time);
-    axios.post(`${api.url}:8000/done`, formdata)
-    .then(response => {
-      fetchdone();
-      console.log('Medication done status updated successfully:', response.data);
-    })
-    .catch(error => {
-      // Handle error if needed
-      console.error('Error updating medication done status:', error);
-    });
-  };
-    const sortMedicationByNextTimeFrame = () => {
-    const currentTimeFrame = sortMedicationByTime();
-    console.log("akhon somoy");
-    console.log(currentTimeFrame);
-    const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
-    const nextMedications = medicationSchedule.filter(med => !med.times.includes(currentTimeFrame));
-    return [...currentMedications, ...nextMedications];
-  };
-  const medicationbox=sortMedicationByNextTimeFrame();
-  const [gap,setgap]=useState('30');
-  const handleSetAlertTime=()=>{
-    console.log("yo yo kaj hbe na");
-    const fromdata=new FormData();
-    fromdata.append('username',userData.username);
-    fromdata.append('morning',morningTime);
-    fromdata.append('noon',noonTime);
-    fromdata.append('night',nightTime);
-    fromdata.append('gap',gap);
-    axios.post(`${api.url}:8000/medtime`,fromdata)
-    .then(response => {
-      console.log('Alert time set successfully:', response.data);
-    fetchtime();
-    })
-    .catch(error => {
-      console.error('Error setting alert time:', error);
-    });
-    console.log("here is updated timr bro, look at this is there any disperencey..................................");
-    console.log(nowtime);
-    setShowModal(false);
-  }
-      const [body,setBody] =useState("")
-      const [importFile,setImportFile] =useState("")
-   
-   const [search,setSearch] =useState("")
-  const [following,setFollowing] =useState("")
-        
-  const [showMenu,setShowMenu] =useState(false)
-  const [images,setImages] =  useState(null);
+  const fetchMedTime = useCallback(async () => {
+    if (!userData.username) return;
+    try {
+      const response = await axios.get(`${api.url}:8001/medtime`, {
+        params: { username: userData.username }
+      });
+      if (response.data) {
+        setMorningTime(response.data.morning || '08:00');
+        setNoonTime(response.data.noon || '14:00');
+        setNightTime(response.data.night || '20:00');
+        setGap(response.data.gap || '30');
+      }
+    } catch (error) {
+      console.error('Error fetching med time:', error);
+    }
+  }, [userData.username]);
+
+  const fetchMedications = useCallback(async () => {
+    if (!userData.username) return;
+    try {
+      const response = await axios.get(`${api.url}:8001/medication`, {
+        params: { username: userData.username }
+      });
+      setMedicationSchedule(response.data || []);
+    } catch (error) {
+      console.error('Error fetching medications:', error);
+    }
+  }, [userData.username]);
+
+  const fetchDoneStatus = useCallback(async () => {
+    if (!userData.username) return;
+    try {
+      const response = await axios.get(`${api.url}:8001/done`, {
+        params: {
+          username: userData.username,
+          date: moment().format('YYYY-MM-DD'),
+          time: currentFrame
+        }
+      });
+      setDone(response.data && response.data.done === 1);
+    } catch (error) {
+      console.error('Error fetching done status:', error);
+    }
+  }, [userData.username, currentFrame]);
 
   useEffect(() => {
-    // Function to parse time string to hours and minutes
-    const parseTime = (timeString) => {
-      const [hours, minutes] = timeString.split(":");
-      return { hour: parseInt(hours), minute: parseInt(minutes) };
-    };
+    fetchMedTime();
+    fetchMedications();
+    fetchDoneStatus();
+  }, [fetchMedTime, fetchMedications, fetchDoneStatus]);
 
-    // Function to check and show notification
-    const checkNotification = () => {
-      const currentTime = new Date();
-      const currentHour = currentTime.getHours();
-      const currentMinute = currentTime.getMinutes();
+  const handleTimeCheckboxChange = (time) => {
+    setNewMedication(prev => ({
+      ...prev,
+      [time]: !prev[time]
+    }));
+  };
 
-      const notificationTime = parseTime(nowtime);
-      const currentTimeFrame = sortMedicationByTime();
-      console.log("akhon somoy");
-      console.log(currentTimeFrame);
-      const currentMedications = medicationSchedule.filter(med => med.times.includes(currentTimeFrame));
-        console.log("med for now");
-      // Check if it's time for notification and task is not done
-      if (
-        currentHour >= notificationTime.hour &&
-        currentMinute >= notificationTime.minute &&
-        done != true && currentMedications.length>0
-      ) {
-        console.log("ar kotokhon bhai, matha mutha gelo...");
-        console.log(done);
-        showNotification();
-      }
-    };
-    // Check for notification every 10 seconds
-    const interval = setInterval(checkNotification, 10000);
+  const handleAddMedication = async (e) => {
+    if (e) e.preventDefault();
+    if (!newMedication.name || !newMedication.dosage) {
+      alert("Please specify medication name and dosage.");
+      return;
+    }
 
-    // Cleanup function
-    return () => clearInterval(interval);
-  }, [nowtime, done]);
-  // Function to show notification
-  const showNotification = () => {
-    // Code to display notification
-    console.log('Notification: Task is not done!');
-    const audio = new Audio(notificationSoundFile);
-    audio.play();
+    const formData = new FormData();
+    formData.append('user', userData.username);
+    formData.append('name', newMedication.name);
+    formData.append('dosage', newMedication.dosage);
+    formData.append('morning', newMedication.morning ? 1 : 0);
+    formData.append('noon', newMedication.noon ? 1 : 0);
+    formData.append('night', newMedication.night ? 1 : 0);
+    formData.append('after', newMedication.after);
+    formData.append('note', newMedication.note);
+    formData.append('start_date', newMedication.start_date);
+    formData.append('end_date', newMedication.end_date);
+    if (image) formData.append('img', image);
 
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        audio.play();
-      }, 2000); 
+    try {
+      await axios.post(`${api.url}:8001/medication`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      fetchMedications();
+      setNewMedication({
+        user: userData.username,
+        name: '',
+        dosage: '',
+        morning: false,
+        noon: false,
+        night: false,
+        after: 'After Meal',
+        note: '',
+        start_date: today.toISOString().split('T')[0],
+        end_date: endDate.toISOString().split('T')[0],
+        img: null
+      });
+      setImage(null);
+      alert("Medication added successfully!");
+    } catch (error) {
+      console.error('Error adding medication:', error);
     }
   };
+
+  const toggleDoneStatus = async () => {
+    const formData = new FormData();
+    formData.append('type', done ? 'notdone' : 'done');
+    formData.append('username', userData.username);
+    formData.append('date', moment().format('YYYY-MM-DD'));
+    formData.append('time', currentFrame);
+
+    try {
+      await axios.post(`${api.url}:8001/done`, formData);
+      setDone(!done);
+    } catch (error) {
+      console.error('Error toggling done status:', error);
+    }
+  };
+
+  const handleSetAlertTime = async () => {
+    const formData = new FormData();
+    formData.append('username', userData.username);
+    formData.append('morning', morningTime);
+    formData.append('noon', noonTime);
+    formData.append('night', nightTime);
+    formData.append('gap', gap);
+
+    try {
+      await axios.post(`${api.url}:8001/medtime`, formData);
+      fetchMedTime();
+      setShowDrawer(false);
+      alert("Medication alert schedule updated!");
+    } catch (error) {
+      console.error('Error setting alert time:', error);
+    }
+  };
+
   return (
     <div className='interface'>
-        <Nav 
-        search={search}
-        setSearch={setSearch}
-        showMenu={showMenu}
-        setShowMenu={setShowMenu}
-        />
-
-    <div className="medhome">
+      <Nav search={search} setSearch={setSearch} showMenu={showMenu} setShowMenu={setShowMenu} />
+      <div className="btw">
         <Left />
+        <div className="container-fluid px-3 py-2">
+          <PageHeader
+            title="Medication & Health Manager"
+            subtitle="Track daily dosages, set reminder alerts, and maintain health schedules."
+            actionButton={
+              <Button className="btn-modern-primary py-2 px-4 shadow-sm" onClick={() => setShowDrawer(true)}>
+                ⏰ Alarm Timings
+              </Button>
+            }
+          />
 
+          <div className="row g-4">
+            {/* Schedule List */}
+            <div className="col-12 col-lg-7">
+              <div className="glass-search-card">
+                <div className="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                  <h4 className="fw-bold text-dark m-0">Daily Schedule ({currentFrame})</h4>
+                  <div className="d-flex align-items-center bg-light px-3 py-2 rounded-pill border">
+                    <span className="fw-semibold text-dark me-2">Dose Status ({currentFrame}):</span>
+                    <input
+                      type="checkbox"
+                      className="form-check-input ms-1"
+                      style={{ width: '1.3em', height: '1.3em', cursor: 'pointer' }}
+                      checked={done}
+                      onChange={toggleDoneStatus}
+                    />
+                    <span className={`ms-2 badge ${done ? 'bg-success' : 'bg-warning text-dark'}`}>
+                      {done ? 'Taken' : 'Pending'}
+                    </span>
+                  </div>
+                </div>
 
-      <div className="rounded med scrollable medication-schedule">
-        <h4 className="headmed">Medication Schedule({moment().format('h:mm A')})</h4>
-        {timebox.map((timeFrame, index) => (
-         <div className="m-2 row d-flex" key={index}>
-        <div className="row">
-          <div className="col-md-6">
-         <h5>{timeFrame}</h5>
-         </div>
-        <div className="col-md-6 text-right">
-         {(timeFrame==time) ? (
-         <input
-                type="checkbox"
-                className="form-check-input"
-                id={"done"}
-                checked={done}
-                onChange={() => handlenow()}
-              />
-        ):<></>
-         }
-         </div>
-          </div>
-         {sortMedicationByNextTimeFrame().map((med, medIndex) => (
-           med.times.includes(timeFrame) && (
-             <div className="col-md-4" key={medIndex}>
-               <Card className="mb-3">
-                 <Card.Img src={`${api.url}:8000/${med.image}`} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
-                 <Card.Body>
-                   <Card.Title>{med.name}</Card.Title>
-                   <Card.Text>Dosage: {med.dosage}</Card.Text>
-                   <Card.Text>Take: {med.after}</Card.Text>
-                 </Card.Body>
-               </Card>
-             </div>
-           )
-         ))}
-       </div>       
-        ))}
-      </div>
-
-      <div className="med scrollable notes rounded">
-  <h4 className="note">Notes</h4>
-  {sortMedicationByNextTimeFrame().map((note, index) => (
-    note.note !== null && (
-      <div className="med notes m-2" key={index}>
-        <h5>{note.name}</h5>
-        <p>{note.note}</p>
-      </div>
-    )
-  ))}
-</div>
-<div className="med addmed rounded scrollbox">
-      <h4 className="m-1 headmed">Add Medication</h4>
-      <div className="m-1 form-group">
-        <label className="m-1">Medication Name</label>
-        <input
-          type="text"
-          className="m-1 form-control"
-          value={newMedication.name}
-          onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
-        />
-      </div>
-      <div className="m-1 form-group">
-        <label className="m-1">Dosage</label>
-        <input
-          type="text"
-          className="m-1 form-control"
-          value={newMedication.dosage}
-          onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
-        />
-      </div>
-      <div className="m-1 form-group">
-        <label className="m-1">Times per Day</label>
-        <div>
-          {['Morning', 'Noon', 'Night'].map(time => (
-            <div key={time} className="form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id={time}
-                checked={newMedication[time.toLowerCase()]}
-                onChange={() => handleTimeCheckboxChange(time.toLowerCase())}
-              />
-              <label className="m-1 form-check-label" htmlFor={time}>{time}</label>
+                {timeFrames.map((frame) => {
+                  const frameMeds = medicationSchedule.filter(med => med.times && med.times.includes(frame));
+                  return (
+                    <div key={frame} className="mb-4">
+                      <h5 className="fw-bold text-primary mb-3">
+                        {frame === 'Morning' ? '🌅 Morning' : frame === 'Noon' ? '☀️ Noon' : '🌙 Night'}
+                      </h5>
+                      {frameMeds.length === 0 ? (
+                        <p className="text-muted italic bg-light p-3 rounded-3" style={{ fontSize: '0.88rem' }}>
+                          No medications scheduled for {frame.toLowerCase()}.
+                        </p>
+                      ) : (
+                        <div className="row g-3">
+                          {frameMeds.map((med, idx) => {
+                            const imgUrl = med.image ? `${api.url}:8001/${med.image}` : `${api.url}:8001/media/d.png`;
+                            return (
+                              <div key={idx} className="col-12 col-md-6">
+                                <Card className="modern-user-card text-start p-3 h-100">
+                                  <div className="d-flex align-items-center gap-3">
+                                    <img
+                                      src={imgUrl}
+                                      alt={med.name}
+                                      className="rounded-3"
+                                      style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                                      onError={(e) => { e.target.onerror = null; e.target.src = `${api.url}:8001/media/d.png`; }}
+                                    />
+                                    <div>
+                                      <h5 className="fw-bold text-dark mb-1">{med.name}</h5>
+                                      <p className="text-muted m-0" style={{ fontSize: '0.85rem' }}>Dosage: {med.dosage}</p>
+                                      <span className="badge bg-light text-primary border mt-1" style={{ fontSize: '0.75rem' }}>
+                                        {med.after}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Card>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="m-1 form-group">
-        <label className="m-1">Note</label>
-        <input
-          type="text"
-          className="m-1 form-control"
-          value={newMedication.note}
-          onChange={(e) => setNewMedication({ ...newMedication, note: e.target.value })}
-        />
-      </div>
-      <div className="m-1 form-group">
-        <label className="m-1">Start Date</label>
-        <input
-          type="date"
-          className="m-1 form-control"
-          value={newMedication.start_date}
-          onChange={(e) => setNewMedication({ ...newMedication, start_date: e.target.value })}
-        />
-      </div>
-      <div className="m-1 form-group">
-        <label className="m-1">End Date</label>
-        <input
-          type="date"
-          className="m-1 form-control"
-          value={newMedication.end_date}
-          onChange={(e) => setNewMedication({ ...newMedication, end_date: e.target.value })}
-        />
-      </div>
-      <div className="m-2 form-group">
-      <label>Med Image</label>
-      <input
-        type="file"
-        accept="image/*"
-        className="form-control-file"
-        onChange={handleImageChange}
-      />
-      {image && (
-        <div>
-          <img src={URL.createObjectURL(image)} className="card-img-top" alt="Medication" style={{  height: '100px' }} />
 
-        </div>
-        
-      )}
-      </div>
-      <div className="m-1 form-group">
-  <label className="m-1">Take At</label>
-  <select
-    className="m-1 form-control"
-    value={newMedication.after}
-    onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
-  >
-    <option value="After Meal">After Meal</option>
-    <option value="Before Meal">Before Meal</option>
-  </select>
-</div>
+            {/* Add Form */}
+            <div className="col-12 col-lg-5">
+              <div className="glass-search-card">
+                <h4 className="fw-bold text-dark mb-4 pb-2 border-bottom">Add Medication</h4>
+                <form onSubmit={handleAddMedication}>
+                  <div className="form-group mb-3">
+                    <label className="fw-semibold mb-1">Medication Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g. Paracetamol 500mg"
+                      value={newMedication.name}
+                      onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+                      required
+                    />
+                  </div>
 
-      
-      <button className="m-1 btn btn-primary" onClick={handleAddMedication}>Add Medication</button>
-      </div>
+                  <div className="form-group mb-3">
+                    <label className="fw-semibold mb-1">Dosage</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g. 1 Tablet"
+                      value={newMedication.dosage}
+                      onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group mb-3">
+                    <label className="fw-semibold mb-1">Daily Schedule</label>
+                    <div className="d-flex gap-3 bg-light p-3 rounded-3 border">
+                      {['Morning', 'Noon', 'Night'].map(t => (
+                        <div key={t} className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id={`check-${t}`}
+                            checked={newMedication[t.toLowerCase()]}
+                            onChange={() => handleTimeCheckboxChange(t.toLowerCase())}
+                          />
+                          <label className="form-check-label text-dark fw-semibold" htmlFor={`check-${t}`}>{t}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-6 form-group mb-3">
+                      <label className="fw-semibold mb-1">Start Date</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={newMedication.start_date}
+                        onChange={(e) => setNewMedication({ ...newMedication, start_date: e.target.value })}
+                      />
+                    </div>
+                    <div className="col-6 form-group mb-3">
+                      <label className="fw-semibold mb-1">End Date</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={newMedication.end_date}
+                        onChange={(e) => setNewMedication({ ...newMedication, end_date: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group mb-3">
+                    <label className="fw-semibold mb-1">Instruction</label>
+                    <select
+                      className="form-select"
+                      value={newMedication.after}
+                      onChange={(e) => setNewMedication({ ...newMedication, after: e.target.value })}
+                    >
+                      <option value="After Meal">After Meal</option>
+                      <option value="Before Meal">Before Meal</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group mb-4">
+                    <label className="fw-semibold mb-1">Note</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g. Take with water"
+                      value={newMedication.note}
+                      onChange={(e) => setNewMedication({ ...newMedication, note: e.target.value })}
+                    />
+                  </div>
+
+                  <Button type="submit" className="btn-modern-primary w-100 py-2 shadow-sm">
+                    + Save Medication
+                  </Button>
+                </form>
+              </div>
+            </div>
           </div>
-          <div className="modal" style={{ display: showModal ? 'block' : 'none' }}>
-  <div className="modal-dialog">
-    <div className="modal-content bg-light">
-      <div className="modal-header">
-        <h5 className="modal-title">Set Alert Time</h5>
-        <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
-      </div>
-      <div className="modal-body">
-        <div className="form-group">
-          <label>Morning Time (12-hour format)</label>
-          <input
-            type="time"
-            className="form-control"
-            value={morningTime}
-            onChange={(e) => setMorningTime(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Noon Time (12-hour format)</label>
-          <input
-            type="time"
-            className="form-control"
-            value={noonTime}
-            onChange={(e) => setNoonTime(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Night Time (12-hour format)</label>
-          <input
-            type="time"
-            className="form-control"
-            value={nightTime}
-            onChange={(e) => setNightTime(e.target.value)}
-          />
-          </div>
-           <div className="form-group">
-          <label>Alert Between</label>
-          <input
-            type="text"
-            className="form-control"
-            value={gap}
-            onChange={(e) => setgap(e.target.value)}
-          />
         </div>
       </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-primary" onClick={handleSetAlertTime}>Set Alert</button>
-      </div>
+
+      {/* Reminder Config Drawer */}
+      <ModernDrawer
+        isOpen={showDrawer}
+        onClose={() => setShowDrawer(false)}
+        title="Configure Reminder Timings"
+      >
+        <div className="form-group mb-3">
+          <label className="fw-semibold mb-1">Morning Alarm Time</label>
+          <input type="time" className="form-control" value={morningTime} onChange={(e) => setMorningTime(e.target.value)} />
+        </div>
+        <div className="form-group mb-3">
+          <label className="fw-semibold mb-1">Noon Alarm Time</label>
+          <input type="time" className="form-control" value={noonTime} onChange={(e) => setNoonTime(e.target.value)} />
+        </div>
+        <div className="form-group mb-3">
+          <label className="fw-semibold mb-1">Night Alarm Time</label>
+          <input type="time" className="form-control" value={nightTime} onChange={(e) => setNightTime(e.target.value)} />
+        </div>
+        <div className="form-group mb-3">
+          <label className="fw-semibold mb-1">Snooze Interval (Minutes)</label>
+          <input type="text" className="form-control" value={gap} onChange={(e) => setGap(e.target.value)} />
+        </div>
+        <Button className="btn-modern-primary w-100 py-2 mt-3" onClick={handleSetAlertTime}>
+          Save Alarm Schedule
+        </Button>
+      </ModernDrawer>
     </div>
-  </div>
-</div>
-        <div className="fixed-bottom d-flex justify-content-end m-3">
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>Set Alert Time</button>
-        </div>
-    </div>
-  )
-}
-export default MediHome
+  );
+};
+
+export default MediHome;

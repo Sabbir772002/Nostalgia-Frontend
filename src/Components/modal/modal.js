@@ -17,16 +17,17 @@ const Modal = ({ modalCloseHandler, show, children }) => {
       style={show ? { display: "block" } : { display: "none" }}
     >
       <section className="modal-main" ref={modalBodyRef}>
-        <div className="text-right">
+        <div className="modal-header-bar">
           <span
             className="modal-close"
             onClick={modalCloseHandler}
             aria-hidden="true"
+            title="Close"
           >
-            
+            &times;
           </span>
         </div>
-        <div className="mr-4 ml-4 mb-2 modal-body">{children}</div>
+        <div className="modal-body-container">{children}</div>
       </section>
     </div>
   );

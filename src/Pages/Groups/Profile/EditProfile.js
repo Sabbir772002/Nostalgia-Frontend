@@ -42,7 +42,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${api.url}:8000/profile/${username}`);
+        const response = await axios.get(`${api.url}:8001/profile/${username}`);
         if (response.status === 200) {
           setUserData(response.data);
           console.log(response.data.p_image);
@@ -53,14 +53,14 @@ const EditProfile = () => {
             ModelUserName: response.data.username,
             ModelCountryName: response.data.thana,
             ModelJobName: "Web Developer in Google",
-            image: `${api.url}:8000/${response.data.p_image}`
+            image: `${api.url}:8001/${response.data.p_image}`
           });
           const initialUserPostData = [
             {
               id: 1,
               username: "Vijay",
               profilepicture: ProfileImg,
-              img: `${api.url}:8000/${response.data.p_image}`,
+              img: `${api.url}:8001/${response.data.p_image}`,
               datetime: moment("20230401", "YYYYMMDD").fromNow(),
               body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
               like: 22,
@@ -70,7 +70,7 @@ const EditProfile = () => {
         id:2,
         username:"Vijay",
         profilepicture:ProfileImg,
-        img:`${api.url}:8000/${response.data.p_image}`,
+        img:`${api.url}:8001/${response.data.p_image}`,
         datetime:moment("20230525", "YYYYMMDD").fromNow(),
         body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
         like: 84,
@@ -80,7 +80,7 @@ const EditProfile = () => {
             id:3,
             username:"Vijay",
             profilepicture:ProfileImg,
-            img:`${api.url}:8000/${response.data.p_image}`,
+            img:`${api.url}:8001/${response.data.p_image}`,
             datetime:moment.utc("2023-08-13 12:45:00").local().startOf('seconds').fromNow(),
             body:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia illum provident consequuntur reprehenderit tenetur, molestiae quae blanditiis rem placeat! Eligendi, qui quia quibusdam dolore molestiae veniam neque fuga explicabo illum?",
             like: 340,

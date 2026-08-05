@@ -45,7 +45,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const fetchPosts = () => {
-    axios.get(`${api.url}:8000/blog`, {
+    axios.get(`${api.url}:8001/blog`, {
     params: {
         username: userData.username
     }

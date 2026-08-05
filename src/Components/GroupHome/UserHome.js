@@ -1,30 +1,12 @@
-import React from 'react'
-import FeedUser from './FeedUser'
-import { useState,useEffect } from 'react';
-import { useLocation,useNavigate,useParams } from 'react-router-dom';
-import axios from 'axios';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import React, { useEffect } from 'react';
+import FeedUser from './FeedUser';
 
 const UserHome = ({fetchPosts,posts,setposts}) => {
-  const location = useLocation();
-  //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const userData= JSON.parse(localStorage.getItem('userData'));
-  const { username } = useParams();
-  const navigate = useNavigate();
-  const [showModal, setShowModal] = React.useState(false);
-  // React.useEffect(() => {
-  //   if (userData && username !== userData.username) {
-  //     setShowModal(true);
-  //   }
-  // }, [username, userData]);
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  const userData = JSON.parse(localStorage.getItem('userData')) || {};
 
   useEffect(() => {
-    fetchPosts();
-  }, [username]);
+    if (fetchPosts) fetchPosts();
+  }, [fetchPosts]);
 
 
   return (

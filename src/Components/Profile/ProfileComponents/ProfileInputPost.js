@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import axios from 'axios';
 import api from '../../../util/api';
 import '../../../Components/Post/InputPost.css';
+
 const ProfileInputPost = (fetchPosts) => {
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = JSON.parse(localStorage.getItem('userData')) || {};
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
@@ -30,8 +31,6 @@ const ProfileInputPost = (fetchPosts) => {
     setImages(file);
   };
 
-
-
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -43,7 +42,7 @@ const ProfileInputPost = (fetchPosts) => {
         formData.append(key, value);
       });
 
-      const response = await axios.post(`${api.url}:8000/addblog`, formData);
+      await axios.post(`${api.url}:8001/addblog`, formData);
       alert('Blog created successfully');
       // fetchPosts();
       setPost({
@@ -64,7 +63,7 @@ const ProfileInputPost = (fetchPosts) => {
     <div className="i-form">
       <form onSubmit={onSubmit}>
         <div className="i-input-box">
-          <img src={`${api.url}:8000/${userData.p_image}`} className='i-img' alt="Profile" />
+          <img src={`${api.url}:8001/${userData.p_image}`} className='i-img' alt="Profile" />
           <input
             type="text"
             id="i-input"

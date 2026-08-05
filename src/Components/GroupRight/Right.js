@@ -1,7 +1,6 @@
-import React from 'react'
-import "../RightSide/Right.css"
-import {GrFormClose} from "react-icons/gr"
-import ShowGroup from '../GMiddle/RightGroup/ShowGroup'
+import React from 'react';
+import "../RightSide/Right.css";
+import ShowGroup from '../GMiddle/RightGroup/ShowGroup';
 import Sugg from '../GMiddle/GroupSugg/Sugg';
 const Right = ({following,setFollowing,showMenu,setShowMenu,fetchOverseerList}) => {
 

@@ -1,86 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import Axios
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 import "../Home/Post.css";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import SentimentSatisfiedRoundedIcon from '@mui/icons-material/SentimentSatisfiedRounded';
-import { PiSmileySad } from "react-icons/pi";
-import { IoVolumeMuteOutline } from "react-icons/io5";
-import { MdBlockFlipped } from "react-icons/md";
 import { AiOutlineDelete } from "react-icons/ai";
-import { MdReportGmailerrorred } from "react-icons/md";
-import { LiaFacebookF } from "react-icons/lia";
-import { FiInstagram } from "react-icons/fi";
-import { BiLogoLinkedin } from "react-icons/bi";
-import { AiFillYoutube } from "react-icons/ai";
-import { RxTwitterLogo } from "react-icons/rx";
-import { FiGithub } from "react-icons/fi";
-import img1 from "../../assets/Following/img-2.jpg";
-import img2 from  "../../assets/Following/img-3.jpg";
-import img3 from  "../../assets/Following/img-4.jpg";
-import Profile from "../../assets/profile.jpg";
 import Comments from '../Comments/Comments';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-// import api from '../../../util/api';
-import api from '../../util/api';
+import ServerUrl, { getImageUrl } from '../../api/serverUrl';
+import ProfileDefaultImg from "../../assets/profile.jpg";
 
 const Post = ({ post, posts }) => {
-    const [postbox,setPostbox] = useState(post);
-
-  const [comments,setComments] =useState([]);
-  const [like, setLike] = useState(post.is_upvoted);
+  const [postbox, setPostbox] = useState(post);
+  const [comments, setComments] = useState([]);
   const [filledLike, setFilledLike] = useState(post.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
   const [showDelete, setShowDelete] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [socialIcons, setSocialIcons] = useState(false);
-  const userdata = JSON.parse(localStorage.getItem('userData'));
+  const userdata = JSON.parse(localStorage.getItem('userData')) || {};
   const [commentInput, setCommentInput] = useState({
     author: userdata.username,
     content: '',
-    blog: post.id,
-});
-const handleCommentSubmit = async (e) => {
-    console.log(commentInput.content);
-    e.preventDefault();
+    blog: post.id || post.blogid,
+  });
+
+  const fetchComments = useCallback(async (postId) => {
     try {
-        const response = await axios.post(`${api.url}:8000/comment`, commentInput);
-        console.log(response.data);
-        alert('Comment created successfully');
-        setCommentInput(  { 
-         author: userdata.username,
-          content: '',
-          blog: post.id,
-    });
-        //Fetch comments again
-        fetchComments();
-    } catch (error) {
-        console.error('Error creating comment:', error);
-        alert('Error creating comment. Please try again.');
-    }
-};
-  useEffect(() => {
-    fetchComments(postbox.id);
-  }, []);
-  const fetchComments = async (postId) => {
-    try {
-      console.log(post.author);
-      console.log(post.id);
-      
-      const response = await axios.get(`${api.url}:8000/comments`,{
-          params: {
-          username:post.author,
-          blog: post.id
-      }
+      const response = await axios.get(`${ServerUrl.BASE_URL}comments`, {
+        params: {
+          username: post.author,
+          blog: postId || post.id || post.blogid
+        }
       });
-      console.log(response.data);
-      setComments(response.data);
+      setComments(response.data || []);
     } catch (error) {
       console.error('Error fetching comments:', error);
+    }
+  }, [post.author, post.id, post.blogid]);
+
+  useEffect(() => {
+    fetchComments(postbox.id || postbox.blogid);
+  }, [fetchComments, postbox.id, postbox.blogid]);
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!commentInput.content.trim()) return;
+    try {
+      await axios.post(`${ServerUrl.BASE_URL}comment`, commentInput);
+      alert('Comment created successfully');
+      setCommentInput({ 
+        author: userdata.username,
+        content: '',
+        blog: post.id || post.blogid,
+      });
+      fetchComments(postbox.id || postbox.blogid);
+    } catch (error) {
+      console.error('Error creating comment:', error);
+      alert('Error creating comment. Please try again.');
     }
   };
 
@@ -88,38 +66,36 @@ const handleCommentSubmit = async (e) => {
     try {
       const upvotedata = {
         username: userdata.username,
-        id: postbox.id,
+        id: postbox.id || postbox.blogid,
         time: moment().fromNow(),
       };
-      const response = await axios.post(`${api.url}:8000/upvote`, { ...upvotedata });
-      setLike(response.data.is_upvoted);
+      const response = await axios.post(`${ServerUrl.BASE_URL}upvote`, { ...upvotedata });
       setFilledLike(response.data.is_upvoted ? <FavoriteRoundedIcon /> : <FavoriteBorderOutlinedIcon />);
-      //console.log(response.data);
-      setPostbox(response.data);
+      setPostbox(prev => ({
+        ...prev,
+        upvote: response.data.upvote !== undefined ? response.data.upvote : prev.upvote,
+        is_upvoted: response.data.is_upvoted !== undefined ? response.data.is_upvoted : !prev.is_upvoted
+      }));
     } catch (error) {
       console.error('Error liking the post:', error);
     }
   };
+
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`API_ENDPOINT/posts/${id}`);
-      // Handle UI update after successful deletion
+      await axios.post(`${ServerUrl.BASE_URL}posts`, { id: id });
     } catch (error) {
       console.error('Error deleting the post:', error);
-    
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCommentInput(prevState => ({ ...prevState, [name]: value }));
-};
-  const handleFriendsId = (id) => {
-    // Implement this function as per your requirements
   };
+
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editedContent, setEditedContent] = useState(postbox.content);
-
-  // Other state variables and functions remain unchanged
 
   const handleEdit = () => {
     setEditedContent(postbox.content);
@@ -129,92 +105,94 @@ const handleCommentSubmit = async (e) => {
   const handleUpdate = async () => {
     try {
       const updatedPost = { ...postbox, content: editedContent };
-      const response = await axios.put(`${api.url}:8000/posts/${post.id}`, updatedPost);
-      setPostbox(response.data); // Update post data after successful update
-      setEditModalOpen(false); // Close the edit modal
+      await axios.put(`${ServerUrl.BASE_URL}posts`, updatedPost);
+      setPostbox(updatedPost);
+      setEditModalOpen(false);
     } catch (error) {
       console.error('Error updating post:', error);
     }
   };
+
   return (
     <div className='post'>
-      
       <div className='post-header'>
-        <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
-          <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
-            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
-            <div className='post-user-info'>
+        <div className='post-user' style={{ cursor: "pointer" }}>
+          <img
+            src={getImageUrl(postbox.author_img)}
+            className='p-img'
+            alt={postbox.author}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = ProfileDefaultImg;
+            }}
+          />
+          <div className='post-user-info'>
+            <Link to={`/profile/${postbox.author}`} style={{ textDecoration: "none", color: "inherit" }}>
               <h2>{postbox.author}</h2>
-              <p className='datePara'>{postbox.post_date}</p>
-            </div>
+            </Link>
+            <Link to={`/blog/${postbox.blogid || postbox.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              <p className='datePara' style={{ cursor: "pointer" }}>{postbox.post_date}</p>
+            </Link>
           </div>
-        </Link>
+        </div>
 
         <div className='delete'>
-         {showDelete && (<div className="options">
-            {/* <button><PiSmileySad />Not Interested in this post</button> */}
-            {/* <button><IoVolumeMuteOutline />Mute this user</button> */}
-            {/* <button><MdBlockFlipped />Block this user</button> */}
-            {postbox.author === userdata.username && (
-              <>
-            <button onClick={()=>handleDelete(post.id)}><AiOutlineDelete />Delete</button>
-            <button onClick={()=>handleEdit(post.id)}><AiOutlineDelete />Edit Post</button>
-            </>
-            )}
-            {/* <button><MdReportGmailerrorred />Report post</button> */}
-         </div>
-         )}
-          <MoreVertRoundedIcon className='post-vertical-icon' onClick={()=>setShowDelete(!showDelete)}/>
-         </div>
-       </div>
+          {showDelete && (
+            <div className="options">
+              {postbox.author === userdata.username && (
+                <>
+                  <button onClick={() => handleDelete(postbox.id || postbox.blogid)}><AiOutlineDelete />Delete</button>
+                  <button onClick={() => handleEdit()}><AiOutlineDelete />Edit Post</button>
+                </>
+              )}
+            </div>
+          )}
+          <MoreVertRoundedIcon className='post-vertical-icon' onClick={() => setShowDelete(!showDelete)}/>
+        </div>
+      </div>
 
-      {/* Edit Modal */}
       {editModalOpen && (
-     
-      <div className="edit-modal">
-  <textarea
-    className="edit-textarea"
-    value={editedContent}
-    onChange={(e) => setEditedContent(e.target.value)}
-    rows={4}
-    cols={50}
-    placeholder="Edit your post..."
-  />
-  <div className="edit-buttons">
-    <button className="update-button" onClick={handleUpdate}>Update</button>
-    <button className="cancel-button" onClick={() => setEditModalOpen(false)}>Cancel</button>
-  </div>
-</div>
-      
+        <div className="edit-modal">
+          <textarea
+            className="edit-textarea"
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            rows={4}
+            cols={50}
+            placeholder="Edit your post..."
+          />
+          <div className="edit-buttons">
+            <button className="update-button" onClick={handleUpdate}>Update</button>
+            <button className="cancel-button" onClick={() => setEditModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
       )}
-   
 
-      <p className='body'>{
-        (postbox.content).length <= 300 ?
-        postbox.content : `${(postbox.content).slice(0, 300)}...`
-      }</p>
+      <p className='body'>
+        {postbox.content && postbox.content.length <= 300 ?
+          postbox.content : `${(postbox.content || '').slice(0, 300)}...`
+        }
+      </p>
 
-      {postbox.blog_img && (<img src={`${api.url}:8000/${postbox.blog_img}`} alt="" className="post-img" />)}
+      {postbox.blog_img && (
+        <img
+          src={getImageUrl(postbox.blog_img)}
+          alt=""
+          className="post-img"
+        />
+      )}
 
       <div className="post-foot">
         <div className="post-footer">
           <div className="like-icons">
-            <p className='heart' onClick={handleLike}>
+            <p className='heart' onClick={handleLike} style={{ cursor: "pointer" }}>
               {filledLike}
             </p>
 
-            <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' />
-
-            {/* <ShareOutlinedIcon onClick={() => setSocialIcons(!socialIcons)} className='share' /> */}
-
-            {socialIcons && (
-              <div className="social-buttons">
-                {/* Add social media icons here */}
-              </div>
-            )}
+            <MessageRoundedIcon onClick={() => setShowComment(!showComment)} className='msg' style={{ cursor: "pointer" }} />
           </div>
           <div className="like-comment-details">
-            <span className='post-like'>{postbox.upvote}  Upvote</span>
+            <span className='post-like'>{postbox.upvote || 0} Upvote</span>
             <span className='post-comment'>{comments.length} comments</span>
           </div>
 

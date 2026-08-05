@@ -1,351 +1,347 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Button, Tab, Tabs } from 'react-bootstrap';
 import axios from 'axios';
-import './Buddylist.css';
-import { Tab, Tabs, Table } from 'react-bootstrap';
 import RequestList from './Request';
 import MemberList from './Walkmembers';
+import PageHeader from '../../Components/Common/PageHeader';
+import ModernDrawer from '../../Components/Common/ModernDrawer';
 import api from '../../util/api';
+import '../styles/ModernUI.css';
 
 const BuddyList = () => {
-  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
-  const [showInputBoxModal, setShowInputBoxModal] = useState(false);
-  const [showEditBoxModal, setShowEditBoxModal] = useState(false);
+  const [showUserInfoDrawer, setShowUserInfoDrawer] = useState(false);
+  const [showInputBoxDrawer, setShowInputBoxDrawer] = useState(false);
+  const [showEditBoxDrawer, setShowEditBoxDrawer] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userlist, setUserlist] = useState([]);
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const rawUser = JSON.parse(localStorage.getItem('userData')) || {};
+  const activeUsername = rawUser.username ? (rawUser.username.includes('@') ? rawUser.username.split('@')[1] : rawUser.username) : '';
+  const userData = { ...rawUser, username: activeUsername };
+
   const [formData, setFormData] = useState({
     walk_name: '',
-    type:"Done",
+    type: "Done",
     w_creator: userData.username,
     address: '',
     walk_date: new Date().toISOString().split('T')[0],
     end_date: new Date().toISOString().split('T')[0],
-    time: '',
+    time: '07:00',
     privacy: 'Bondhu'
   });
 
-  const fetchData = async () => {
-    console.log("fetching data...");
+  const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(`${api.url}:8000/walk`, {
+      const response = await axios.get(`${api.url}:8001/walk`, {
         params: { username: userData.username }
       });
-      setUserlist(response.data);
+      setUserlist(response.data || []);
     } catch (error) {
-      console.error('Error fetching user list:', error);
+      console.error('Error fetching walk list:', error);
     }
-  };
+  }, [userData.username]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleChange = (e) => {
-    e.preventDefault();
-    console.log(e.target);
     const { id, value } = e.target;
-
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [id]: value
-    }));
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowInputBoxModal(false);
+    setShowInputBoxDrawer(false);
     try {
-      await axios.post(`${api.url}:8000/walk`, formData);
-      console.log('Walk data sent successfully:', formData);
+      await axios.post(`${api.url}:8001/walk`, formData);
       fetchData();
       setFormData({
         walk_name: '',
-        type:"Done",
+        type: "Done",
         w_creator: userData.username,
         address: '',
         walk_date: new Date().toISOString().split('T')[0],
         end_date: new Date().toISOString().split('T')[0],
-        time: '',
+        time: '07:00',
         privacy: 'Bondhu'
       });
     } catch (error) {
-      console.error('Error sending walk data:', error);
+      console.error('Error creating walk:', error);
     }
   };
 
   const handleEditSubmit = async (e) => {
-    
     e.preventDefault();
-
-    formData.type="Update";
+    const updateData = { ...formData, type: "Update" };
     try {
-      await axios.post(`${api.url}:8000/walk`, formData);
-      console.log('Walk data updated successfully:', formData);
+      await axios.post(`${api.url}:8001/walk`, updateData);
       fetchData();
-      setShowEditBoxModal(false);
+      setShowEditBoxDrawer(false);
     } catch (error) {
-      console.error('Error updating walk data:', error);
+      console.error('Error updating walk:', error);
     }
   };
+
   const formatDateString = (dateString) => {
+    if (!dateString) return new Date().toISOString().split('T')[0];
     const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    if (isNaN(date.getTime())) return dateString;
+    return date.toISOString().split('T')[0];
   };
 
   const handleEditButtonClick = (user) => {
-    setFormData(user);
-    console.log(user);
-    setFormData(
-      {
-        walk_name: user.walk_name,
-        w_creator: user.w_creator,
-        address: user.location,
-        walk_date: formatDateString(user.date),
-        end_date: formatDateString(user.end),
-        time: user.time,
-        privacy: user.privacy,
-        id: user.id
-      }
-    )
-    setShowEditBoxModal(true);
+    setFormData({
+      walk_name: user.walk_name,
+      w_creator: user.w_creator,
+      address: user.location,
+      walk_date: formatDateString(user.date),
+      end_date: formatDateString(user.end),
+      time: user.time,
+      privacy: user.privacy,
+      id: user.id
+    });
+    setShowEditBoxDrawer(true);
   };
 
   const [members, setMembers] = useState([]);
   const fetchmembers = async (user) => {
-    console.log("kauke passi na khujte khujte...");
-    console.log(user);
     try {
-      const response = await axios.get(`${api.url}:8000/walkmembers`, {
+      const response = await axios.get(`${api.url}:8001/walkmembers`, {
         params: { id: user.id }
       });
-      setMembers(response.data);
+      setMembers(response.data || []);
     } catch (error) {
-      console.error('Error fetching members:', error);
+      console.error('Error fetching walk members:', error);
     }
   };
 
   const submitrequest = async (walk) => {
-    console.log("hatte jabo tomar sathe.... niba?");
     if (walk.w_creator === userData.username) {
-      alert("You cannot request to join your own walk.");
+      alert("You are the organizer of this walk.");
       return;
     }
     try {
-      const response = await axios.post(`${api.url}:8000/walk_request`, {
+      const response = await axios.post(`${api.url}:8001/walk_request`, {
         id: walk.id,
         username: userData.username
       });
       fetchData();
       if (response.data.user === userData.username) {
-        alert("You have already requested to join this walk. Please wait for the owner to accept your request.");
+        alert("Walk request already sent.");
         return;
       }
-      console.log('Request sent successfully:', walk.id);
-      alert("Request sent successfully. Please wait for the owner to accept your request.");
+      alert("Request sent successfully!");
     } catch (error) {
-      alert("Some issue! Try again after some moment!.");
-      console.error('Error sending request:', error);
+      alert("Could not send request. Please try again.");
     }
   };
 
   const handleUserInfoClick = (user) => {
-    console.log("ogo, hete chole jaite mon chaitese na...");
     setSelectedUser(user);
     fetchmembers(user);
-    setShowUserInfoModal(true);
+    setShowUserInfoDrawer(true);
   };
-  const handleInputBoxButtonClick = () => {
-    setShowInputBoxModal(true);
-  };
-
-  const handleClose = () => setShowUserInfoModal(false);
 
   return (
-    <div className="vox mt-10 bg-light rounded-20px" style={{ overflowY: 'auto' }}>
-      <div className="box">
-        <div className="mt-3 row">
-          <div className="col-6">
-            <h1 className="toto">Buddy List</h1>
-          </div>
-          <div className="col-6">
-            <div className={`modal fade ${showInputBoxModal ? 'show d-block' : 'd-none'}`} tabIndex="-1" role="dialog">
-              <div className="modal-dialog " role="document">
-                <div className="modal-content bg-light">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Walking List</h5>
-                    <button type="button" className="close" onClick={() => setShowInputBoxModal(false)}>
-                      <span>&times;</span>
-                    </button>
+    <div className="container-fluid px-3 py-2">
+      <PageHeader
+        title="Walking Buddy Schedules"
+        subtitle="Schedule morning walks, find neighborhood companions, and keep active."
+        actionButton={
+          <Button className="btn-modern-primary py-2 px-4 shadow-sm" onClick={() => setShowInputBoxDrawer(true)}>
+            + Schedule New Walk
+          </Button>
+        }
+      />
+
+      {userlist.length === 0 ? (
+        <div className="text-center py-5 bg-white rounded-3 shadow-sm my-4">
+          <h5 className="text-secondary fw-semibold">No Active Walk Schedules</h5>
+        </div>
+      ) : (
+        <div className="row g-4">
+          {userlist.map((walk) => {
+            const avatarUrl = walk.img ? `${api.url}:8001/${walk.img}` : `${api.url}:8001/media/image/download_lX6bjA6.jpeg`;
+            return (
+              <div key={walk.id} className="col-12 col-md-6 col-lg-4">
+                <div className="event-card h-100 d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                      <span className="event-meta-badge">
+                        🔒 {walk.privacy}
+                      </span>
+                      <span className="badge bg-light text-dark border">
+                        ⏰ {walk.time}
+                      </span>
+                    </div>
+
+                    <h4 className="event-title mb-2">{walk.walk_name}</h4>
+
+                    <div className="d-flex align-items-center mb-3">
+                      <img
+                        src={avatarUrl}
+                        alt={walk.w_creator}
+                        className="rounded-circle me-2"
+                        style={{ width: '38px', height: '38px', objectFit: 'cover' }}
+                        onError={(e) => { e.target.onerror = null; e.target.src = `${api.url}:8001/media/image/download_lX6bjA6.jpeg`; }}
+                      />
+                      <div>
+                        <span className="d-block fw-semibold text-dark" style={{ fontSize: '0.88rem' }}>{walk.w_creator}</span>
+                        <span className="text-muted" style={{ fontSize: '0.78rem' }}>Organizer</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-light rounded-3 mb-3" style={{ fontSize: '0.88rem' }}>
+                      <div className="mb-1 text-dark"><strong>📍 Location:</strong> {walk.location}</div>
+                      <div className="mb-1 text-dark"><strong>📅 Start:</strong> {walk.date}</div>
+                      <div className="text-dark"><strong>🏁 End:</strong> {walk.end}</div>
+                    </div>
                   </div>
-                  <div className="modal-body">
-                    <form onSubmit={handleSubmit}>
-                      <div className="form-group">
-                        <label htmlFor="walk_name">Walk Name</label>
-                        <input type="text" className="form-control" id="walk_name" value={formData.walk_name} onChange={handleChange} />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="address">Address</label>
-                        <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="walk_date">Start Date</label>
-                        <input type="date" className="form-control" id="walk_date" value={formData.walk_date} onChange={handleChange} />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="end_date">End Date</label>
-                        <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="time">Time</label>
-                        <input type="time" className="form-control" id="time" value={formData.time} onChange={handleChange} />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="privacy">Privacy</label>
-                        <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
-                          <option value="Bondhu">Bondhu</option>
-                          <option value="Known">Known</option>
-                        </select>
-                      </div>
-                      <button type="submit" className="btn btn-primary mt-2">Save</button>
-                    </form>
+
+                  <div className="d-flex gap-2">
+                    {walk.w_creator === userData.username ? (
+                      <Button variant="outline-primary" className="btn-modern-outline flex-1" onClick={() => handleEditButtonClick(walk)}>
+                        Edit
+                      </Button>
+                    ) : walk.member === 1 && walk.not_ac === 0 ? (
+                      <Button variant="success" className="flex-1 font-weight-bold" disabled>
+                        ✓ Member
+                      </Button>
+                    ) : (
+                      <Button className="btn-modern-primary flex-1" onClick={() => submitrequest(walk)}>
+                        + Join
+                      </Button>
+                    )}
+
+                    <Button variant="info" className="btn-modern-outline flex-1" onClick={() => handleUserInfoClick(walk)}>
+                      Details
+                    </Button>
                   </div>
                 </div>
               </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <Button className="mew" onClick={handleInputBoxButtonClick}>Add New Walk</Button>
-            </div>
-          </div>
+            );
+          })}
         </div>
+      )}
 
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Owner</th>
-              <th>Location</th>
-              <th>Date</th>
-              <th>End</th>
-              <th>Time</th>
-              <th>Request</th>
-              <th>View Info</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            {userlist.map(user => (
-              <tr key={user.id}>
-                <td><img src={`${api.url}:8000/${user.img}`} alt="User" className="rounded" style={{ width: '50px', height: '50px' }} /></td>
-                <td>{user.w_creator}</td>
-                <td>{user.location}</td>
-                <td>{user.date}</td>
-                <td>{user.end}</td>
-                <td>{user.time}</td>
-                {user.w_creator === userData.username && (
-                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Owner</Button></td>
-                )}
-                {user.member === 1 && user.not_ac === 0 && !(user.w_creator === userData.username) && (
-                  <td><Button variant="success" onClick={() => submitrequest(user)}>Member</Button></td>
-                )}
-                {user.member === 1 && user.not_ac === 1 && (
-                  <td><Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={() => submitrequest(user)}>Requested</Button></td>
-                )}
-                {user.member === 1 && user.cancel === 1 && (
-                  <td><Button variant="gray" onClick={() => submitrequest(user)}>Cancel</Button></td>
-                )}
-                {(user.w_creator !== userData.username && user.member === 0) && (
-                  <td><Button variant="primary" onClick={() => submitrequest(user)}>Request</Button></td>
-                )}
-                <td><Button variant="info" onClick={() => handleUserInfoClick(user)}>View Info</Button>
-                {user.w_creator === userData.username && (
-                  <Button variant="warning" onClick={() => handleEditButtonClick(user)}>Edit</Button>
-                )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <Modal show={showUserInfoModal} onHide={handleClose} dialogClassName="custom-modal">
-          <div className="bg-light">
-            <Modal.Header closeButton>
-              <Modal.Title>User Info</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Tabs defaultActiveKey="details">
-                {userData && selectedUser && userData.username === selectedUser.w_creator && (
-                  <Tab eventKey="request" title="Request">
-                    <RequestList fmembers={fetchmembers} user={selectedUser} />
-                  </Tab>
-                )}
-                <Tab eventKey="details" title="Details">
-                  {selectedUser && (
-                    <div>
-                      <p><strong>Walk Name:</strong> {selectedUser.walk_name}</p>
-                      <p><strong>Creator:</strong> {selectedUser.w_creator}</p>
-                      <p><strong>Privacy:</strong> {selectedUser.privacy}</p>
-                      <p><strong>Location:</strong> {selectedUser.location}</p>
-                      <p><strong>Start:</strong> {selectedUser.date}</p>
-                      <p><strong>End:</strong> {selectedUser.end}</p>
-                      <p><strong>Time:</strong> {selectedUser.time}</p>
-                    </div>
-                  )}
-                </Tab>
-                <Tab eventKey="members" title="Members">
-                  {selectedUser && <MemberList members={members} />}
-                </Tab>
-              </Tabs>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>Close</Button>
-            </Modal.Footer>
+      {/* Schedule Walk Drawer */}
+      <ModernDrawer
+        isOpen={showInputBoxDrawer}
+        onClose={() => setShowInputBoxDrawer(false)}
+        title="Schedule New Walk"
+      >
+        <form onSubmit={handleSubmit}>
+          <div className="form-group mb-3">
+            <label className="fw-semibold mb-1" htmlFor="walk_name">Walk Title</label>
+            <input type="text" className="form-control" id="walk_name" placeholder="e.g. Ramna Park Walk" value={formData.walk_name} onChange={handleChange} required />
           </div>
-        </Modal>
-
-        <Modal show={showEditBoxModal} onHide={() => setShowEditBoxModal(false)} dialogClassName="custom-modal">
-          <div className="bg-light">
-            <Modal.Header closeButton>
-              <Modal.Title>Edit Walk</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form onSubmit={handleEditSubmit}>
-                <div className="form-group">
-                  <label htmlFor="walk_name">Walk Name</label>
-                  <input type="text" className="form-control" id="walk_name" value={formData.walk_name} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="address">Address</label>
-                  <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="walk_date">Start Date</label>
-                  <input type="date" className="form-control" id="walk_date" value={formData.walk_date} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="end_date">End Date</label>
-                  <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="time">Time</label>
-                  <input type="time" className="form-control" id="time" value={formData.time} onChange={handleChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="privacy">Privacy</label>
-                  <select className="form-control" id="privacy" value={formData.privacy} onChange={handleChange}>
-                    <option value="Bondhu">Bondhu</option>
-                    <option value="Known">Known</option>
-                  </select>
-                </div>
-                <button type="submit" className="btn btn-primary mt-2">Save</button>
-              </form>
-            </Modal.Body>
+          <div className="form-group mb-3">
+            <label className="fw-semibold mb-1" htmlFor="address">Address / Meeting Point</label>
+            <input type="text" className="form-control" id="address" placeholder="e.g. Gate 2" value={formData.address} onChange={handleChange} required />
           </div>
-        </Modal>
-      </div>
+          <div className="row">
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="walk_date">Start Date</label>
+              <input type="date" className="form-control" id="walk_date" value={formData.walk_date} onChange={handleChange} required />
+            </div>
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="end_date">End Date</label>
+              <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} required />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="time">Time</label>
+              <input type="time" className="form-control" id="time" value={formData.time} onChange={handleChange} required />
+            </div>
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="privacy">Privacy</label>
+              <select className="form-select" id="privacy" value={formData.privacy} onChange={handleChange}>
+                <option value="Bondhu">Bondhu</option>
+                <option value="Known">Known</option>
+              </select>
+            </div>
+          </div>
+          <Button type="submit" className="btn-modern-primary w-100 py-2 mt-3">
+            Save Walk Schedule
+          </Button>
+        </form>
+      </ModernDrawer>
+
+      {/* Edit Walk Drawer */}
+      <ModernDrawer
+        isOpen={showEditBoxDrawer}
+        onClose={() => setShowEditBoxDrawer(false)}
+        title="Edit Walk Schedule"
+      >
+        <form onSubmit={handleEditSubmit}>
+          <div className="form-group mb-3">
+            <label className="fw-semibold mb-1" htmlFor="walk_name">Walk Title</label>
+            <input type="text" className="form-control" id="walk_name" value={formData.walk_name} onChange={handleChange} required />
+          </div>
+          <div className="form-group mb-3">
+            <label className="fw-semibold mb-1" htmlFor="address">Address</label>
+            <input type="text" className="form-control" id="address" value={formData.address} onChange={handleChange} required />
+          </div>
+          <div className="row">
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="walk_date">Start Date</label>
+              <input type="date" className="form-control" id="walk_date" value={formData.walk_date} onChange={handleChange} required />
+            </div>
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="end_date">End Date</label>
+              <input type="date" className="form-control" id="end_date" value={formData.end_date} onChange={handleChange} required />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="time">Time</label>
+              <input type="time" className="form-control" id="time" value={formData.time} onChange={handleChange} required />
+            </div>
+            <div className="col-6 form-group mb-3">
+              <label className="fw-semibold mb-1" htmlFor="privacy">Privacy</label>
+              <select className="form-select" id="privacy" value={formData.privacy} onChange={handleChange}>
+                <option value="Bondhu">Bondhu</option>
+                <option value="Known">Known</option>
+              </select>
+            </div>
+          </div>
+          <Button type="submit" className="btn-modern-primary w-100 py-2 mt-3">
+            Save Changes
+          </Button>
+        </form>
+      </ModernDrawer>
+
+      {/* Info & Members Drawer */}
+      <ModernDrawer
+        isOpen={showUserInfoDrawer}
+        onClose={() => setShowUserInfoDrawer(false)}
+        title="Walk Schedule Details"
+      >
+        <Tabs defaultActiveKey="details" className="mb-3">
+          {userData && selectedUser && userData.username === selectedUser.w_creator && (
+            <Tab eventKey="request" title="Requests">
+              <RequestList fmembers={fetchmembers} user={selectedUser} />
+            </Tab>
+          )}
+          <Tab eventKey="details" title="Details">
+            {selectedUser && (
+              <div className="p-3 bg-light rounded-3">
+                <p className="mb-2"><strong>Title:</strong> {selectedUser.walk_name}</p>
+                <p className="mb-2"><strong>Organizer:</strong> {selectedUser.w_creator}</p>
+                <p className="mb-2"><strong>Privacy:</strong> {selectedUser.privacy}</p>
+                <p className="mb-2"><strong>Meeting Location:</strong> {selectedUser.location}</p>
+                <p className="mb-2"><strong>Start Date:</strong> {selectedUser.date}</p>
+                <p className="mb-2"><strong>End Date:</strong> {selectedUser.end}</p>
+                <p className="mb-0"><strong>Time:</strong> {selectedUser.time}</p>
+              </div>
+            )}
+          </Tab>
+          <Tab eventKey="members" title="Members">
+            {selectedUser && <MemberList members={members} />}
+          </Tab>
+        </Tabs>
+      </ModernDrawer>
     </div>
   );
 };

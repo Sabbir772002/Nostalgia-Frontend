@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
 import EditProfile from './Pages/Profile/EditProfile';
@@ -12,80 +12,63 @@ import Medi from './Pages/Medication/Medi';
 import MediHome from './Pages/Medication/MediHome';
 import Friend from './Pages/Friend/Friend';
 import Ex from './Pages/Ex/Ex';
-import DD from './Pages/Ex/DD';
-// import Recovered from './Pages/RegisterPage/ForgetPassword/Recovered';
-// import Reset from './Pages/RegisterPage/ForgetPassword/Reset';
-// import OTPInput from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import Compare from './Pages/Compare/Compare';
 import NHome from './Pages/NHome/NHome';
 import Caregiver from './Pages/Caregiver/Caregiver';
-// import EmailVerificationForm from './Pages/RegisterPage/ForgetPassword/OTPInput';
 import { UserProvider } from './context/UserContext';
 import Buddy from './Pages/WalkingBuddy/Buddy';
 import Trip from './Pages/Trip/Trip';
 import Event from './Pages/Event/Event';
-import FindFriendlist from './Pages/FindFriend/FindFriendlist';
+import FindFriendList from './Pages/FindFriend/FindFriendList';
 import GroupHome from './Pages/Groups/GroupHome/GroupHome';
 import GroupProfile from './Pages/Groups/Profile/GroupProfile';
-
-import HomeScreen from "./screens/home/HomeScreen";
-import ChatBody from "./Components/chatbody/ChatBody";
-import LoginScreen from "./screens/auth/login/LoginScreen";
-import SignupScreen from "./screens/auth/signup/SignupScreen";
-import AppPaths from "./chat_lib/appPaths";
 import Chat from './Pages/Chat/ChatBox';
-import Vid from './Pages/Chat/video';
-import BD from './Pages/Ex/BD';
-import Vide from './Pages/Vide';
+import SingleBlogPage from './Pages/Blog/SingleBlogPage';
+const ProtectedRoute = ({ children }) => {
+  const userData = localStorage.getItem('userData');
+  if (!userData) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 const App = () => {
-  // Define state for friendProfile
   const [friendProfile, setFriendsProfile] = useState([]);
   return (
-      <UserProvider>
-        <div className='App'>
-          <Routes>
-            <Route path='/home' element={<Home setFriendsProfile={setFriendsProfile} />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/profile/edit/:username' element={<EditProfile />} />
-            <Route path='/profile/:username' element={<Profile />} />
-            {/* <Route path='/friendsId/:id' element={<FriendsId friendProfile={friendProfile} />} /> */}
-            <Route path='/friendsId' element={<FriendsId friendProfile={friendProfile} />} />
-            <Route path='/notification' element={<Notification />} />
-            <Route path='/' element={<Login />} />
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/med' element={<Medi />} />
-            <Route path='/medication' element={<MediHome />} />
-            <Route path='/caregiver' element={<Caregiver />} />
-            <Route path='/friend' element={<Friend />} />
-            <Route path='/image' element={<ImgBox />} />
-            <Route path='/ex' element={<Ex />} />
-            {/* <Route path='/forget' element={<Recovered />} />
-            <Route path='/Reset' element={<Reset />} />
-            <Route path='/OTP' element={<OTPInput />} />
-            <Route path='/OTPP' element={<OTPInput />} /> */}
-            <Route path='/walk' element={<Buddy />} />
-            <Route path='/comparebox' element={<Compare />} />
-            <Route path='/compare/:username' element={<Compare />} />
-            <Route path='/nhome' element={<NHome />} />
-            <Route path='/findfrined' element={<FindFriendlist />} />
-            <Route path='/groups' element={<GroupHome />} />
-            <Route path='/group/:username' element={<GroupProfile />} />
-            <Route path='/DD' element={<DD />} />
-            {/* <Route path='/BD' element={<BD />} /> */}
-            <Route path='/event' element={<Event />} />
-            <Route path='/trip' element={<Trip />} />
-            <Route path='/chat/:fnd' element={<Chat />} />
-            <Route path='/chat' element={<Chat />} />
-            {/* <Route path='/video' element={<Vid />} /> */}
-            <Route path='/Vide' element={<Vide />} />
-            {/* <Route path='/chat' element={Chat} /> */}
-            {/* <Route path='/c/:chatId' element={HomeScreen} />
-            <Route path='/chat_login' element={LoginScreen} />
-            <Route path='/chat_signup' element={SignupScreen} /> */}
-          </Routes>
-        </div>
-      </UserProvider>
+    <UserProvider>
+      <div className='App'>
+        <Routes>
+          <Route path='/home' element={<ProtectedRoute><Home setFriendsProfile={setFriendsProfile} /></ProtectedRoute>} />
+          <Route path='/blog/:id' element={<ProtectedRoute><SingleBlogPage /></ProtectedRoute>} />
+          <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path='/profile/edit/:username' element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+          <Route path='/profile/:username' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path='/friendsId' element={<ProtectedRoute><FriendsId friendProfile={friendProfile} /></ProtectedRoute>} />
+          <Route path='/notification' element={<ProtectedRoute><Notification /></ProtectedRoute>} />
+          <Route path='/' element={<Login />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/med' element={<ProtectedRoute><Medi /></ProtectedRoute>} />
+          <Route path='/medication' element={<ProtectedRoute><MediHome /></ProtectedRoute>} />
+          <Route path='/caregiver' element={<ProtectedRoute><Caregiver /></ProtectedRoute>} />
+          <Route path='/friend' element={<ProtectedRoute><Friend /></ProtectedRoute>} />
+          <Route path='/image' element={<ProtectedRoute><ImgBox /></ProtectedRoute>} />
+          <Route path='/ex' element={<ProtectedRoute><Ex /></ProtectedRoute>} />
+          <Route path='/walk' element={<ProtectedRoute><Buddy /></ProtectedRoute>} />
+          <Route path='/comparebox' element={<ProtectedRoute><Compare /></ProtectedRoute>} />
+          <Route path='/compare/:username' element={<ProtectedRoute><Compare /></ProtectedRoute>} />
+          <Route path='/nhome' element={<ProtectedRoute><NHome /></ProtectedRoute>} />
+          <Route path='/findfrined' element={<ProtectedRoute><FindFriendList /></ProtectedRoute>} />
+          <Route path='/findfriend' element={<ProtectedRoute><FindFriendList /></ProtectedRoute>} />
+          <Route path='/groups' element={<ProtectedRoute><GroupHome /></ProtectedRoute>} />
+          <Route path='/group/:username' element={<ProtectedRoute><GroupProfile /></ProtectedRoute>} />
+          <Route path='/event' element={<ProtectedRoute><Event /></ProtectedRoute>} />
+          <Route path='/trip' element={<ProtectedRoute><Trip /></ProtectedRoute>} />
+          <Route path='/chat/:fnd' element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+          <Route path='/chat' element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+        </Routes>
+      </div>
+    </UserProvider>
   );
 };
+
 export default App;

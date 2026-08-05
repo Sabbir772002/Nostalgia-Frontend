@@ -1,67 +1,52 @@
-import {  useState,useEffect } from 'react'
-import "./Home.css"
+import React, { useState, useEffect, useCallback } from 'react';
+import "./Home.css";
 import axios from 'axios';
-import Left from "../../../Components/LeftSide/Left"
-import Middle from "../../../Components/GMiddle/Middle"
-import Nav from '../../../Components/Navigation/Nav'
-import moment from 'moment/moment'
-import { useLocation } from 'react-router-dom';
-import Right from '../../../Components/GroupRight/Right'
-import api from '../../../util/api'
+import Left from "../../../Components/LeftSide/Left";
+import Middle from "../../../Components/GMiddle/Middle";
+import Nav from '../../../Components/Navigation/Nav';
+import Right from '../../../Components/GroupRight/Right';
+import api from '../../../util/api';
 
 const GroupHome = () => {
-  const location = useLocation();
-  //const userData = JSON.parse(new URLSearchParams(location.search).get('userData'));
-  const userData= JSON.parse(localStorage.getItem('userData'));
+  const rawUser = JSON.parse(localStorage.getItem('userData')) || {};
+  const activeUsername = rawUser.username ? (rawUser.username.includes('@') ? rawUser.username.split('@')[1] : rawUser.username) : '';
+  const userData = { ...rawUser, username: activeUsername };
 
   const [posts, setPosts] = useState([]);
-  const fetchPosts = () => {
-    axios.get(`${api.url}:8000/gt_post`, {
-    params: {
-        username: userData.username
-    }
-})
-.then(response => {
-  console.log('Posts:', response.data);
-    setPosts(response.data);
-})
-.catch(error => {
-    console.error('Error fetching posts:', error);
-});
+  const [search, setSearch] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
-  };
-  useEffect(() => {
-    // Fetch posts when component mounts
-    fetchPosts();
-  }, []);
-
-
-      const [body,setBody] =useState("");
-      const [importFile,setImportFile] =useState("");
-   
-   const [search,setSearch] =useState("");
-
-    
-  const [following,setFollowing] =useState("");
-        
-  const [showMenu,setShowMenu] =useState(false);
-  const [images,setImages] =  useState(null);
-  console.log(userData);
-  const user= JSON.parse(localStorage.getItem('userData'));
-  const [fndlist, setfndlist] = useState([]);
-  const fetchOverseerList = () => {
-    axios.get(`${api.url}:8000/my_groups`, {
+  const fetchPosts = useCallback(() => {
+    if (!userData.username) return;
+    axios.get(`${api.url}:8001/gt_post`, {
       params: {
-        user_id: user.id
+        username: userData.username
       }
     })
-      .then(response => {
-        setfndlist(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+    .then(response => {
+      setPosts(response.data || []);
+    })
+    .catch(error => {
+      console.error('Error fetching posts:', error);
+    });
+  }, [userData.username]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const fetchOverseerList = () => {
+    if (!userData.id) return;
+    axios.get(`${api.url}:8001/my_groups`, {
+      params: {
+        user_id: userData.id
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
   };
+
   return (
     <div className='interface'>
       <Nav 
@@ -72,18 +57,11 @@ const GroupHome = () => {
       />
       <div className="home">
         <Left />
-        {userData.username.includes("@") ? (
-          <h1 className="error mt-4">You are not allowed to view this page</h1>
-        ) : (
-          <>
-            <Middle posts={posts} fetchPosts={fetchPosts} />
-            <Right fetchOverseerList={fetchOverseerList} />
-          </>
-        )}
+        <Middle posts={posts} fetchPosts={fetchPosts} />
+        <Right fetchOverseerList={fetchOverseerList} />
       </div>
     </div>
   );
-  
-}
+};
 
-export default GroupHome
+export default GroupHome;

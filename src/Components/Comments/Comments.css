@@ -42,7 +42,7 @@
 }
 .commentList2 p{
     text-align: end;
-    color: orangered;
+    color: #2563eb;
 }
 
 .commentFooter{
@@ -82,7 +82,7 @@
     }
     .commentList2 p{
         text-align: end;
-        color: orangered;
+        color: #2563eb;
     }
     .commentFooter{
         padding-left: 45px;

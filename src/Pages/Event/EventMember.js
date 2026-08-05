@@ -1,7 +1,6 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Table } from 'react-bootstrap';
-import axios from 'axios';
 const MemberList = ({ members }) => {
     console.log("yo yo bro, hete chole jabo bohudur...");
     return (

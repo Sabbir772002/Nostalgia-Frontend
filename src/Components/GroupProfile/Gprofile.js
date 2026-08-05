@@ -1,11 +1,8 @@
-import Info from '../GroupProfile/ProfileComponents/InfoProfile/Info'
-import UserHome from '../GroupHome/UserHome'
-import Profile from "../../assets/profile.jpg"
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import "../Profile/ProfileMiddle.css"
-import moment from 'moment'
-import ProfileInputPost from './ProfileComponents/ProfileInputPost'
+import React from 'react';
+import Info from '../GroupProfile/ProfileComponents/InfoProfile/Info';
+import UserHome from '../GroupHome/UserHome';
+import "../Profile/ProfileMiddle.css";
+import ProfileInputPost from './ProfileComponents/ProfileInputPost';
 
 const GProfile = ({following,
                         search,
@@ -17,20 +14,17 @@ const GProfile = ({following,
                         posts,
                         setPosts,
                         group}) => {
-  const [body,setBody] =useState("")
-  const [importFile,setImportFile] =useState("")
-  const handleSubmit =(e)=>{
-    e.preventDefault()
-  }
-  const [searchResults,setSearchResults] =useState("")
-   const userData= JSON.parse(localStorage.getItem('userData'));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+  const userData = JSON.parse(localStorage.getItem('userData')) || {};
   return (
     <div className='profileMiddle'>
         <Info 
         group={group}
         gprofile={gprofile}
         />
-        {group && group.member == 1 &&(
+        {group && group.member === 1 && (
         <ProfileInputPost
         handleSubmit={handleSubmit}
         group={group}

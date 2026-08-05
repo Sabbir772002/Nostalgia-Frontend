@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal } from '@mantine/core';
 import Fimg1 from "../../../../assets/Remaining-Following/img-1.jpg"
 import Fimg2 from "../../../../assets/Remaining-Following/img-3.jpg"

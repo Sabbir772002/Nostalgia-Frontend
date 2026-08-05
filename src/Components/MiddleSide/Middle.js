@@ -1,36 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import InputPost from '../Post/InputPost'
-import Homepage from "../Home/Homepage"
-import "../MiddleSide/Middle.css"
+import React from 'react';
+import InputPost from '../Post/InputPost';
+import Homepage from "../Home/Homepage";
+import "../MiddleSide/Middle.css";
 
-
-const Middle = ({posts,fetchPosts}) => {
-    
-  
-    const [searchResults,setSearchResults] =useState("")
-    
-    // useEffect(()=>{
-    //   const searchData = posts.filter((val)=>(
-    //     (val.body.toLowerCase().includes(search.toLowerCase()))
-    //    ||
-    //    (val.username.toLowerCase().includes(search.toLowerCase()))
-    //    ))
-    //    setSearchResults(searchData)
-       
-    // },[posts,search])
-  
+const Middle = ({ posts, fetchPosts, loadMorePosts, hasMore, loadingMore }) => {
   return (
     <div className='M-features'>
-        <InputPost
-        // useEffect={useEffect}
+      <InputPost fetchPosts={fetchPosts} />
+      <Homepage 
+        posts={posts}
         fetchPosts={fetchPosts}
-        />
-        <Homepage 
-          posts={posts}
-          fetchPosts={fetchPosts}
-        />
+        loadMorePosts={loadMorePosts}
+        hasMore={hasMore}
+        loadingMore={loadingMore}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Middle
+export default Middle;

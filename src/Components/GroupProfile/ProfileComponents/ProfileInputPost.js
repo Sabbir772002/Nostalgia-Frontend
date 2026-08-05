@@ -1,28 +1,24 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../../Post/InputPost.css";
-import Profile from "..//../../assets/profile.jpg";
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PlayCircleFilledOutlinedIcon from '@mui/icons-material/PlayCircleFilledOutlined';
-import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
-import { FaSmile } from "react-icons/fa";
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import api from '../../../util/api';
+
 const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = JSON.parse(localStorage.getItem('userData')) || {};
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0];
   const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
   const [post, setpost] = useState({
     username: userData.username,
-    content: '', // State variable for content
+    content: '',
     post_date: formattedDate,
     post_time: formattedTime,
     blog_img: "",
-    gp:group.username
+    gp: group.username
   });
-  const [images, setImages] = useState(null); // State variable for images
+  const [images, setImages] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,46 +29,40 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
     const file = e.target.files[0];
     setpost({ ...post, blog_img: file });
     setImages(file);
-    //console.log(post.file);
   };
-  useEffect(() => {
-    fmembers();
-  }, []);
 
-  
+  useEffect(() => {
+    if (fmembers) fmembers();
+  }, [fmembers]);
+
   const onSubmit = async (e) => {
     e.preventDefault();
-    let i=0;
+    let i = 0;
     try {
       const formData = new FormData();
       Object.entries(post).forEach(([key, value]) => {
-        console.log(key, value);
-        if(key === 'blog_img' && !(value instanceof File)) {
-          console.log('No image provided.');  
+        if (key === 'blog_img' && !(value instanceof File)) {
           return; 
         }
         formData.append(key, value);  
       });
-      //console.log(formData);
-      const response = await axios.post(`${api.url}:8000/addgroupost`, formData);
-      console.log(response.data); 
-      console.log(group.username);
+
+      await axios.post(`${api.url}:8001/addgroupost`, formData);
       alert('Group Post created successfully');
-      i=1;
-      // Reset form data
+      i = 1;
       setpost({
         username: userData.username,
         content: '',
         post_date: formattedDate,
         post_time: formattedTime,
         blog_img: null,
-        gp:group.username
+        gp: group.username
       });
-       fetchPosts();
-      setImages(null); // Reset images state
+      if (fetchPosts) fetchPosts();
+      setImages(null);
     } catch (error) {
       console.error('Error creating blog:', error);
-      if(i==0)alert('Error creating blog. Please try again.');
+      if (i === 0) alert('Error creating blog. Please try again.');
     }
   };
 
@@ -80,15 +70,15 @@ const ProfileInputPost = ({fetchPosts,fmembers,group}) => {
     <div className="i-form">
       <form onSubmit={onSubmit}>
         <div className="i-input-box">
-        <img src={`${api.url}:8000/${userData.p_image}`} className='i-img'/>
+          <img src={`${api.url}:8001/${userData.p_image}`} className='i-img' alt="avatar" />
           <input 
             type="text" 
             id="i-input" 
-            placeholder="What's in your mind Vijay?"
+            placeholder="What's on your mind?"
             required
-            value={post.content} // Use formData.content instead of body
-            onChange={handleChange} // Use handleChange for content change
-            name="content" // Set name for content
+            value={post.content}
+            onChange={handleChange}
+            name="content"
           />
         </div>
 

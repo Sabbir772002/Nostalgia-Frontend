@@ -1,36 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../util/api';
 
 const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
-  const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
-  const [selectedId, setSelectedId] = useState(null); // State for selected member ID
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
-  const user= JSON.parse(localStorage.getItem('userData'));
+  const user = JSON.parse(localStorage.getItem('userData')) || {};
  
   const viewProfile = (userId) => {
     navigate(`/profile/${userId}`);
   };
 
   const handleConfirm = (id) => {
-    console.log(id);
     actions(id, "confirm");
   };
 
   const handleDelete = (id) => {
-    console.log(id);
     actions(id, "delete");
   };
   const actions = async (id, action) => {
     try {
-      const response = await axios.post(`${api.url}:8000/grouprequest`, {user_id:id,group:guser, type: action});
-      console.log("in actions");  
-      console.log(response.data);
-      fetchData();
-     // setRmembers(response.data);
-       fmembers();
+      await axios.post(`${api.url}:8001/grouprequest`, {user_id:id,group:guser, type: action});
+      if (fetchData) fetchData();
+      if (fmembers) fmembers();
     } catch (error) {
       console.error('Error performing action:', error);
     }
@@ -41,22 +36,21 @@ const RequestList = ({guser,fmembers,Rmembers,fetchData,setRmembers,group}) => {
         <tr>
           <th>Name</th>
           <th>Age</th>
-          {/* <th>Gender</th> */}
           <th>View</th>
-          {user.username==group.admin && (
-
-<th>Actions</th>
-)}        </tr>
+          {user.username === group.admin && (
+            <th>Actions</th>
+          )}
+        </tr>
       </thead>
       <tbody>
         {Rmembers && Rmembers.map(member => (
           <tr key={member.id}>
             <td>{member.first_name}</td>
             <td>{member.dob}</td>
-            {/* <td>{member.gender}</td> */}
             <td>
               <Button variant="primary" onClick={() => viewProfile(member.username)}>View Profile</Button>
-            </td>          {user.username==group.admin && (
+            </td>
+            {user.username === group.admin && (
 
             <td>
               <DropdownButton

@@ -1,7 +1,7 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
 import Nav from '../../Components/Navigation/Nav.js';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
 import axios from 'axios';
@@ -24,10 +24,12 @@ const useSocket = (url) => {
 const Chat = () => {
     const { fnd } = useParams();
     const [fd, setfd] = useState("");
-    const location = useLocation();
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const rawUser = JSON.parse(localStorage.getItem('userData')) || {};
+    const activeUsername = rawUser.username ? (rawUser.username.includes('@') ? rawUser.username.split('@')[1] : rawUser.username) : '';
+    const userData = { ...rawUser, username: activeUsername };
+
     const [done, setdone] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [, setUsers] = useState([]);
     const [userbox, setUserbox] = useState([]);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -35,41 +37,18 @@ const Chat = () => {
     const [showMenu, setShowMenu] = useState(false);
     const socket = useSocket(`${api.url}:5000`);
     const [lastseen, setLastseen] = useState("");
-    const [n,setn]=useState("");
-    const [e,sete]=useState("");
-    const [d,setd]=useState("");
-    const [msg,setmsg]=useState("");
-    
-    useEffect(() => {
-        if (fnd && !done) {
-            console.log("fnd alreadt set   "+fnd);
-            setfd(fnd);
-            findname(fnd);
-            msgbox();
-        }
-    }, [fnd,done]);
-    // console.log(fnd)
-    const encrypt = (message) => {
-        axios.get(`${api.url}:8000/msge`, {
-            params: {
-                msg: message,
-                e: e,
-                n: n,
-                d: d
-            }
-        }).then(response => {
-            console.log('Encrypted Message:', response.data);
-            setmsg(response.data);
-        })
-        .catch(error => {
-            console.error('Error fetching user data:',error);
-        });
-     }
-    const decrypt = async (message) => {
-        console.log("this is decrypted function");
-        console.log(message);
+    const [n, setn] = useState("");
+    const [e, sete] = useState("");
+    const [d, setd] = useState("");
+    const [msg, setmsg] = useState("");
+    const [fnddata, setfndData] = useState({});
+    const [fndname, setfndName] = useState("");
+    const [selectedImage, setSelectedImage] = useState(null);
+    const chatHistoryRef = useRef(null);
+
+    const decrypt = useCallback(async (message) => {
         try {
-            const response = await axios.get(`${api.url}:8000/msgd`, {
+            const response = await axios.get(`${api.url}:8001/msgd`, {
                 params: {
                     msg: message,
                     e: e,
@@ -77,42 +56,103 @@ const Chat = () => {
                     d: d
                 }
             });
-            // console.log('Decrypted Message:', response.data);
             return response.data; 
         } catch (error) {
             console.error('Error fetching decrypted message:', error);
-            throw error;
+            return message;
         }
+    }, [e, n, d]);
+
+    const findname = useCallback((name) => {
+        if (!name || !userData.username) return;
+        axios.get(`${api.url}:5000/api/findpbvt`, {
+            params: { id1: name, id2: userData.username }
+        }).then(response => {
+            if (response.data) {
+                setd(response.data.d || '');
+                sete(response.data.e || '');
+                setn(response.data.n || '');
+            }
+        }).catch(error => {
+            console.error('Error fetching key data:', error);
+        });
+
+        axios.get(`${api.url}:8001/profile/${name}`, {
+            params: {
+                username: name,
+                user: userData.username
+            }
+        }).then(response => {
+            setfndData(response.data || {});
+            setfndName(`${response.data.first_name || ''} ${response.data.last_name || ''}`);
+            const user = userbox.find(u => u.name === name);
+            setLastseen(user ? user.lastSeen : '');
+        }).catch(error => {
+            console.error('Error fetching user data:', error);
+        });
+    }, [userData.username, userbox]);
+
+    const msgbox = useCallback(async () => {
+        if (!userData.username || !fd) return;
+        try {
+            const response = await axios.get(`${api.url}:5000/api/messages/`, {
+                params: {
+                    id1: userData.username,
+                    id2: fd
+                }
+            });
+            const encryptedMessages = response.data || [];
+            const decryptedMessages = await Promise.all(
+                encryptedMessages.map(async (message) => {
+                    const decryptedContent = await decrypt(message.content);
+                    return { ...message, content: decryptedContent }; 
+                })
+            );
+            setMessages(decryptedMessages);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }, [userData.username, fd, decrypt]);
+
+    useEffect(() => {
+        if (fnd && !done) {
+            setfd(fnd);
+            findname(fnd);
+            msgbox();
+        }
+    }, [fnd, done, findname, msgbox]);
+
+    const encrypt = (message) => {
+        axios.get(`${api.url}:8001/msge`, {
+            params: {
+                msg: message,
+                e: e,
+                n: n,
+                d: d
+            }
+        }).then(response => {
+            setmsg(response.data);
+        }).catch(error => {
+            console.error('Error encrypting message:', error);
+        });
     };
 
-    const finduserlist = async () => {
+    const fetchUserImage = useCallback(async (username, currentUser) => {
         try {
-            const response = await axios.get(`${api.url}:5000/api/userbox/` + userData.username);
-            const userList = response.data.map((user, index) => ({
-                id: index + 1,
-                name: user.username,
-                online: user.online,
-                lastSeen: user.lastSeen
-            }));
-    
-            setUsers(userList);
-    
-            if (userList.length > 0 && (fnd == "" || fnd == null || fnd == undefined) && !done) {
-                console.log(fnd);
-                setLastseen(userList[0].lastSeen);
-                console.log("set of userlists")
-                setfd(userList[0].name);
-                msgbox();
-                findname(userList[0].name);
-            }
-    
-            // Fetch user images after fetching user list
-            fetchUserImages(userList);
+            const response = await axios.get(`${api.url}:8001/profile/${username}`, {
+                params: {
+                    username: username,
+                    user: currentUser
+                }
+            });
+            return response.data.pp;
         } catch (error) {
-            console.error('Error fetching users:', error);
+            console.error('Error fetching user image:', error);
+            return null;
         }
-    };
-    const fetchUserImages = async (userList) => {
+    }, []);
+
+    const fetchUserImages = useCallback(async (userList) => {
         const userImages = await Promise.all(userList.map(async (user) => {
             try {
                 return await fetchUserImage(user.name, userData.username);
@@ -130,32 +170,41 @@ const Chat = () => {
             img: userImages[index]
         }));
         setUserbox(updatedUserBox);
-    };
-    async function fetchUserImage(username, currentUser) {
+    }, [userData.username, fetchUserImage]);
+
+    const finduserlist = useCallback(async () => {
+        if (!userData.username) return;
         try {
-            const response = await axios.get(`${api.url}:8000/profile/${username}`, {
-                params: {
-                    username: username,
-                    user: currentUser
-                }
-            });
-            return response.data.pp;
+            const response = await axios.get(`${api.url}:5000/api/userbox/` + userData.username);
+            const userList = (response.data || []).map((user, index) => ({
+                id: index + 1,
+                name: user.username,
+                online: user.online,
+                lastSeen: user.lastSeen
+            }));
+    
+            setUsers(userList);
+    
+            if (userList.length > 0 && !fnd && !done) {
+                setLastseen(userList[0].lastSeen);
+                setfd(userList[0].name);
+                msgbox();
+                findname(userList[0].name);
+            }
+    
+            fetchUserImages(userList);
         } catch (error) {
-            console.error('Error fetching user image:', error);
-            return null;
+            console.error('Error fetching users:', error);
         }
-    }
-    useEffect(()=>{
+    }, [userData.username, fnd, done, msgbox, findname, fetchUserImages]);
+
+    useEffect(() => {
         if (!socket) return;
         socket.on('users status', (usersStatus) => {
-            // Handle received user status updates
-            // console.log('Received user status:', usersStatus);
-            // console.log("user data",userbox);
             setUserbox(prevUserBox => {
                 return prevUserBox.map(user => {
-                    const status = usersStatus.find(status => status.username.toLowerCase() === user.name.toLowerCase());
+                    const status = usersStatus.find(s => s.username.toLowerCase() === user.name.toLowerCase());
                     if (status) {
-                        // Update user's status and last seen time
                         return {
                             ...user,
                             online: status.online,
@@ -164,13 +213,8 @@ const Chat = () => {
                     }
                     return user;
                 });
-
             });
-          //  console.log("updated userbox ",userbox);
-                                
-            // You can update your UI or perform any other actions based on the received user status
         });
-
     }, [socket, messages]);
 
     useEffect(() => {
@@ -181,114 +225,37 @@ const Chat = () => {
         });
         socket.on('disconnect', () => {
             console.log('Socket disconnected');
-        })
+        });
         socket.on('chat message', async (message) => {
-            // console.log('New message received from:', message.sender);
-            // console.log('New message received:', message);
-            // const messageExists = messages.some(msg => msg.id == msg.id);
-            // console.log(fd);
-            // console.log(message.sender);
-            // console.log(message.receiver);
-            // console.log(userData.username);
-            // if ( (message.sender == userData.username || (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase())) {
-            if ( (message.sender.toLowerCase() == String(fd).toLowerCase()) && String(message.receiver).toLowerCase() == String(userData.username).toLowerCase()) {
-                // console.log("msg in socket");
-                // console.log(message);
+            if (String(message.sender).toLowerCase() === String(fd).toLowerCase() && String(message.receiver).toLowerCase() === String(userData.username).toLowerCase()) {
                 try {
                     message.content = await decrypt(message.content);
                 } catch (error) {
                     console.error("Error decrypting content:", error);
-                    // Optional: Provide a fallback value for message.content
-                    message.content = "hlw";
+                    message.content = "Message received";
                 }
                 setMessages(prevMessages => [...prevMessages, message]);
                 const chatHistory = document.getElementById('chat-history');
-                chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;    
+                if (chatHistory) {
+                    chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
+                }
             }
         });
-            // if ( message.receiver.toLowerCase() == userData.username.toLowerCase()) {
-            //     console.log("usere ",userData.username);
-            //     console.log("receiver",message.receiver);
-            //     console.log("sender",message.sender);
-            //     console.log("userebox in 0 "+userbox[0].name);
-            //     const handleUserboxUpdate = async (username) => { 
-            //              console.log("delete krobo",username);
-            //              let updated=[];
-            //              for(let i=0;i<userbox.length;i++){
-            //                     if(userbox[i].name!=username){
-            //                         console.log(userbox[i])
-            //                         updated.push(userbox[i]);
-            //                     }
-            //                 }
-            //                 setUserbox(updated, () => {
-            //                     console.log("updated", updated);
-            //                     console.log("userbox", userbox);
-            //                 });
-            //                 console.log("updated", updated);
-            //                 console.log("userbox", userbox);
-                                               
-            //         const userImage = await fetchUserImage(username, userData.username);
-    
-            //         const newUser = {
-            //             id: userbox.length + 1,
-            //             name: username,
-            //             img: userImage
-            //         };
-            //         setUserbox(prevUserbox => [newUser, ...prevUserbox]);
-            //     };
-            //     handleUserboxUpdate(message.sender);
-
-            // }
-            // if ( message.sender.toLowerCase() == userData.username.toLowerCase()) {
-            //     console.log("usere ",userData.username);
-            //     console.log("receiver",message.receiver);
-            //     console.log("sender",message.sender);
-            //     console.log("userebox in 0 "+userbox[0].name);
-            //     const handleUserboxUpdate = async (username) => { 
-            //              console.log("delete krobo",username);
-            //              let updated=[];
-            //              for(let i=0;i<userbox.length;i++){
-            //                     if(userbox[i].name!=username){
-            //                         console.log(userbox[i])
-            //                         updated.push(userbox[i]);
-            //                     }
-            //                 }
-            //                 setUserbox(updated, () => {
-            //                     console.log("updated", updated);
-            //                     console.log("userbox", userbox);
-            //                 });
-            //                 console.log("updated", updated);
-            //                 console.log("userbox", userbox);
-                                               
-            //         const userImage = await fetchUserImage(username, userData.username);
-            //         const newUser = {
-            //             id: userbox.length + 1,
-            //             name: username,
-            //             img: userImage
-            //         };
-            //         setUserbox(prevUserbox => [newUser, ...prevUserbox]);
-            //     };
-            //     handleUserboxUpdate(message.receiver);
-
-            // }
         
         return () => {
             socket.off('connect');
             socket.off('disconnect');
             socket.off('chat message');
         };
-    }, [socket, messages]);
-
+    }, [socket, messages, fd, userData.username, decrypt]);
 
     useEffect(() => {
         const handleBeforeUnload = () => {
-            console.log('Leaving page, disconnecting socket');
-           socket.disconnect();
+            if (socket) socket.disconnect();
         };
 
         const handlePageFocus = () => {
-            console.log('Returning to page, reconnecting socket');
-            socket.connect();
+            if (socket) socket.connect();
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
         window.addEventListener('focus', handlePageFocus);
@@ -297,42 +264,33 @@ const Chat = () => {
             window.removeEventListener('focus', handlePageFocus);
         };
     }, [socket]);
-    const [selectedImage, setSelectedImage] = useState(null);
 
     const handleImageSelect = (event) => {
         const file = event.target.files[0];
         setSelectedImage(file);
-        //sendMessage();
     };
-
 
     const sendMessage = async () => {
         encrypt(newMessage);
         if (selectedImage) {
-            // Create a FormData object to send the image file
             const formData = new FormData();
             formData.append('image', selectedImage);
 
-            // Send the FormData object along with other message data
             const message = {
                 id: messages.length + 1,
                 sender: userData.username,
                 receiver: fd,
-                content: '', // You can include a message if needed
+                content: '',
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
-                img:1,
-                image: formData, // Attach the FormData object containing the image
+                img: 1,
+                image: formData,
             };
-            console.log(message.image);
 
-            // Emit the message event to the server
             socket.emit('chat message', message);
             setNewMessage('');
-            // Clear the selected image after sending
             setSelectedImage(null);
-        }else if (newMessage.trim() !== '') {
-        
+        } else if (newMessage.trim() !== '') {
             const message = {
                 id: messages.length + 1,
                 sender: userData.username,
@@ -340,7 +298,7 @@ const Chat = () => {
                 content: msg,
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
-                img:0,
+                img: 0,
                 image: null
             }; 
             const newmsg = {
@@ -350,167 +308,63 @@ const Chat = () => {
                 content: newMessage,
                 time: new Date().toLocaleTimeString(),
                 date: new Date().toLocaleDateString(),
-                img:0,
+                img: 0,
                 image: null
             };
-            //cmnt below to go before 
             setMessages((prevMessages) => [...prevMessages, newmsg]);
 
-            // try {
-            //     // Decrypt the message content
-            //     const decryptedContent = await decrypt(newMessage);
-        
-            //     // Update the message with decrypted content
-            //     setMessages((prevMessages) =>
-            //         prevMessages.map((msg) =>
-            //             msg.id === newMessage.id
-            //                 ? { ...msg, content: decryptedContent, isDecrypted: true }
-            //                 : msg
-            //         )
-            //     );
-            // } catch (error) {
-            //     console.error("Error decrypting message:", error);
-            // }
             socket.emit('set username', userData.username);
             socket.emit('chat message', message);   
-            console.log("msg send now"); 
-            console.log(message);
             setNewMessage('');
             setmsg('');
-        // Save message to MongoDB using Axios
-        axios.post(`${api.url}:5000/api/messages`, message)
-        .then(response => {
-            console.log('Message saved:', response.data);
-        })
-        .catch(error => {
-            console.error('Error saving message:', error);
-        });
+            axios.post(`${api.url}:5000/api/messages`, message).catch(console.error);
         }
     };
-    const msgbox = async () => {
-        axios.get(`${api.url}:5000/api/messages/`, {
-            params: {
-                id1: userData.username,
-                id2: fd
-            }
-        })
-        .then(async (response) => {
-            const encryptedMessages = response.data;
-            // console.log("This is rcv msg");
-            // for(let i=0;i<encryptedMessages.length;i++){
-            //     console.log(encryptedMessages[i].content);
-            // }
 
-            const decryptedMessages = await Promise.all(
-                encryptedMessages.map(async (message) => {
-                    const decryptedContent = await decrypt(message.content);
-                    return { ...message, content: decryptedContent }; 
-                })
-            );
-            setMessages(decryptedMessages);
-            // setMessages(encryptedMessages);
-        })
-        .catch((error) => {
-            console.error('Error fetching messages:', error);    
-        });
-        const chatHistory = document.getElementById('chat-history');
-        chatHistory.scrollTop = chatHistory.scrollHeight - chatHistory.clientHeight;
-
-    }
-    
     useEffect(() => {
         if (fd) {
             msgbox();
             findname(fd);
         } 
-    }, [fd]);
-    
-    const [fnddata, setfndData] = useState("");
-    const [fndname, setfndName] = useState("");
-    const findname = (name) => {
-        // console.log(name);
-        // if (name==null)return;
-        axios.get(`${api.url}:5000/api/findpbvt`, {
-            params: {id1: name, id2: userData.username}}).then(response => {
-            setd(response.data.d);
-            sete(response.data.e);
-            setn(response.data.n);
-            // console.log('Box of Key Data:', response.data);
-            
-        })
-         .catch(error => {
-            console.error('Error fetching user data:', error);
-        });
-        // console.log("E",e);
-        // console.log("N",n);
-        // console.log("D",d);
-        axios.get(`${api.url}:8000/profile/${name}`, {
-            params: {
-                username: name,
-                user: userData.username
-                }
-        }).then(response => {
-            console.log('Box of User Data:', response.data);
-            setfndData(response.data);
-            setfndName(response.data.first_name + " " + response.data.last_name);
-            const user = userbox.find(user => user.name === name);
-            setLastseen(user ? user.lastSeen : lastseen);
-                        console.log(name);
-            console.log(userbox);
-            console.log("last seen time update in findname",lastseen);
-            console.log(response.data.first_name + " " + response.data.last_name);
-        })
-        .catch(error => {
-            console.error('Error fetching user data:', error);
-        });
-    };
-  const handleNameClick = (name) => {
+    }, [fd, msgbox, findname]);
+
+    const handleNameClick = (name) => {
         setdone(true);
         setfd(name);
         findname(name);
         msgbox();
-        console.log("msg box of : "+name);
     }; 
+
     useEffect(() => {
         finduserlist();
-    // }, [fndname,fd,userData.username,messages,socket]);
-  }, [socket,fd]);
-  const chatHistoryRef = useRef(null);
-  const scrollToBottom = () => {
-    if (chatHistoryRef.current) {
-      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-      console.log("scorlling");
-    }
-  };
-function getLastSeenTime(lastSeen) {
-    const currentTime = new Date();
-    const lastSeenTime = new Date(lastSeen);
-    const timeDifference = currentTime.getTime() - lastSeenTime.getTime();
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(months / 12);
+    }, [socket, fd, finduserlist]);
 
-    if (years > 0) {
-        return `left ${years} year${years > 1 ? 's' : ''} ago`;
-    } else if (months > 0) {
-        return `left ${months} month${months > 1 ? 's' : ''} ago`;
-    } else if (days > 0) {
-        return `left ${days} day${days > 1 ? 's' : ''} ago`;
-    } else if (hours > 0) {
-        return `left ${hours} hour${hours > 1 ? 's' : ''} ago`;
-    } else if (minutes > 0) {
-        return `left ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    } else {
+    const scrollToBottom = () => {
+        if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+        }
+    };
+
+    function getLastSeenTime(lastSeen) {
+        if (!lastSeen) return '';
+        const currentTime = new Date();
+        const lastSeenTime = new Date(lastSeen);
+        const timeDifference = currentTime.getTime() - lastSeenTime.getTime();
+        const seconds = Math.floor(timeDifference / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) return `left ${days} day${days > 1 ? 's' : ''} ago`;
+        if (hours > 0) return `left ${hours} hour${hours > 1 ? 's' : ''} ago`;
+        if (minutes > 0) return `left ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
         return `left a few seconds ago`;
     }
-}
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
- 
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     return (
         <div className='interface'>
             <Nav
@@ -519,121 +373,92 @@ function getLastSeenTime(lastSeen) {
                 showMenu={showMenu}
                 setShowMenu={setShowMenu}
             />
-            {userData.username.includes("@") ? (
-                <>
-                <h1 className="error mt-4">You are not allowed to view this page</h1>
-                </>
-            ) : (
             <div className='bot mt-2' style={{ position: 'fixed', marginBottom: '20px' }}>
                 <div className='row clearfix'>
                     <div className='card chat-app'>
                         <div className='col-lg-3'>
                             <div id='plist' className='people-list'>
                                 <h2>Recent Message</h2>
-                                <div className='input-group'>
-                                    {/* <div className='input-group-prepend'>
-                                        <span className='input-group-text' style={{ height: '38px' }}>
-                                            <i className='fas fa-search' style={{ fontSize: '16px' }}></i>
-                                        </span>
-                                    </div> */}
-                                    {/* <input type='text' className='form-control' style={{ height: '38px' }} placeholder='Search...' /> */}
-                                </div>
                                 <hr />
                                 <ul className='list-unstyled chat-list mt-2 mb-0' style={{ maxHeight: '500px', overflowY: 'auto', marginBottom: '20px' }}>
-                                {userbox.map((user) => (
-                                    <li key={user.id} className='clearfix'  onClick={() => handleNameClick(user.name)}>
-                                        <img src={`${api.url}:8000/${user.img}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
-                                        <div className='about'>
-                                            <div className='name'>
-                                                {user.name}
+                                    {userbox.map((user) => (
+                                        <li key={user.id} className='clearfix' onClick={() => handleNameClick(user.name)}>
+                                            <img src={`${api.url}:8001/${user.img}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
+                                            <div className='about'>
+                                                <div className='name'>{user.name}</div>
+                                                <div className="status">
+                                                    <i className={`fa fa-circle ${user.online ? 'online' : 'offline'}`}></i> {user.online ? 'Online' : getLastSeenTime(user.lastSeen)}
+                                                </div>
                                             </div>
-                                            <div className="status">
-                                                <i className={`fa fa-circle ${user.online ? 'online' : 'offline'}`}></i> {user.online ? 'Online' : getLastSeenTime(user.lastSeen)}
-                                            </div>
-                                        </div>
-                                    </li>
-                                ))}
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
                         <div className='chat'>
                             <div className='chat-header clearfix'>
                                 <div className='row'>
-                                    <div className='col-lg-6'>
-                                        <a href='javascript:void(0);' data-toggle='modal' data-target='#view_info'>
-                                        <img src={`${api.url}:8000/${fnddata.pp}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
-                                        </a>
+                                    <div className='col-lg-6 d-flex align-items-center gap-3'>
+                                        <img src={`${api.url}:8001/${fnddata.pp}`} alt='avatar' className="circle" style={{ width: '50px', height: '50px' }} />
                                         <div className='chat-about'>
-                                        <Link to={`/profile/${fd}`} className="text-dark">
-                                            <h6 className='m-b-0'>{fndname}</h6>
-                                            <small> {fd && userbox.find(user => user.name === fd)?.online ? 'online' : getLastSeenTime(lastseen)}</small>
+                                            <Link to={`/profile/${fd}`} className="text-dark text-decoration-none">
+                                                <h6 className='m-b-0 fw-bold'>{fndname}</h6>
+                                                <small>{fd && userbox.find(user => user.name === fd)?.online ? 'online' : getLastSeenTime(lastseen)}</small>
                                             </Link>
                                         </div>
                                     </div>
-                                    <div className='col-lg-6 box-right'>
-                                        <a href='javascript:void(0);' className='btn btn-outline-secondary'>
+                                    <div className='col-lg-6 box-right d-flex gap-2 justify-content-end'>
+                                        <button type="button" className='btn btn-outline-secondary'>
                                             <i className='fas fa-camera'></i>
-                                        </a>
-                                        <a href='javascript:void(0);' className='btn btn-outline-primary'>
+                                        </button>
+                                        <button type="button" className='btn btn-outline-primary'>
                                             <i className='fas fa-image'></i>
-                                        </a>
-                                        <a href='javascript:void(0);' className='btn btn-outline-info'>
+                                        </button>
+                                        <button type="button" className='btn btn-outline-info'>
                                             <i className='fas fa-cogs'></i>
-                                        </a>
-                                        <a href='javascript:void(0);' className='btn btn-outline-warning'>
+                                        </button>
+                                        <button type="button" className='btn btn-outline-warning'>
                                             <i className='fas fa-question'></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <div className='chat-history' ref={chatHistoryRef}  id='chat-history' style={{ height: '420px', overflowY: 'scroll' }}>
-                                <ul className='m-b-0' >
-                                 {messages.map((message, index) => (
-                                        <li key={index} className='clearfix'>
-                                            {message.sender == userData.username ? (
-                                                <>
-                                                    <div className="message-data box-right">
-                                                        <span className="message-data-time m-2">{message.time}</span>
-                                                    {/* <img src={`http://localhost:8000/${userData.p_image}`} alt="User" className="circle" style={{ width: '50px', height: '50px' }} /> */}
-                                                  <br/>
-                                                    <div className="message my-message msg-right bg-primary text-light">{message.content}</div> 
-                                                     </div>
-                                                                                                </>
+                            <div className='chat-history' ref={chatHistoryRef} id='chat-history' style={{ height: '420px', overflowY: 'scroll' }}>
+                                <ul className='m-b-0'>
+                                    {messages.map((message, index) => (
+                                        <li key={index} className='clearfix mb-2'>
+                                            {message.sender === userData.username ? (
+                                                <div className="message-data box-right text-end">
+                                                    <span className="message-data-time m-2">{message.time}</span>
+                                                    <br/>
+                                                    <div className="message my-message msg-right bg-primary text-light d-inline-block p-2 rounded">{message.content}</div> 
+                                                </div>
                                             ) : (
-                                                <>
-                                                    <div className="message-data">
-                                                        <span className="message-data-time">{message.time}</span>
-                                                  
-                                                 <br/>
-                                                    <div className="message my-message bg-dark text-light">{message.content}</div>
-                                                    </div>
-                                                
-                                                </>
+                                                <div className="message-data text-start">
+                                                    <span className="message-data-time">{message.time}</span>
+                                                    <br/>
+                                                    <div className="message my-message bg-dark text-light d-inline-block p-2 rounded">{message.content}</div>
+                                                </div>
                                             )}
                                         </li>
                                     ))}
                                 </ul>
                             </div>
-                            <div className='chat-message clearfix'>
+                            <div className='chat-message clearfix p-3 border-top'>
                                 <div className='input-group mb-0'>
-                                    {/* <div className='input-group-prepend'>
-                                        <span className='input-group-text' style={{ height: '38px' }}>
-                                            <i className='fas fa-paper-plane' style={{ fontSize: '16px' }}></i>
-                                        </span>
-                                    </div> */}
-                                          <div className="input-group-prepend" style={{ width: '40px', height: '48px', position: 'relative' }}>
-                                                            <input
-                                                                type="file"
-                                                                accept="image/*"
-                                                                onChange={handleImageSelect}
-                                                                style={{ opacity: 0, position: 'absolute', width: '100%', height: '100%', zIndex: 1, cursor: 'pointer' }}
-                                                            />
-                                                            <FaReact style={{ width: '100%', height: '100%', color: '#61dafb', pointerEvents: 'none' }} />
-                                                            </div>
+                                    <div className="input-group-prepend" style={{ width: '40px', height: '48px', position: 'relative' }}>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleImageSelect}
+                                            style={{ opacity: 0, position: 'absolute', width: '100%', height: '100%', zIndex: 1, cursor: 'pointer' }}
+                                        />
+                                        <FaReact style={{ width: '100%', height: '100%', color: '#61dafb', pointerEvents: 'none' }} />
+                                    </div>
 
                                     <input
                                         type='text'
-                                        className='form-control'
+                                        className='form-control ms-2'
                                         style={{ height: '48px' }}
                                         placeholder='Enter text here...'
                                         value={newMessage}
@@ -644,8 +469,8 @@ function getLastSeenTime(lastSeen) {
                                             }
                                         }}
                                     />
-                                    <div className='input-group-append'>
-                                        <button className='btn btn-primary' style={{ height: '48px' }}  type='button' onClick={sendMessage}>
+                                    <div className='input-group-append ms-2'>
+                                        <button className='btn btn-primary px-4' style={{ height: '48px' }} type='button' onClick={sendMessage}>
                                             Send
                                         </button>
                                     </div>
@@ -655,7 +480,6 @@ function getLastSeenTime(lastSeen) {
                     </div>
                 </div>
             </div>
-            )}
         </div>
     );
 };

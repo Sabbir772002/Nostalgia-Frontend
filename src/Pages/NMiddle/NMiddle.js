@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import Homepage from "../../Components/NHome/Homepage"
-import "./NMiddle.css"
-
+import React from 'react';
+import Homepage from "../../Components/NHome/Homepage";
+import "./NMiddle.css";
 
 const NMiddle = ({posts,fetchPosts}) => {
-    
-  
-    const [searchResults,setSearchResults] =useState("")
     
     // useEffect(()=>{
     //   const searchData = posts.filter((val)=>(

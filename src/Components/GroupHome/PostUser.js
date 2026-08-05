@@ -13,15 +13,6 @@ import {MdBlockFlipped} from "react-icons/md"
 import {AiOutlineDelete} from "react-icons/ai"
 import {MdReportGmailerrorred} from "react-icons/md"
 
-import {LiaFacebookF} from "react-icons/lia"
-import {FiInstagram} from "react-icons/fi"
-import {BiLogoLinkedin} from "react-icons/bi"
-import {AiFillYoutube} from "react-icons/ai"
-import {RxTwitterLogo} from "react-icons/rx"
-import {FiGithub} from "react-icons/fi";
-import img1 from "../../assets/Following/img-2.jpg"
-import img2 from  "../../assets/Following/img-3.jpg"
-import img3 from  "../../assets/Following/img-4.jpg"
 import { useState } from 'react';
 import Comments from '../Comments/Comments';
 import moment from 'moment';
@@ -30,7 +21,7 @@ import api from '../../util/api';
 
 
 const PostUser = ({posts,post,setPosts,userD}) => {
-  const [postbox,setPostbox] =useState(post);
+  const postbox = post || {};
   console.log("ye nuha kothai apni");
   console.log(postbox);
 
@@ -99,7 +90,7 @@ const handleDelete=(id)=>{
       <div className='post-header'>
         <Link to={`/profile/${post.author}`} style={{ textDecoration: "none" }}>
           <div className='post-user' onClick={() => handleFriendsId(postbox.id)} style={{ cursor: "pointer" }}>
-            <img src={`${api.url}:8000/${postbox.author_img}`} className='p-img' alt="" />
+            <img src={`${api.url}:8001/${postbox.author_img}`} className='p-img' alt="" />
                 <div className='post-user-info item-align-center'>
                 <h2 className='' style={{ marginBottom: '5px' }}>{postbox.group_name}</h2>
                 <h4 className='ml-2 item-align-center text-align-center' style={{ color: 'gray', fontSize: '14px', marginLeft: '5px', marginTop: '0' }}>{postbox.author}</h4>
@@ -130,7 +121,7 @@ const handleDelete=(id)=>{
 
       </p>
 
-      {postbox.post_img && (<img src={`${api.url}:8000/${postbox.post_img}`} alt="" className="post-img" />)}
+      {postbox.post_img && (<img src={`${api.url}:8001/${postbox.post_img}`} alt="" className="post-img" />)}
 
       <div className="post-foot">
         <div className="post-footer">

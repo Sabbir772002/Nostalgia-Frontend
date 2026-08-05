@@ -4,7 +4,11 @@
     margin: 20px auto 30px;
     padding: 5px 30px 30px 30px;
     border-radius: 20px;
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
 .i-input-box{
@@ -52,11 +56,19 @@
 .file-upload button{
     padding: 15px 60px;
     border-radius: 40px;
-    border:none;
-    background: linear-gradient(107deg, rgb(255, 67, 5) 11.1%, rgb(245, 135, 0) 95.3%);
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
     color: #fff;
     font-size: 20px;
     cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+    transition: all 0.3s ease;
+}
+.file-upload button:hover{
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    transform: translateY(-1px);
 }
 .photo-icon{
     color: red;
@@ -103,7 +115,10 @@
         margin: 10px auto 30px;
         padding: 5px 15px 20px 15px;
         border-radius: 10px;
-        background-color: #ffffff;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
     }
     #i-input{
         height: 90px;
@@ -167,8 +182,10 @@
         margin: 0px auto 30px;
         padding: 5px 15px 15px 15px;
         border-radius: 0px;
-        background-color: rgb(255, 255, 255);
-        border-bottom: 1px solid #efefef;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07);
     }
     #i-input{
         font-size: 13px;
@@ -184,9 +201,9 @@
     .file-upload button{
         padding: 5px 20px;
         border-radius: 5px;
-        background-color:orangered;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
         color: #fff;
-        font-size: 15x;
+        font-size: 15px;
     }
     .photo-dis{
         display: none;

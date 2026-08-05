@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, DropdownButton, Dropdown, Table } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import api from '../../util/api';
 
 const RequestList = ({user, fmembers}) => {
-  const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
-  const [selectedId, setSelectedId] = useState(null); // State for selected member ID
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem('userData'));
   const [Rmembers, setRmembers] = useState([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
+    if (!user || !user.id) return;
     try {
-      const response = await axios.get(`${api.url}:8000/trip!members`, {
+      const response = await axios.get(`${api.url}:8001/trip!members`, {
         params: { id: user.id }
       });
-     // fmembers();
-      setRmembers(response.data);
+      setRmembers(response.data || []);
     } catch (error) {   
-         console.error('Error fetching user list:', error);
+      console.error('Error fetching user list:', error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const viewProfile = (userId) => {
     navigate(`/profile/${userId}`);
   };
@@ -43,7 +42,7 @@ const RequestList = ({user, fmembers}) => {
   const actions = async (id, action) => {
     try {
       console.log(id);
-      const response = await axios.post(`${api.url}:8000/handletripmember`, { id:id,tid:user.id, type: action});
+      const response = await axios.post(`${api.url}:8001/handletripmember`, { id:id,tid:user.id, type: action});
       console.log(response.data);
       fetchData();
       fmembers();
